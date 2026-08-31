@@ -29,6 +29,18 @@ flowchart TD
 
 Roster: `opus` (Claude Opus 5), `composer` (Composer 2.5), `grok` (Grok 4.6), `terra` (GPT-5.6 Terra). Discovery enumerates whatever is on `PATH` and caches the roster for a day. Missing families become local Claude agents; the run does not abort. Seat→angle pairing is a fresh even permutation each wave. The session model owns the reduce and the carry-forward ledger (rejected proposals are not relitigated; timed-out angles are owed first next cycle). Critics only critique.
 
+## Prerequisites
+
+| | Binary | Seat |
+| --- | --- | --- |
+| Required | [Claude Code](https://docs.anthropic.com/en/docs/claude-code) | the orchestrator; also the local-fallback critics |
+| Optional | `claude` | `opus` |
+| Optional | `cursor-agent` | `composer` |
+| Optional | `grok` | `grok` |
+| Optional | `codex` | `terra` |
+
+Optional binaries must be on `PATH` and logged in. Discovery picks them up automatically. A missing family does not abort the run — that seat becomes a local Claude agent. Cross-vendor convergence needs the optionals.
+
 ## Install
 
 ```bash
@@ -37,7 +49,6 @@ cp -R agent-files/skills/refine_plan ~/.claude/skills/refine_plan
 # or into a project:  cp -R agent-files/skills/refine_plan .claude/skills/refine_plan
 ```
 
-Needs [Claude Code](https://docs.anthropic.com/en/docs/claude-code). Optional on PATH: `claude`, `cursor-agent`, `grok`, `codex`.
 
 ```
 /refine_plan path/to/plan.md              # edit in place until it converges
