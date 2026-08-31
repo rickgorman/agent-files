@@ -1,5 +1,7 @@
 # refine_plan
 
+![refine_plan](refine-plan-hero.png)
+
 Steal when a plan is about to become code and you've only reviewed it from one seat.
 
 `/refine_plan` runs [Jeffrey Emanuel](https://x.com/doodlestein)'s Agent Flywheel **"Phase 2: Refine the Plan"** as a concurrent 4-critic map-reduce. It does not ask one model to bless its own draft. Each cycle **maps** four fresh critics onto four complementary angles, **reduces** what they found into the plan file, and repeats until the yield is zero.
