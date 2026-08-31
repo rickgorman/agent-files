@@ -8,14 +8,14 @@ Stealable Claude Code skills. Not a course. Not a prompt dump.
 
 [refine_plan](skills/refine_plan/). four-critic map-reduce on a markdown plan, until yield is zero.
 
-[dag-reader](skills/dag-reader/). steal when you need the spine of an argument, not a summary.
+[dag-reader](skills/dag-reader/). thesis-claim-fact DAG, pruned to one crux paragraph.
 
 ## Map
 
 | Skill | When | Install |
 | --- | --- | --- |
 | [refine_plan](skills/refine_plan/) | After a draft, before beads or code — converge the plan | Copy `skills/refine_plan/` into `.claude/skills/` |
-| [dag-reader](skills/dag-reader/) | You need the spine of an argument, not a summary | Copy `skills/dag-reader/` into `.claude/skills/` |
+| [dag-reader](skills/dag-reader/) | After a source, before you act on it or argue with it | Copy `skills/dag-reader/` into `.claude/skills/` |
 
 ## Install
 
