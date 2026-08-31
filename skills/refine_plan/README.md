@@ -1,5 +1,7 @@
 ![refine_plan](refine-plan-hero.png)
 
+## Overview
+
 Agents are cheap at emitting a plan and expensive at implementing the wrong one. `/refine_plan` is the gate between those two: a concurrent four-critic **map-reduce** that edits a markdown implementation plan **in place** until another round would not change anything that matters.
 
 Each cycle **maps** four independent critics — different model families, different lenses — onto the current file, **reduces** their findings (cluster, corroborate, skeptic-check lone wolves, integrate), and scores **yield**: how many `transformative` or `material` changes actually landed. Incremental and cosmetic noise does not count. The loop stops when yield hits zero, a majority of critics return `CONVERGED` twice, or the cycle cap (default 6).
@@ -12,7 +14,7 @@ This is [Jeffrey Emanuel](https://x.com/doodlestein)'s Agent Flywheel **Phase 2*
 | Findings die in chat | The plan file is the artifact |
 | Open-ended polish | Stops when yield is 0 |
 
-## A cycle
+### A cycle
 
 ```mermaid
 flowchart TD
@@ -26,10 +28,6 @@ flowchart TD
 ```
 
 Roster: `opus` (Claude Opus 5), `composer` (Composer 2.5), `grok` (Grok 4.6), `terra` (GPT-5.6 Terra). Discovery enumerates whatever is on `PATH` and caches the roster for a day. Missing families become local Claude agents; the run does not abort. Seat→angle pairing is a fresh even permutation each wave. The session model owns the reduce and the carry-forward ledger (rejected proposals are not relitigated; timed-out angles are owed first next cycle). Critics only critique.
-
-## Where it sits
-
-After a first draft or a planning-team merge. Before beads, a swarm, or anyone writing code. Bring a plan. This does not invent one, does not touch source, and does not open a PR.
 
 ## Install
 
@@ -48,6 +46,10 @@ Needs [Claude Code](https://docs.anthropic.com/en/docs/claude-code). Optional on
 ```
 
 No path? It looks for `PLAN.md`, `docs/plans/*.md`, or a recently edited `*plan*.md`. If it still can't tell, it asks.
+
+## When to use
+
+After a first draft or a planning-team merge. Before beads, a swarm, or anyone writing code. Bring a plan. This does not invent one, does not touch source, and does not open a PR.
 
 ## Output
 
