@@ -1,5 +1,3 @@
-# refine_plan
-
 ![refine_plan](refine-plan-hero.png)
 
 Steal when a plan is about to become code and you've only reviewed it from one seat.
