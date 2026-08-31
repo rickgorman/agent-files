@@ -25,7 +25,7 @@ flowchart TD
   score -->|yield 0, streak, majority CONVERGED, or cap| stop["Stop and report"]
 ```
 
-Critics are four different vendors when a cross-vendor bridge is up (`opus`, `composer`, `grok`, `terra`). Otherwise they are four fresh local Claude agents. Same loop either way. The session model owns the reduce; the critics only critique.
+Critics are four families — `opus` (Claude Opus 5), `composer` (Composer 2.5), `grok` (Grok 4.6), `terra` (GPT-5.6 Terra) — using whichever provider CLIs are on the machine. A discovery pass enumerates available models and caches the roster for a day. Missing families become local Claude agents. The session model owns the reduce; the critics only critique.
 
 A change is `transformative`, `material`, `incremental`, or `cosmetic`. Only the first two count as **yield**.
 
@@ -43,7 +43,7 @@ cp -R agent-files/skills/refine_plan ~/.claude/skills/refine_plan
 # or into a project:  cp -R agent-files/skills/refine_plan .claude/skills/refine_plan
 ```
 
-Needs [Claude Code](https://docs.anthropic.com/en/docs/claude-code). A cross-vendor bridge is optional — without one, the skill runs the same swarm as local Claude agents.
+Needs [Claude Code](https://docs.anthropic.com/en/docs/claude-code). Optional on PATH: `claude`, `cursor-agent`, `grok`, `codex`. Missing providers do not abort the run — those seats fall back to local Claude agents.
 
 ```
 /refine_plan path/to/plan.md              # edit in place until it converges

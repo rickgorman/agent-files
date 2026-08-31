@@ -1,6 +1,6 @@
 ---
 name: refine_plan
-description: Iteratively refine a markdown implementation plan in place via a concurrent 4-critic map-reduce swarm (cross-vendor seats when a bridge is up; local Claude agents otherwise) until diminishing returns or 6 cycles. Use when a plan is about to become beads or code, after a first draft or /plan-team, before implementation. Invoke as /refine_plan <path-to-plan.md> [--max N] [--dry-run].
+description: Iteratively refine a markdown implementation plan in place via a concurrent 4-critic map-reduce swarm (cross-vendor host CLIs when present; local Claude agents otherwise) until diminishing returns or 6 cycles. Use when a plan is about to become beads or code, after a first draft or /plan-team, before implementation. Invoke as /refine_plan <path-to-plan.md> [--max N] [--dry-run].
 ---
 
 # /refine_plan
@@ -15,16 +15,15 @@ Each cycle is a **map-reduce**: it MAPS a swarm of `SWARM_SIZE` fresh critics ov
 distinct, complementary angles concurrently, then REDUCES their findings into the plan
 and into a carry-forward ledger that seeds the next cycle's swarm.
 
-**Prefer cross-vendor critics, not four copies of yourself.** When the bridge is up,
-each wave dispatches its `SWARM_SIZE` angle-critiques across four DIFFERENT models —
-`opus`, `composer`, `grok`, `terra` (GPT-5.6). Seat→angle pairing is a **random,
-evenly-distributed permutation each wave** (exactly one seat per angle, since
-`SWARM_SIZE == #seats == 4`). Cross-vendor disagreement is the point: a plan that
-survives four different intelligences is converged for real, not just converged from
-one model's point of view. When the bridge is down — or this skill was stolen without
-one — run the same swarm as local Claude agents. YOU (the session model) remain the
-orchestrator — you own the reduce, the integration edits, and the ledger; the critics
-only critique.
+**Prefer cross-vendor critics, not four copies of yourself.** Each wave dispatches its
+`SWARM_SIZE` angle-critiques across four DIFFERENT model families — `opus`, `composer`,
+`grok`, `terra` — using whichever provider CLIs are actually on this machine. Seat→angle
+pairing is a **random, evenly-distributed permutation each wave** (exactly one seat per
+angle when all four families are present). Cross-vendor disagreement is the point: a plan
+that survives four different intelligences is converged for real, not just converged from
+one model's point of view. Missing families are filled with local Claude agents so the
+wave still has four critics. YOU (the session model) remain the orchestrator — you own
+the reduce, the integration edits, and the ledger; the critics only critique.
 
 The whole point: **spend cheap planning tokens now to save expensive implementation
 tokens later.** A converged plan should survive a re-run almost untouched.
@@ -52,29 +51,28 @@ If no path is given:
   than a single-critic loop on purpose: each cycle now spends ~5× the passes
   (`SWARM_SIZE` map critics + 1 reduce), so it converges in far fewer cycles.
 - `SWARM_SIZE = 4` — fresh critics dispatched CONCURRENTLY each cycle, one per angle.
-  Equals the seat count, so each bridge wave uses every seat exactly once (even
-  distribution).
-- `SEATS` — the four cross-vendor bridge seats the swarm dispatches to when the
-  bridge is up. Pass `cli_type` + `model` verbatim (do NOT rely on a `codex` /
-  `gpt-5.5` alias — we want `gpt-5.6-terra`):
+  Equals the seat-family count, so a full roster uses every family exactly once.
+- `FAMILIES` — four cross-vendor families. Discovery (Phase R) picks the **latest
+  available model in each family** from the live catalog; the preferred IDs below are
+  the current target, not a frozen pin. Never ship a stale ID when the catalog has a
+  newer one in the same family.
 
-  | seat | `cli_type` | `model` |
-  |---|---|---|
-  | `opus` | `claude_code` | `claude-opus-4-8` |
-  | `composer` | `cursor` | `composer-2.5` |
-  | `grok` | `grok` | `grok-4.5` |
-  | `terra` | `openai_codex` | `gpt-5.6-terra` |
+  | seat | family | preferred model | detect |
+  |---|---|---|---|
+  | `opus` | Claude Opus | `claude-opus-5` (Claude Code alias: `opus`) | `claude` or this harness's Agent tool |
+  | `composer` | Cursor Composer | `composer-2.5` | `cursor-agent` |
+  | `grok` | Grok 4.x | `grok-4.6` | `grok` |
+  | `terra` | GPT-5.6 Terra | `gpt-5.6-terra` | `codex` |
 
-- `TRANSPORT` — if `~/.claude/skills/leverage/scripts/bridge-ask.sh` exists, dispatch
-  via that script (absolute path) and poll via `~/.claude/skills/leverage/scripts/api.sh`.
-  Session key scheme `refine:<ts>:<cycle>:<seat>` — unique per critic per cycle, so
-  every critic is a fresh, independent voice (no cross-turn anchoring). Bridge seats
-  are **text-only with zero repo access** — they see only what the plan text contains.
-  If those scripts are absent, skip the health check and go straight to the local
-  Claude fallback.
-- `BRIDGE_CALL_TIMEOUT = 360s (6 min)` — hard per-invocation cap. A seat still
-  `running` at 6 min is abandoned and its angle is **deferred to the next cycle**
-  (see Step 1).
+  Stay in these families. Do not substitute Fable, Sonnet, Sol, Luna, or a `-fast`
+  variant just because it appeared in a list — pick the latest **non-fast** model
+  that matches the family. Fast is a last resort if it is the only listing.
+
+- `CACHE_PATH` — day-long roster cache on this machine:
+  `${XDG_CACHE_HOME:-$HOME/.cache}/refine_plan/roster.json`
+  (create the directory if needed). Valid for 24 hours from `cached_at`.
+- `CRITIC_TIMEOUT = 360s (6 min)` — hard per-invocation cap. A critic still running
+  at 6 min is abandoned and its angle is **deferred to the next cycle** (see Step 1).
 - `CONVERGENCE_STREAK = 2` — consecutive zero-yield cycles that force a stop.
 - Materiality tiers (each proposed change gets exactly one):
   - `transformative` — changes architecture, scope, sequencing, or core approach
@@ -89,48 +87,109 @@ If no path is given:
   Used to prioritize integration and to flag lone-wolf claims (corroboration 1) for a
   skeptic verify before they earn a spot in the plan.
 
-## Transport
+## Phase R — Roster discovery (before cycle 0)
 
-This skill has two transports. The loop is identical; only who the four critics are
-changes.
+Once per run, resolve which providers and models this machine can actually call.
+Do not hardcode today's IDs as if they will still be right next month.
 
-### Bridge preflight (before cycle 0)
+1. **Cache hit.** If `CACHE_PATH` exists and `cached_at` is < 24h old, load it and
+   skip to step 5. If it is stale or missing, continue.
+2. **Detect providers.** For each family, the provider is available if its binary
+   exists on `PATH` (or, for `opus`, if this harness can spawn an Agent with an
+   `opus` / `claude-opus-*` model):
 
-If the leverage scripts exist, health-check first:
+   ```bash
+   command -v claude
+   command -v cursor-agent
+   command -v grok
+   command -v codex
+   ```
+
+   A missing binary is not an error — that family will be local-fallback.
+3. **Enumerate models** with a **5s cap** per list command so a hung catalog cannot
+   stall the run. If the list command times out or fails, treat the provider as
+   present and use the family's preferred model.
+
+   ```bash
+   timeout 5 grok models
+   timeout 5 cursor-agent --list-models
+   # claude: aliases are `opus` / `sonnet` / `fable` / full ids like `claude-opus-5`.
+   # Do NOT run `claude models` — it can hang. Prefer the Agent tool or `claude -p --model opus`.
+   # codex: no cheap catalog; probe `codex exec --help` and use `gpt-5.6-terra` if -m is accepted.
+   ```
+
+4. **Pick per family.** From that family's enumerated names:
+   - Prefer the **preferred model** in the table if it is present (or an obvious
+     alias — `opus` for `claude-opus-5`).
+   - Else pick the highest version in-family (`claude-opus-5` beats `claude-opus-4-8`;
+     `grok-4.6` beats `grok-4.5`).
+   - Skip `-fast` / `fast` variants unless that is the only listing.
+   - Composer stays on Composer (`composer-2.5`), not a Cursor-hosted Grok/Opus.
+   - Terra stays on Terra (`gpt-5.6-terra`), not Sol or Luna.
+5. **Write the cache** (even on a hit you already loaded — no need to rewrite). Shape:
+
+   ```json
+   {
+     "cached_at": "2026-08-31T12:00:00Z",
+     "ttl_hours": 24,
+     "seats": {
+       "opus":     { "available": true,  "bin": "claude",        "model": "claude-opus-5" },
+       "composer": { "available": true,  "bin": "cursor-agent",  "model": "composer-2.5" },
+       "grok":     { "available": true,  "bin": "grok",          "model": "grok-4.6" },
+       "terra":    { "available": false, "bin": null,            "model": null, "reason": "codex not on PATH" }
+     }
+   }
+   ```
+
+   This file is a local cache. Do not commit it. Print one line:
+   `roster: opus=claude-opus-5 composer=composer-2.5 grok=grok-4.6 terra=local-fallback`.
+
+Available families dispatch via their host CLI (or Agent tool). Unavailable families
+are **local-fallback**: a fresh Claude `Plan` / `general-purpose` agent covering that
+angle. The loop is identical either way.
+
+## Dispatch
+
+Critics return text. They must not edit the plan or the repo — you integrate.
+
+Per-family invocation (substitute the **picked** model from the cache). Fire all
+four, THEN collect. Wrap each with `timeout 360`.
 
 ```bash
-~/.claude/skills/leverage/scripts/api.sh GET /bridge/api/v1/health 2>/dev/null || echo BRIDGE_DOWN
+# opus — Agent tool in this harness (model: opus / claude-opus-5), or:
+timeout 360 claude -p --model claude-opus-5 "$(cat /tmp/refine_${CYCLE}_opus.txt)"
+
+# composer — ask/plan mode so it cannot write the tree:
+timeout 360 cursor-agent --print --output-format text --mode ask --model composer-2.5 "$(cat /tmp/refine_${CYCLE}_composer.txt)"
+
+# grok — single-turn headless:
+timeout 360 grok -p --model grok-4.6 "$(cat /tmp/refine_${CYCLE}_grok.txt)"
+
+# terra — read-only sandbox:
+timeout 360 codex exec -m gpt-5.6-terra -s read-only --skip-git-repo-check "$(cat /tmp/refine_${CYCLE}_terra.txt)"
 ```
 
-- **Bridge up** → proceed with the cross-vendor swarm below.
-- **503 / connection refused / `BRIDGE_DOWN`** (supervisor down or `BRIDGE_API_TOKEN`
-  missing) → **degrade gracefully**: run the local Claude fallback. Print one line:
-  `⚠ bridge down — running local Claude fallback swarm`.
-- **Scripts absent** (this skill was stolen without the leverage stack) → skip the
-  health check, run the local fallback, no warning. That is the default without
-  those scripts, not an error.
+Flag names drift; if a CLI rejects a flag, use that CLI's current non-interactive
+equivalent. Do not invent a different model family to make a flag work.
 
-### Local Claude fallback
-
-Dispatch `SWARM_SIZE` fresh `Plan` / `general-purpose` Agent subagents in **one
-message** per cycle, skipping seat-assignment / dispatch-poll / timeout machinery.
-Each agent gets the same prompt file contents the matching bridge seat would have
-gotten. Everything else (angles, reduce, ledger, scoring, stop conditions) is
-identical. This is how the skill actually runs when the bridge is down, and how it
-runs for anyone who copied the folder without the leverage stack.
-
-The rest of this document describes the bridge path. On the local path, treat
-"seat" as a label for the agent covering that angle.
+**Collect:**
+- **done** → stdout / agent report = that angle's critique.
+- **dispatch failure** (binary missing, auth error, 429) → substitute a local Claude
+  `Plan` agent for that angle THIS wave. Mark `local-fallback` in the report.
+- **still running at 6 min** → abandon it, append its angle to the ledger's
+  `deferred` (reason `timeout`) so the NEXT cycle re-runs it first; it contributes
+  no critique this wave.
+- If **fewer than 2 critics survive** a wave → fill the remaining angles via local
+  Claude `Plan` agents so the reduce has a real swarm to work with.
 
 ## Before the loop (cycle 0)
 
 1. Read the full plan file.
-2. **Self-containment pass** (once — CRITICAL on the bridge path, still worth doing
-   on the local path): the critics may have ZERO repo access and see only the plan's
-   own text. Would a model with no access to this repo understand the plan? List
-   missing context, undefined terms, unstated assumptions, absent background — and
-   any file/symbol/schema the critique will need to reason about. Fold that
-   background (including the relevant code excerpts) INTO the plan before
+2. **Self-containment pass** (once): some critics have weak or no repo access and
+   see only the plan's own text. Would a model with no access to this repo understand
+   the plan? List missing context, undefined terms, unstated assumptions, absent
+   background — and any file/symbol/schema the critique will need to reason about.
+   Fold that background (including the relevant code excerpts) INTO the plan before
    dispatching. A thin plan yields thin, generic critiques and never truly converges.
 3. **Initialize the carry-forward ledger** (in-memory working state, NOT written to
    disk): `rejected` (proposals the reduce step declined — never re-litigate these),
@@ -158,57 +217,28 @@ each cycle's angles differ from prior cycles where possible — this broadens co
 over the run instead of re-grinding the same 4. Append the chosen lenses to
 `angles_covered`; clear the `deferred` entries you just pulled in.
 
-**1b. Randomly assign seats to angles — evenly.** On the bridge path, produce a
-fresh random permutation of the four seats and zip them 1:1 onto the four angles, so
-each wave uses every seat exactly once but a different seat covers each angle:
+**1b. Randomly assign seats to angles — evenly.** Produce a fresh random permutation
+of the four seats and zip them 1:1 onto the four angles:
 
 ```bash
 shuf -e opus composer grok terra   # → e.g. "grok\nopus\nterra\ncomposer"
 ```
 
 Zip that order onto the ordered angle list (angle 1 ← first seat, …). **Record the
-wave's seat→angle map** — it goes in the final report and shows the rotation. Do not
-hand-pick; the randomness is what spreads each vendor's blind spots across different
-lenses over the run. On the local path, skip `shuf` and label the four agents by
-angle.
+wave's seat→angle map** (including which seats were `local-fallback`) — it goes in
+the final report. Do not hand-pick; the randomness is what spreads each vendor's
+blind spots across different lenses over the run.
 
 **1c. Build one prompt file per angle** at `/tmp/refine_<cycle>_<seat>.txt`, each
 containing: the CURRENT full plan text, the carry-forward ledger (`rejected` +
 `open_questions`), the ONE angle assigned to that seat, and the critic instructions
 block below.
 
-**1d. Dispatch all 4 in parallel** (fire every POST, THEN poll — concurrency now
-means concurrent invocations, not one message). Bridge path:
+**1d. Dispatch all 4 in parallel** using Phase R's picked bin+model for each seat
+(or a local Claude agent if that seat is unavailable). Fire every invocation, THEN
+collect — never dispatch-and-wait one seat at a time.
 
-```bash
-API=~/.claude/skills/leverage/scripts/api.sh
-ASK=~/.claude/skills/leverage/scripts/bridge-ask.sh
-TS=$(date +%s)
-# per seat, using its (cli_type, model) from SEATS and its assigned angle's prompt file:
-$ASK "refine:$TS:$CYCLE:$SEAT" refine_plan "$CLI_TYPE" "$MODEL" "/tmp/refine_${CYCLE}_${SEAT}.txt"
-#   → prints "bridge #<id> <model> -> <status>"; collect each <id> with its seat+angle
-```
-
-Local path: spawn all `SWARM_SIZE` Agent subagents in a single message (`Plan`,
-fallback `general-purpose`), each with its prompt-file contents. Do not wait for
-one before launching the next.
-
-**1e. Collect with a per-call 6-min cap** (bridge path). Poll the id set every ~5s
-up to `BRIDGE_CALL_TIMEOUT` (360s); for each id `$API GET /bridge/api/v1/invocations/<id>`
-and read `.status` / `.response`:
-- **terminal** (done) → fetch `.response` = that angle's critique.
-- **dispatch failure** — no id / 503 / `429` (vendor cap) → **substitute a local
-  Claude `Plan` agent** for that angle THIS wave (spawn it with the same prompt file
-  contents). All 4 angles still get covered now; mark the angle `local-fallback` for
-  the report.
-- **still `running` at 6 min** → abandon it, append its angle to the ledger's
-  `deferred` (with reason `timeout`) so the NEXT cycle re-runs it first; it
-  contributes no critique this wave.
-- If **fewer than 2 critics survive** a wave (mass bridge failure mid-run) → treat
-  the wave as bridge-degraded and run its remaining angles via local Claude `Plan`
-  agents so the reduce has a real swarm to work with.
-
-Each critic (bridge seat or local-fallback agent) gets these instructions:
+Each critic (host CLI or local-fallback agent) gets these instructions:
 
 > You are one critic in a swarm. Your assigned angle is **{ANGLE}** — drive your
 > critique primarily through that lens (other critics cover the other angles).
@@ -302,7 +332,8 @@ behavior, not failure.
 
 Print:
 - plan file path
-- whether the run used the **bridge swarm** or the **local-Claude** fallback
+- the **roster** actually used (picked model per family, and which seats were
+  `local-fallback`)
 - cycles run and why it stopped (converged / streak / cap)
 - per-cycle yields, e.g. `4, 2, 1, 0`
 - the **seat→angle assignment per cycle** (showing the random even rotation — which
@@ -326,12 +357,12 @@ Then, if the file is in a git repo, suggest the user `git diff -- <plan>` to rev
 - Keep cycling autonomously to a stop condition — do not pause for confirmation
   between cycles unless a change would be destructive or reverses a stated user
   decision.
-- **Dispatch the whole wave concurrently** — fire all `SWARM_SIZE` bridge POSTs (or
-  local Agent spawns), THEN collect. Never dispatch-and-wait one critic at a time;
-  sequential calls waste the whole point of the map step.
-- The bridge path **couples this skill to the leverage stack** — `BRIDGE_API_TOKEN`
-  plus a running `bin/bridge-supervisor`. The preflight health check + local-Claude
-  fallback is what keeps the skill working when the stack is absent; don't remove it.
+- **Dispatch the whole wave concurrently** — fire all `SWARM_SIZE` invocations, THEN
+  collect. Never dispatch-and-wait one critic at a time; sequential calls waste the
+  whole point of the map step.
+- Do not couple this skill to any one app, daemon, or env token. Host CLIs + the
+  Agent tool + local-fallback are the whole transport. Missing providers degrade;
+  they do not abort the run.
 - The carry-forward ledger (including `deferred`) is in-memory working state only. The
   plan file stays the single persisted artifact, so a re-run of an already-refined
   plan still converges to yield 0 on cycle 1 — seat randomness must NEVER manufacture
