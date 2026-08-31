@@ -2,7 +2,7 @@
 
 ## Overview
 
-A first-draft plan is cheap. Building the wrong one is not. `/refine_plan` runs a four-critic map-reduce over a markdown implementation plan and edits the file until another round would not change anything that matters.
+A first-draft plan is cheap. Building the wrong one is not. `/refine_plan` runs a four-critic map-reduce over a markdown implementation plan and edits the file until the plan settles into place.
 
 Each cycle maps four critics (different model families, different lenses) onto the current file, reduces their findings, and scores yield: how many `transformative` or `material` changes actually landed. Wording nits don't count. It stops when yield is zero, when a majority of critics say `CONVERGED` two cycles in a row, or at the cap (default 6).
 
