@@ -2,11 +2,11 @@
 
 ## Overview
 
-Agents are cheap at emitting a plan and expensive at implementing the wrong one. `/refine_plan` is the gate between those two: a concurrent four-critic **map-reduce** that edits a markdown implementation plan **in place** until another round would not change anything that matters.
+A first-draft plan is cheap. Building the wrong one is not. `/refine_plan` runs a four-critic map-reduce over a markdown implementation plan and edits the file until another round would not change anything that matters.
 
-Each cycle **maps** four independent critics — different model families, different lenses — onto the current file, **reduces** their findings (cluster, corroborate, skeptic-check lone wolves, integrate), and scores **yield**: how many `transformative` or `material` changes actually landed. Incremental and cosmetic noise does not count. The loop stops when yield hits zero, a majority of critics return `CONVERGED` twice, or the cycle cap (default 6).
+Each cycle maps four critics (different model families, different lenses) onto the current file, reduces their findings, and scores yield: how many `transformative` or `material` changes actually landed. Wording nits don't count. It stops when yield is zero, when a majority of critics say `CONVERGED` two cycles in a row, or at the cap (default 6).
 
-This is an expansion of [Jeffrey Emanuel](https://x.com/doodlestein)'s Agent Flywheel **Phase 2** — iterate the plan to steady state before anyone writes code — run as a swarm instead of a single sequential review. One model blessing its own draft is not convergence. Four families that cannot see each other's work, then a reduce the session model owns, is. A plan that is actually done survives a re-run with yield 0 on cycle 1. That is the test, not a failure.
+This expands [Jeffrey Emanuel](https://x.com/doodlestein)'s Agent Flywheel Phase 2 (get the plan to steady state before anyone writes code) into a swarm instead of one sequential review. A single model signing off on its own draft is not the same as four families that can't see each other's work, then a reduce the session model owns. If the plan is actually done, a re-run reports yield 0 on cycle 1.
 
 | One more pass from the same model | `/refine_plan` |
 | --- | --- |
@@ -27,7 +27,7 @@ flowchart TD
   score -->|yield 0, streak, majority CONVERGED, or cap| stop["Stop and report"]
 ```
 
-Roster: `opus` (Claude Opus 5), `composer` (Composer 2.5), `grok` (Grok 4.6), `terra` (GPT-5.6 Terra). Discovery enumerates whatever is on `PATH` and caches the roster for a day. Missing families become local Claude agents; the run does not abort. Seat→angle pairing is a fresh even permutation each wave. The session model owns the reduce and the carry-forward ledger (rejected proposals are not relitigated; timed-out angles are owed first next cycle). Critics only critique.
+Roster: `opus` (Claude Opus 5), `composer` (Composer 2.5), `grok` (Grok 4.6), `terra` (GPT-5.6 Terra). Discovery checks `PATH` and caches the roster for a day. If a family is missing, that seat falls back to a local Claude agent and the run continues. Seats are shuffled onto angles each wave. The session model does the reduce and keeps a ledger so rejected ideas don't come back next cycle, and so a timed-out angle goes first in the next one. Critics only critique.
 
 ## Prerequisites
 
@@ -39,7 +39,7 @@ Roster: `opus` (Claude Opus 5), `composer` (Composer 2.5), `grok` (Grok 4.6), `t
 | Optional | `grok` | `grok` |
 | Optional | `codex` | `terra` |
 
-Optional binaries must be on `PATH` and logged in. Discovery picks them up automatically. A missing family does not abort the run — that seat becomes a local Claude agent. Cross-vendor convergence needs the optionals.
+Optional binaries must be on `PATH` and logged in. Discovery picks them up automatically. If a family is missing, that seat becomes a local Claude agent. You need the optionals for a real cross-vendor pass.
 
 ## Install
 
@@ -48,7 +48,6 @@ gh repo clone rickgorman/agent-files
 cp -R agent-files/skills/refine_plan ~/.claude/skills/refine_plan
 # or into a project:  cp -R agent-files/skills/refine_plan .claude/skills/refine_plan
 ```
-
 
 ```
 /refine_plan path/to/plan.md              # edit in place until it converges
@@ -60,11 +59,11 @@ No path? It looks for `PLAN.md`, `docs/plans/*.md`, or a recently edited `*plan*
 
 ## When to use
 
-After a first draft or a planning-team merge. Before beads, a swarm, or anyone writing code. Bring a plan. This does not invent one, does not touch source, and does not open a PR.
+After a first draft or a planning-team merge. Before beads, a swarm, or anyone writing code. You need a plan already. It won't invent one, and it won't touch code or open a PR.
 
 ## Output
 
-- The plan, hardened — architecture, sequencing, failure modes, scope, the holes one seat does not see
+- The plan, hardened: architecture, sequencing, failure modes, scope, the holes one seat does not see
 - A changelog per cycle: wholeheartedly agree / somewhat agree / disagree
 - A report: cycles, yields (`4, 2, 1, 0`), who covered which lens, why it stopped
 
