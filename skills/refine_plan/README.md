@@ -6,7 +6,7 @@ Agents are cheap at emitting a plan and expensive at implementing the wrong one.
 
 Each cycle **maps** four independent critics — different model families, different lenses — onto the current file, **reduces** their findings (cluster, corroborate, skeptic-check lone wolves, integrate), and scores **yield**: how many `transformative` or `material` changes actually landed. Incremental and cosmetic noise does not count. The loop stops when yield hits zero, a majority of critics return `CONVERGED` twice, or the cycle cap (default 6).
 
-This is [Jeffrey Emanuel](https://x.com/doodlestein)'s Agent Flywheel **Phase 2** — iterate the plan to steady state before anyone writes code — run as a swarm instead of a single sequential review. One model blessing its own draft is not convergence. Four families that cannot see each other's work, then a reduce the session model owns, is. A plan that is actually done survives a re-run with yield 0 on cycle 1. That is the test, not a failure.
+This is an expansion of [Jeffrey Emanuel](https://x.com/doodlestein)'s Agent Flywheel **Phase 2** — iterate the plan to steady state before anyone writes code — run as a swarm instead of a single sequential review. One model blessing its own draft is not convergence. Four families that cannot see each other's work, then a reduce the session model owns, is. A plan that is actually done survives a re-run with yield 0 on cycle 1. That is the test, not a failure.
 
 | One more pass from the same model | `/refine_plan` |
 | --- | --- |
