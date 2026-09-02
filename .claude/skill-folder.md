@@ -116,6 +116,7 @@ Do not add: a second README, a changelog, an `assets/` folder for the hero, a co
 | Runnable helper | `scripts/` |
 | How a skill folder in *this* repo is shaped | this file |
 | Copy-ready skeleton | `.claude/data/skill-template/` |
+| Repo index (one bullet per skill) | root `README.md` `## Skills` |
 | How to generate the hero | `.claude/data/generate-hero.md` (session only — never the PR) |
 | How to port a skill into `skills/` and open a PR | `.claude/skills/add-new-skill/` |
 
@@ -129,6 +130,6 @@ One home per fact. If a constant lives in SKILL.md, the README may mention it in
 - [ ] `SKILL.md` has `name` + trigger-rich `description`, then Input → procedure → Output → Guardrails
 - [ ] `README.md` starts with the hero, has no H1, and has Overview / Prerequisites / Install / When to use / Output
 - [ ] Hero PNG at 2172×724, kebab-named, skill's real terms on the signs (prompt stayed off git and off the PR)
-
 - [ ] `cp -R skills/<name> ~/.claude/skills/<name>` is the documented install
+- [ ] Root `README.md` `## Skills` has one bullet: `- [<name>](skills/<name>/) <one sentence>`
 - [ ] Nothing in the folder exists only to look complete
