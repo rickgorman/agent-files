@@ -2,11 +2,12 @@
 
 What a published skill in this repo is. Follow this when adding or editing anything under `skills/`. Exemplars: `skills/dag-reader/`, `skills/refine_plan/`.
 
-Skills live in `skills/<name>/`. That folder is what people copy. Do not also park a published skill in `.claude/skills/` — `.claude/` here is authoring convention, not the steal path.
+Skills live in `skills/<name>/`. That folder is what people copy. Do not also park a published skill in `.claude/skills/` — `.claude/` here is authoring convention, not the steal path. To port an existing skill into `skills/` and open a PR, run `/add-new-skill` ([.claude/skills/add-new-skill/SKILL.md](skills/add-new-skill/SKILL.md)).
 
 ## Start here
 
 ```bash
+# or: /add-new-skill path/to/existing-skill
 cp -R .claude/data/skill-template skills/<name>
 ```
 
@@ -116,6 +117,7 @@ Do not add: a second README, a changelog, an `assets/` folder for the hero, a co
 | How a skill folder in *this* repo is shaped | this file |
 | Copy-ready skeleton | `.claude/data/skill-template/` |
 | How to generate the hero | `.claude/data/generate-hero.md` (session only — never the PR) |
+| How to port a skill into `skills/` and open a PR | `.claude/skills/add-new-skill/` |
 
 One home per fact. If a constant lives in SKILL.md, the README may mention it in passing (cull caps, cycle cap) but does not become a second procedure.
 
