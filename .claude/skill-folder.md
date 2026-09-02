@@ -1,6 +1,6 @@
 # Skill folder
 
-What a published skill in this repo is. Follow this when adding or editing anything under `skills/`. Exemplars: `skills/dag-reader/`, `skills/refine_plan/`.
+What a published skill in this repo is. Follow this when adding or editing anything under `skills/`. Exemplars: `skills/dag-reader/`, `skills/refine_plan/`, `skills/self-review/`.
 
 Skills live in `skills/<name>/`. That folder is what people copy. Do not also park a published skill in `.claude/skills/` — `.claude/` here is authoring convention, not the steal path. To port an existing skill into `skills/` and open a PR, run `/add-new-skill` ([.claude/skills/add-new-skill/SKILL.md](skills/add-new-skill/SKILL.md)).
 
