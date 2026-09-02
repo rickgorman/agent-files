@@ -8,6 +8,8 @@ Stealable Claude Code skills. Not a course. Not a prompt dump.
 
 [refine_plan](skills/refine_plan/). four-critic map-reduce on a markdown plan, until yield is zero.
 
+[self-review](skills/self-review/). three-reviewer map-reduce on a frozen diff, until the suggestion list stops growing.
+
 [dag-reader](skills/dag-reader/). thesis-claim-fact DAG, pruned to one crux paragraph.
 
 ## Map
@@ -15,6 +17,7 @@ Stealable Claude Code skills. Not a course. Not a prompt dump.
 | Skill | When | Install |
 | --- | --- | --- |
 | [refine_plan](skills/refine_plan/) | After a draft, before beads or code — converge the plan | Copy `skills/refine_plan/` into `.claude/skills/` |
+| [self-review](skills/self-review/) | After you think the change is done, before a human reviewer | Copy `skills/self-review/` into `.claude/skills/` |
 | [dag-reader](skills/dag-reader/) | After a source, before you act on it or argue with it | Copy `skills/dag-reader/` into `.claude/skills/` |
 
 ## Install
@@ -23,10 +26,11 @@ Copy a skill folder into Claude Code:
 
 ```bash
 cp -R skills/refine_plan .claude/skills/refine_plan
+cp -R skills/self-review .claude/skills/self-review
 cp -R skills/dag-reader .claude/skills/dag-reader
 ```
 
-Then invoke `/refine_plan path/to/plan.md` or `/dag-reader path/to/article.md`.
+Then invoke `/refine_plan path/to/plan.md`, `/self-review`, or `/dag-reader path/to/article.md`.
 
 ## License
 
