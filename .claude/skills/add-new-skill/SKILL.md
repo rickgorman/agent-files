@@ -84,7 +84,16 @@ person.
 Rare-path material goes in `references/`. A real helper goes in `scripts/`.
 Do not add a second README, a changelog, or a hero `assets/` folder.
 
-Update the root `README.md` map the same way existing skills are listed.
+Append one bullet to the root `README.md` `## Skills` list, same shape as
+the lines already there:
+
+```markdown
+- [<name>](skills/<name>/) <one sentence: the mechanism, not a slogan>
+```
+
+Do not add a second table, a "When" column, or a per-skill install stanza.
+The generic `## Install` block already covers `cp -R skills/<name>`.
+
 Add `skills/<name>/` to the exemplar list in `.claude/skill-folder.md` only
 when this skill is itself a published exemplar worth naming — default: skip;
 the first two published skills already sit there.
