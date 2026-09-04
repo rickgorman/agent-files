@@ -1,9 +1,9 @@
 ---
-name: refine_plan
-description: Iteratively refine a markdown implementation plan in place via a concurrent 4-critic map-reduce swarm (cross-vendor host CLIs when present; local Claude agents otherwise) until diminishing returns or 6 cycles. Use when a plan is about to become beads or code, after a first draft or /plan-team, before implementation. Invoke as /refine_plan <path-to-plan.md> [--max N] [--dry-run].
+name: refine-plan
+description: Iteratively refine a markdown implementation plan in place via a concurrent 4-critic map-reduce swarm (cross-vendor host CLIs when present; local Claude agents otherwise) until diminishing returns or 6 cycles. Use when a plan is about to become beads or code, after a first draft or /plan-team, before implementation. Invoke as /refine-plan <path-to-plan.md> [--max N] [--dry-run].
 ---
 
-# /refine_plan
+# /refine-plan
 
 Iteratively refine a markdown implementation plan in the style of Jeffrey Emanuel's
 (@doodlestein) Agent Flywheel "Phase 2: Refine the Plan" loop. Each cycle runs an
@@ -69,7 +69,7 @@ If no path is given:
   that matches the family. Fast is a last resort if it is the only listing.
 
 - `CACHE_PATH` — day-long roster cache on this machine:
-  `${XDG_CACHE_HOME:-$HOME/.cache}/refine_plan/roster.json`
+  `${XDG_CACHE_HOME:-$HOME/.cache}/refine-plan/roster.json`
   (create the directory if needed). Valid for 24 hours from `cached_at`.
 - `CRITIC_TIMEOUT = 360s (6 min)` — hard per-invocation cap. A critic still running
   at 6 min is abandoned and its angle is **deferred to the next cycle** (see Step 1).

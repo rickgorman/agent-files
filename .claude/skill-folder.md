@@ -1,6 +1,6 @@
 # Skill folder
 
-What a published skill in this repo is. Follow this when adding or editing anything under `skills/`. Exemplars: `skills/dag-reader/`, `skills/refine_plan/`.
+What a published skill in this repo is. Follow this when adding or editing anything under `skills/`. Exemplars: `skills/dag-reader/`, `skills/refine-plan/`.
 
 Skills live in `skills/<name>/`. That folder is what people copy. Do not also park a published skill in `.claude/skills/` — `.claude/` here is authoring convention, not the steal path. To port an existing skill into `skills/` and open a PR, run `/add-new-skill` ([.claude/skills/add-new-skill/SKILL.md](skills/add-new-skill/SKILL.md)).
 
@@ -15,8 +15,8 @@ Then fill it in. Two replace tokens:
 
 | Token | Becomes | Example |
 | --- | --- | --- |
-| `SKILL_NAME` | slash command and folder name | `dag-reader`, `refine_plan` |
-| `skill-name` | kebab-case hero basename | `dag-reader`, `refine-plan` |
+| `SKILL_NAME` | slash command and folder name, kebab-case | `dag-reader`, `refine-plan` |
+| `skill-name` | hero basename — same string | `dag-reader`, `refine-plan` |
 
 The template has `SKILL.md` and `README.md` only. After the skill text exists, follow [.claude/data/generate-hero.md](data/generate-hero.md) for the banner. Do not invent a placeholder PNG. A skill still containing `SKILL_NAME` is not done.
 
@@ -29,9 +29,9 @@ skills/<name>/
   <kebab-name>-hero.png    # Frontier Systems Cartography banner
 ```
 
-`<name>` is the slash command, including its punctuation (`dag-reader`, `refine_plan`). Keep the folder name identical to the command so `cp -R skills/<name> ~/.claude/skills/<name>` just works.
+`<name>` is the slash command, including its punctuation (`dag-reader`, `refine-plan`). Keep the folder name identical to the command so `cp -R skills/<name> ~/.claude/skills/<name>` just works.
 
-Hero filename is always kebab-case + `-hero.png`, even when the folder uses an underscore: `refine_plan` → `refine-plan-hero.png`.
+Names are **kebab-case** — lowercase, hyphens, no underscores, no spaces. `dag-reader`, `refine-plan`, `self-review`. The hero is the folder name + `-hero.png`.
 
 ## SKILL.md — for the agent
 
@@ -93,7 +93,21 @@ Last paragraph points at `SKILL.md` for the procedure. Do not paste the procedur
 
 File: `<kebab-name>-hero.png` next to the README (not in `assets/`). How to make it is [.claude/data/generate-hero.md](data/generate-hero.md). The prompt never goes on a PR or into git.
 
-README line 1 is the only embed. Do not also put the hero on the repo root README unless every published skill is getting the same treatment.
+README line 1 is the only embed. The repo root README's picture is the world map, not a hero — do not stack a hero there.
+
+## World map entry
+
+The root README opens with `world-map.png`: every published skill as one place
+on one frontier. It is generated from `.claude/data/skill-map.yaml`, so a new
+skill needs an entry there — `plaque`, `region`, `structure`, `transform`, and
+any `edges` to other skills — in the skill's own vocabulary. No entry means the
+skill disappears the next time the map is repainted.
+
+Adding the entry is part of adding the skill. Repainting is not: the map costs a
+human round-trip through ChatGPT, so batch it. How is
+`/generate-world-map`
+([.claude/skills/generate-world-map/SKILL.md](skills/generate-world-map/SKILL.md));
+like the hero prompt, it stays in the session and never reaches a PR.
 
 ## Optional — only when the skill needs them
 
@@ -117,7 +131,9 @@ Do not add: a second README, a changelog, an `assets/` folder for the hero, a co
 | How a skill folder in *this* repo is shaped | this file |
 | Copy-ready skeleton | `.claude/data/skill-template/` |
 | Repo index (one bullet per skill) | root `README.md` `## Skills` |
+| Where a skill sits on the root world map | `.claude/data/skill-map.yaml` |
 | How to generate the hero | `.claude/data/generate-hero.md` (session only — never the PR) |
+| How to repaint the root world map | `/generate-world-map` (session only — never the PR) |
 | How to port a skill into `skills/` and open a PR | `.claude/skills/add-new-skill/` |
 
 One home per fact. If a constant lives in SKILL.md, the README may mention it in passing (cull caps, cycle cap) but does not become a second procedure.
@@ -132,4 +148,5 @@ One home per fact. If a constant lives in SKILL.md, the README may mention it in
 - [ ] Hero PNG at 2172×724, kebab-named, skill's real terms on the signs (prompt stayed off git and off the PR)
 - [ ] `cp -R skills/<name> ~/.claude/skills/<name>` is the documented install
 - [ ] Root `README.md` `## Skills` has one bullet: `- [<name>](skills/<name>/) <one sentence>`
+- [ ] `.claude/data/skill-map.yaml` has an entry for the skill
 - [ ] Nothing in the folder exists only to look complete

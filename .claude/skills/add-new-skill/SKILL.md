@@ -43,10 +43,13 @@ editing. Those files are the shape. This skill does not restate them.
 
 ### 1. Name it
 
-`<name>` is the slash command, punctuation included (`dag-reader`,
-`refine_plan`, `self-review`). Folder = command so
-`cp -R skills/<name> ~/.claude/skills/<name>` just works. Hero file is
-kebab-case: `refine_plan` → `refine-plan-hero.png`.
+`<name>` is the slash command in **kebab-case** — lowercase, hyphens, no
+underscores (`dag-reader`, `refine-plan`, `self-review`). Folder = command so
+`cp -R skills/<name> ~/.claude/skills/<name>` just works. Hero file is the
+folder name + `-hero.png`.
+
+If the source skill's name has underscores, rename it on the way in and fix the
+references inside it — the published roster is kebab-case throughout.
 
 If `skills/<name>/` already exists, stop and say so.
 
@@ -94,6 +97,21 @@ the lines already there:
 Do not add a second table, a "When" column, or a per-skill install stanza.
 The generic `## Install` block already covers `cp -R skills/<name>`.
 
+Add one entry to `.claude/data/skill-map.yaml` too — the root world map is
+generated from that file, and a skill with no entry vanishes the next time the
+map is repainted. Follow the entries already there: `plaque` (the sign bolted
+to the worksite — `/<name>`, lowercase, slash included), `region` (one of the
+regions declared at the top of the file — add a region only if none fits),
+`structure` (what stands at that site), `transform` (what the blue work does
+passing through, told through the building's shape rather than through words),
+and any `edges` to other skills. Add `terminates` only when the skill actually
+has a stopping rule.
+
+Do not repaint the map in this run. It costs a human round-trip through
+ChatGPT; `/generate-world-map`
+([.claude/skills/generate-world-map/SKILL.md](../generate-world-map/SKILL.md))
+covers it when the roster is worth a repaint.
+
 Add `skills/<name>/` to the exemplar list in `.claude/skill-folder.md` only
 when this skill is itself a published exemplar worth naming — default: skip;
 the first two published skills already sit there.
@@ -135,6 +153,7 @@ was generated. Do not paste a prompt.
 ## Output
 
 - `skills/<name>/` conforming to the rubric
+- one new entry in `.claude/data/skill-map.yaml`
 - a PR URL
 - the hero prompt in this session if the PNG was not already on disk
 - if the PNG was missing: a one-line note that the banner still needs a drop
@@ -143,7 +162,8 @@ was generated. Do not paste a prompt.
 
 - Publish into `skills/<name>/` only. Do not copy the result into
   `.claude/skills/` — that directory is authoring skills for this repo.
-- Do not commit the hero prompt, a `prompt.txt`, or a ChatGPT dump.
+- Do not commit the hero prompt, the world-map prompt, a `prompt.txt`, or a
+  ChatGPT dump.
 - Do not expand the PR into unrelated skills or rubric refactors.
 - One published skill per run.
 - Edit nothing in the source skill's original location unless the user asked.
