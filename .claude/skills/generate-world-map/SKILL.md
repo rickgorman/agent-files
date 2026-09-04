@@ -1,8 +1,18 @@
-# Generate the root world map
+---
+name: generate-world-map
+description: >-
+  Repaint the root README's world map from the skill registry: read
+  .claude/data/skill-map.yaml, load the local Frontier Systems Cartography
+  style guide, and emit one paste-ready ChatGPT prompt. Use after adding or
+  removing a published skill, when the map is stale, or on
+  /generate-world-map. The prompt stays in the session — never commit it.
+---
+
+# /generate-world-map
 
 How to rebuild `world-map.png` — the single picture at the top of the root
 README showing every published skill as one place on one frontier. Same style
-system as [generate-hero.md](generate-hero.md): JoyRudder's unpublished
+system as [generate-hero.md](../../data/generate-hero.md): JoyRudder's unpublished
 Frontier Systems Cartography guide, loaded from the local checkout, never
 copied into this repo.
 
@@ -16,7 +26,8 @@ more valuable than a hero's.
 
 ## Regenerate when the roster changes
 
-The map is a function of one file: [`skill-map.yaml`](skill-map.yaml). A skill
+The map is a function of one file:
+[`skill-map.yaml`](../../data/skill-map.yaml). A skill
 added to `skills/` without an entry there is a skill that vanishes from the map
 on the next regeneration. `/add-new-skill` writes the entry; this file turns
 entries into a picture.

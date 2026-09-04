@@ -105,8 +105,9 @@ skill disappears the next time the map is repainted.
 
 Adding the entry is part of adding the skill. Repainting is not: the map costs a
 human round-trip through ChatGPT, so batch it. How is
-[.claude/data/generate-world-map.md](data/generate-world-map.md); like the hero
-prompt, it stays in the session and never reaches a PR.
+`/generate-world-map`
+([.claude/skills/generate-world-map/SKILL.md](skills/generate-world-map/SKILL.md));
+like the hero prompt, it stays in the session and never reaches a PR.
 
 ## Optional — only when the skill needs them
 
@@ -132,7 +133,7 @@ Do not add: a second README, a changelog, an `assets/` folder for the hero, a co
 | Repo index (one bullet per skill) | root `README.md` `## Skills` |
 | Where a skill sits on the root world map | `.claude/data/skill-map.yaml` |
 | How to generate the hero | `.claude/data/generate-hero.md` (session only — never the PR) |
-| How to repaint the root world map | `.claude/data/generate-world-map.md` (session only — never the PR) |
+| How to repaint the root world map | `/generate-world-map` (session only — never the PR) |
 | How to port a skill into `skills/` and open a PR | `.claude/skills/add-new-skill/` |
 
 One home per fact. If a constant lives in SKILL.md, the README may mention it in passing (cull caps, cycle cap) but does not become a second procedure.

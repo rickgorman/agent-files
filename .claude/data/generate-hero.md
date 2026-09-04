@@ -57,4 +57,4 @@ README line 1 is the only embed:
 ![<name>](<kebab-name>-hero.png)
 ```
 
-Do not add the hero to the repo root README. The root README's picture is the world map — [generate-world-map.md](generate-world-map.md).
+Do not add the hero to the repo root README. The root README's picture is the world map — `/generate-world-map`.

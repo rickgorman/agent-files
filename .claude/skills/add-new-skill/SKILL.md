@@ -108,7 +108,8 @@ and any `edges` to other skills. Add `terminates` only when the skill actually
 has a stopping rule.
 
 Do not repaint the map in this run. It costs a human round-trip through
-ChatGPT; [.claude/data/generate-world-map.md](../../data/generate-world-map.md)
+ChatGPT; `/generate-world-map`
+([.claude/skills/generate-world-map/SKILL.md](../generate-world-map/SKILL.md))
 covers it when the roster is worth a repaint.
 
 Add `skills/<name>/` to the exemplar list in `.claude/skill-folder.md` only
