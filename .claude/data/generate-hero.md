@@ -49,7 +49,7 @@ Do not put the prompt on the PR. Do not commit it. Do not write `prompt.txt` or 
 
 ## After the PNG lands
 
-Save as `skills/<name>/<kebab-name>-hero.png` (hero filename is kebab-case even when the folder uses an underscore: `refine_plan` → `refine-plan-hero.png`). ChatGPT's **2172×724** is the on-disk size. Do not rescale it to 2048×682.
+Save as `skills/<name>/<kebab-name>-hero.png`. Folder names are kebab-case, so the hero basename is just the folder name. ChatGPT's **2172×724** is the on-disk size. Do not rescale it to 2048×682.
 
 README line 1 is the only embed:
 
@@ -57,4 +57,4 @@ README line 1 is the only embed:
 ![<name>](<kebab-name>-hero.png)
 ```
 
-Do not add the hero to the repo root README unless every published skill is getting the same treatment.
+Do not add the hero to the repo root README. The root README's picture is the world map — [generate-world-map.md](generate-world-map.md).
