@@ -100,4 +100,24 @@ skills:
     terminates: >-
       The brass scale has settled perfectly level and the return switch has
       fallen open toward the right-hand flats with no one touching it.
+    edges:
+      - to: dev-manager
+        route: off the plateau onto the open right-hand flats — one clean line
+
+  - name: dev-manager
+    region: delivery
+    plaque: /dev-manager
+    structure: >-
+      An open-flats dispatch yard: one elevated timber judging booth overlooking
+      three or four parallel work tracks that reconverge at a single stone
+      commit gate. A clerk in the booth, a few hands on the tracks, no crowd.
+    transform: >-
+      The incoming rolled scroll is unrolled at the booth, split onto the
+      parallel tracks, and each piece is inspected at the gate before the
+      accepted work is re-rolled. The compact exit scroll leaving the right
+      edge is the same object that entered the yard, now tighter and sealed.
+    # The loop ends when the last slice's done-when holds.
+    terminates: >-
+      The commit gate stands closed on a sealed scroll and every work track
+      is empty, with no one touching the switch.
     edges: []
