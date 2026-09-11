@@ -1,0 +1,103 @@
+# Root world map registry.
+#
+# One entry per published skill in skills/. This file is the ONLY input that
+# changes when the roster changes; .claude/data/generate-world-map.md turns it
+# into a paste-ready image prompt. Adding a skill without adding its entry
+# means the next map regeneration silently drops it.
+
+canvas:
+  # Root README displays at ~900px wide. See generate-world-map.md for the
+  # type-floor arithmetic these numbers drive.
+  primary: 1200x500       # 24:10 — the committed world-map.png
+  overflow: 1440x960      # 3:2 — switch when skill count exceeds 10
+  display_width: 900
+  # Sized to the README slot at 1×. Deliberately NOT doubled for HiDPI: it
+  # stays slightly soft on a retina display and that is the accepted trade.
+  # Do not "fix" this by rendering at 2× — that halves the effective type
+  # floor relative to the slot and the labels stop being the design.
+  render_scale: 1x
+
+title: Rick's agent-files   # the one title cartouche. No subtitle.
+
+# The one blue thing. Style guide allows exactly one luminous cyan-blue
+# element; on this map it is the trunk, not any single site.
+blue:
+  is: the work in progress — one river-and-rail trunk of electric cyan-blue
+  enters: lower-left, a broad rough irregular braid of raw work
+  leaves: right edge, a compact rolled blue scroll — the brightest blue in frame
+  rule: >-
+    Every skill site sits ON the trunk and visibly takes it in and puts it back
+    changed. Continuous from entry to exit, no unexplained gaps. No site gets
+    its own separate blue. No blue clothing, lamps, sky, trim, or signage.
+
+# Two label classes, and the viewer must feel the difference before reading a
+# word. Everything drawn on this map is one or the other.
+label_system:
+  category:
+    is: a region banner — READING, PLANNING
+    grammar: >-
+      Giant elevated parchment standard or cloth banner on tall posts, hovering
+      over the territory rather than attached to any building. Bold ALL-CAPS,
+      spanning much of its region. Distinctly larger than any skill plaque.
+  skill:
+    is: a worksite plaque — /dag-reader, /refine-plan
+    grammar: >-
+      Rigid rectangular cream plaque, hard dark border, strong cast shadow,
+      carved or brass mounting, physically attached to its worksite. Lowercase
+      slash-command type. Smaller than a banner but still large — read it at
+      subtitle scale, never as a secondary caption. Plaques are equal to each
+      other in prominence, and each sits unmistakably inside its own region.
+
+# Regions are drawn only when at least one skill claims them. Order is
+# left-to-right along the trunk.
+regions:
+  - key: reading
+    banner: READING
+    ground: shaded pine ridge descending into a deep river gorge, left third
+  - key: planning
+    banner: PLANNING
+    ground: high dry sunlit plateau, center-right
+  - key: review
+    banner: REVIEW
+    ground: walled stone yard at a river junction
+  - key: delivery
+    banner: DELIVERY
+    ground: open flats where the route exits toward the horizon
+
+skills:
+  - name: dag-reader
+    region: reading
+    plaque: /dag-reader
+    # The frontier structure this skill becomes. One structure, one function.
+    structure: >-
+      A cliffside stone survey station of three stacked terraces linked by short
+      ladders, the architecture itself reading as a narrowing funnel: broad
+      intake opening, sorting and survey tables, narrowing stone channels.
+      Two or three surveyors with transit instruments, no more.
+    # What the blue trunk becomes passing through. Told architecturally — the
+    # map carries no SOURCE/CRUX lettering to explain it.
+    transform: >-
+      The raw braid enters the top terrace very wide, is progressively
+      constrained descending the terraces, and leaves the lowest terrace as one
+      clean bright channel roughly a third of the original width.
+    edges:
+      - to: refine-plan
+        route: down through the gorge and up onto the plateau — one clean line
+
+  - name: refine-plan
+    region: planning
+    plaque: /refine-plan
+    structure: >-
+      An open plateau work yard: four separate canvas critic tents ringing one
+      central brass assay scale on a stone plinth, with one short curved return
+      rail looping around the center.
+    transform: >-
+      The incoming channel splits into four thin branches, one per tent, and
+      visibly recombines at the scale. A blue rolled scroll rides the return
+      loop — one bright current lap, one barely visible ghost trace of the
+      previous lap, the current one shorter and denser. Only one ghost.
+    # The loop ends when the scale stops moving.
+    terminates: >-
+      The brass scale has settled perfectly level and the return switch has
+      fallen open toward the right-hand flats with no one touching it.
+    edges: []
