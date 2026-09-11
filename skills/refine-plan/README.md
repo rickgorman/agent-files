@@ -1,14 +1,14 @@
-![refine_plan](refine-plan-hero.png)
+![refine-plan](refine-plan-hero.png)
 
 ## Overview
 
-A first-draft plan is cheap. Building the wrong one is not. `/refine_plan` runs a four-critic map-reduce over a markdown implementation plan and edits the file until the plan settles into place.
+A first-draft plan is cheap. Building the wrong one is not. `/refine-plan` runs a four-critic map-reduce over a markdown implementation plan and edits the file until the plan settles into place.
 
 Each cycle maps four critics (different model families, different lenses) onto the current file, reduces their findings, and scores yield: how many `transformative` or `material` changes actually landed. Wording nits don't count. It stops when yield is zero, when a majority of critics say `CONVERGED` two cycles in a row, or at the cap (default 6).
 
 This expands [Jeffrey Emanuel](https://x.com/doodlestein)'s Agent Flywheel Phase 2 (get the plan to steady state before anyone writes code) into a swarm instead of one sequential review. A single model signing off on its own draft is not the same as four families that can't see each other's work, then a reduce the session model owns. If the plan is actually done, a re-run reports yield 0 on cycle 1.
 
-| One more pass from the same model | `/refine_plan` |
+| One more pass from the same model | `/refine-plan` |
 | --- | --- |
 | Same blind spots | Four vendors, four lenses, rotated |
 | Findings die in chat | The plan file is the artifact |
@@ -45,14 +45,14 @@ Optional binaries must be on `PATH` and logged in. Discovery picks them up autom
 
 ```bash
 gh repo clone rickgorman/agent-files
-cp -R agent-files/skills/refine_plan ~/.claude/skills/refine_plan
-# or into a project:  cp -R agent-files/skills/refine_plan .claude/skills/refine_plan
+cp -R agent-files/skills/refine-plan ~/.claude/skills/refine-plan
+# or into a project:  cp -R agent-files/skills/refine-plan .claude/skills/refine-plan
 ```
 
 ```
-/refine_plan path/to/plan.md              # edit in place until it converges
-/refine_plan path/to/plan.md --dry-run    # critique and report; write nothing
-/refine_plan path/to/plan.md --max 3      # cycle cap (default 6)
+/refine-plan path/to/plan.md              # edit in place until it converges
+/refine-plan path/to/plan.md --dry-run    # critique and report; write nothing
+/refine-plan path/to/plan.md --max 3      # cycle cap (default 6)
 ```
 
 No path? It looks for `PLAN.md`, `docs/plans/*.md`, or a recently edited `*plan*.md`. If it still can't tell, it asks.

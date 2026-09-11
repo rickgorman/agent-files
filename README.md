@@ -1,4 +1,4 @@
-![agent-files](agent-files-hero.png)
+![agent-files](world-map.png)
 
 # agent-files
 
@@ -8,7 +8,11 @@ Stealable Claude Code skills. Not a course. Not a prompt dump.
 
 ## Skills
 
-- [refine_plan](skills/refine_plan/) Four critics map-reduce a markdown plan in place until yield is zero.
+Every skill below is a place on the map. The map is generated from
+[.claude/data/skill-map.yaml](.claude/data/skill-map.yaml) — add a skill, add
+its entry, repaint.
+
+- [refine-plan](skills/refine-plan/) Four critics map-reduce a markdown plan in place until yield is zero.
 - [dag-reader](skills/dag-reader/) Read a source into a thesis–claim–fact DAG and prune it to one crux paragraph.
 - [dev-manager](skills/dev-manager/) The orchestrator judges; coder lanes emit by a fixed task→model fallback sequence.
 
