@@ -104,14 +104,14 @@ skills:
       - to: dev-manager
         route: off the plateau onto the open right-hand flats — one clean line
 
-  - name: screen-flow-plat
+  - name: screen-flow
     region: review
-    plaque: /screen-flow-plat
+    plaque: /screen-flow
     structure: >-
-      A walled stone review yard: a long timber gallery of equal window-frames
-      in two parallel rows, each frame holding a painted scene of the same
-      walk, the second row visibly later than the first. A few viewers at
-      the rail, no crowd.
+      A long roofed timber gallery spanning a canyon on trestles: incoming
+      viewport, a brass NAV press, a bellows SHOT camera, then equal FLOW
+      panes under the roof. Map-scale, not the standalone hero at full
+      complexity. A few workers, no crowd.
     transform: >-
       The incoming rolled scroll unrolls along the gallery as a sequence of
       window-sized panes; the same blue current is visible in every pane, and

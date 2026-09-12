@@ -1,12 +1,12 @@
-![screen-flow-plat](screen-flow-plat-hero.png)
+![screen-flow](screen-flow-hero.png)
 
 ## Overview
 
-A flow explanation that *describes* screens is easy to misread. `/screen-flow-plat` films the real product: it drives a browser through the clicks, waits for the toast, and lays the shots onto a plat canvas in titled, bounded lanes.
+A flow explanation that *describes* screens is easy to misread. `/screen-flow` films the real product: it drives a browser through the clicks, waits for the toast, and lays the shots onto a plat canvas in titled, bounded lanes.
 
 Type on the board is screen-sized (title 36, captions 22). Zoom is ⌘/Ctrl + scroll, the same as plat itself. Schematics are a bug, not a fallback.
 
-| The usual way | `/screen-flow-plat` |
+| The usual way | `/screen-flow` |
 | --- | --- |
 | Boxes and arrows that *look like* the app | Viewport screenshots of the app |
 | 11px captions you cannot read at arm's length | Title 36 / captions 22 |
@@ -38,14 +38,14 @@ A running app URL, or a conversation that already has the screenshots.
 
 ```bash
 gh repo clone rickgorman/agent-files
-cp -R agent-files/skills/screen-flow-plat ~/.claude/skills/screen-flow-plat
-# or into a project:  cp -R agent-files/skills/screen-flow-plat .claude/skills/screen-flow-plat
+cp -R agent-files/skills/screen-flow ~/.claude/skills/screen-flow
+# or into a project:  cp -R agent-files/skills/screen-flow .claude/skills/screen-flow
 ```
 
 ```
-/screen-flow-plat signup → login verify → personal info
-/screen-flow-plat --url http://127.0.0.1:5174 --viewport mobile
-/screen-flow-plat                    # film the flow already in this conversation
+/screen-flow signup → login verify → personal info
+/screen-flow --url http://127.0.0.1:5174 --viewport mobile
+/screen-flow                    # film the flow already in this conversation
 ```
 
 ## When to use

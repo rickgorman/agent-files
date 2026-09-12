@@ -96,28 +96,49 @@ Per the style guide, `min_file_px = ceil(10 × gen_width / display_width)`.
 | --- | --- | --- |
 | 1200×500 | **14px** | ~80px |
 | 1440×960 | **16px** | ~96px |
+| 2172×724 (ChatGPT hero size, README ~900px) | **28px** | ~140px |
 
 Both numbers go in the prompt. A label that cannot clear the floor gets cut,
-not shrunk.
+not shrunk. If ChatGPT returns a 2172×724 file, keep it — do not rescale down
+to 1200×500. Enlarge signs rather than compressing their text.
 
-## Attach a style reference
+## Attach references
 
-Attach the current `world-map.png` (or, on a first run, the JoyRudder frontier
-map the style came from) to the ChatGPT message and say in the prompt that it
-is a **style reference only** — carved wood, parchment cartouches, frontier
-landscape, old-world systems-map storytelling — and that its exact layout and
-labels must not be copied. Without that sentence the generator reproduces the
-reference's regions.
+Attach, in this order:
+
+1. The current `world-map.png` **and** `agent-files-hero.png` if both exist —
+   composition and style. Say they are references for landscape, light, border,
+   and cartouche — **not** layouts to clone. Without that sentence the
+   generator copies the old regions.
+2. Each published skill's `*-hero.png`. These are **mechanism** references:
+   understand the machine, then **simplify it to map-scale**. One distinctive
+   silhouette, one slash-prefixed sign. Do **not** paste miniature skill heroes
+   into the map. Do not reproduce a standalone hero at full complexity.
+
+## Landmark placement
+
+Compose one canyon / plateau world, not four boxes. Put landmarks at
+**different elevations** (ridge, plateau, trestle, lower yard) with a generous
+scenic opening through the middle distance. Integrate them into cliffs and
+bridges. Do not arrange equal rectangular panels. Keep every skill identifiable
+without zooming.
+
+When adding a skill later: give it one distinctive physical mechanism, one
+readable silhouette, and one slash-prefixed sign. **Rebalance the whole
+landscape** instead of squeezing in another inset or shrinking existing labels.
 
 ## Label budget
 
-Two label classes, per the registry's `label_system` block, and the viewer must
-feel the difference before consciously reading a word. Permitted words, and
-nothing else:
+Four label classes, and the viewer must feel the difference before consciously
+reading a word. Permitted words, and nothing else:
 
-- One title cartouche: the registry's `title`. **No subtitle.**
-- One giant banner per drawn region: the region's `banner`
-- One plaque per skill: the skill's `plaque`, verbatim, slash prefix included
+- One title cartouche: the registry's `title`. **No subtitle.** Largest.
+- One giant uppercase banner per drawn region: the region's `banner`
+- One plaque per skill: the skill's `plaque`, verbatim, slash prefix included.
+  All skill plaques comparable in size and importance.
+- Local mechanism plates **only** when the registry's `structure:` named them
+  (example: `NAV`, `SHOT`, `FLOW` on the `/screen-flow` gallery). Smaller than
+  plaques, still ≥ the type floor.
 
 That is the whole list. Spell it out in the prompt as an exhaustive one, then
 ban the rest by name — the generator will otherwise invent them:
@@ -159,9 +180,11 @@ Follow the style guide's assembly order, with the registry supplying the
 subject material:
 
 - Subject: the registry's `title` — the published skill roster as one frontier
-- Kind: `map` — pseudo-isometric top-down story map, viewed slightly from
-  above, one continuous world inside an ornate carved wooden border
-- Size: from the canvas table above
+- Kind: `map` — elevated scenic viewpoint, like a richly illustrated antique
+  world map. Not an overhead map, isometric diagram, or flat flowchart. One
+  continuous world inside an ornate carved wooden border.
+- Size: from the canvas table above. ChatGPT often returns **2172×724**; that
+  is an acceptable on-disk size for the README hero slot.
 - Topology: **relay along one trunk**. The blue enters as raw work at the
   lower left, passes through each skill site in region order, and leaves at the
   right edge. Each `edges:` entry is a visible route, drawn not named.
@@ -191,8 +214,10 @@ on-image words, and where to save the PNG (`world-map.png` at the repo root).
 
 ## After the PNG lands
 
-Save as `world-map.png` at the repo root. ChatGPT returns whatever it returns —
-do not rescale it to the nominal canvas.
+If `~/Downloads/agent-files-hero.png` or `~/Downloads/world-map.png` exists and
+is a ~3:1 PNG, copy it to **both** `world-map.png` and `agent-files-hero.png`
+at the repo root. ChatGPT returns whatever it returns — do not rescale it to
+the nominal canvas. Keep the two root files in sync.
 
 Root README line 1 is the only embed:
 

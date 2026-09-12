@@ -1,14 +1,14 @@
 ---
-name: screen-flow-plat
+name: screen-flow
 description: >-
   Drive a real browser through a multi-screen product flow, capture viewport
   screenshots with toasts intact, and compile them onto a plat canvas of
   titled, bounded lanes. Use when the user wants to visualize a flow, filmstrip
   a journey, compare before/after screens, or build a plat of onboarding,
-  checkout, or login. Invoke as /screen-flow-plat [flow description].
+  checkout, or login. Invoke as /screen-flow [flow description].
 ---
 
-# /screen-flow-plat
+# /screen-flow
 
 Turn a multi-screen product flow into a plat board of **real screenshots**, not schematic phones. Drive the browser, wait for toasts, crop to the viewport, drop each shot into a titled lane, annotate at screen-reading type, and serve a canvas where **⌘/Ctrl + scroll zooms**.
 
