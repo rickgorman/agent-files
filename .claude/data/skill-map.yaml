@@ -104,6 +104,20 @@ skills:
       - to: dev-manager
         route: off the plateau onto the open right-hand flats — one clean line
 
+  - name: screen-flow
+    region: review
+    plaque: /screen-flow
+    structure: >-
+      A long roofed timber gallery spanning a canyon on trestles: incoming
+      viewport, a brass NAV press, a bellows SHOT camera, then equal FLOW
+      panes under the roof. Map-scale, not the standalone hero at full
+      complexity. A few workers, no crowd.
+    transform: >-
+      The incoming rolled scroll unrolls along the gallery as a sequence of
+      window-sized panes; the same blue current is visible in every pane, and
+      it leaves the far end of the yard re-rolled, the last pane the brightest.
+    edges: []
+
   - name: dev-manager
     region: delivery
     plaque: /dev-manager

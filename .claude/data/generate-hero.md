@@ -39,6 +39,12 @@ Follow the JoyRudder style guide's procedure:
 
 On-image words are the skill's own terms. Do not swap a load-bearing word for a prettier synonym. If the skill says `Fact`, the sign says `Fact`, not `Fuel`. If it says `SOURCE`, not `TLDR`. Title is `/<name>`. At most four other text blocks, and only if they are the skill's real labels.
 
+When the skill is a left-to-right process, stage it as **named stations in sequence** (entrance → processing units → destination gallery). Put each station's label on a physical plate on that machine. Draw machines in **three-quarter view with visible depth**, not as flat front-facing rectangles, and leave clear air between them so they do not merge. Incoming state may carry **one or two delicate cyan wisps** from the same current — suspicious, not a second magic source.
+
+If the skill deals with screens or viewports, the panes are **symbolic**: coarse interface blocks and simple status shapes. No readable body copy, no tiny fake UI, no pasted screenshots.
+
+Type floor for a 2172×724 file shown at ~900px: **no glyph under 28px in the file**. Title about 140px. Enlarge signs rather than compressing their text.
+
 Outside the fence, one line: kind, dimensions, aspect ratio, exact permitted on-image words.
 
 ## Give it to the human
@@ -49,7 +55,7 @@ Do not put the prompt on the PR. Do not commit it. Do not write `prompt.txt` or 
 
 ## After the PNG lands
 
-Save as `skills/<name>/<kebab-name>-hero.png`. Folder names are kebab-case, so the hero basename is just the folder name. ChatGPT's **2172×724** is the on-disk size. Do not rescale it to 2048×682.
+If `~/Downloads/<kebab-name>-hero.png` (or a path the user named) exists and is a ~3:1 PNG, copy it to `skills/<name>/<kebab-name>-hero.png`. ChatGPT's **2172×724** is the on-disk size. Do not rescale it to 2048×682.
 
 README line 1 is the only embed:
 
