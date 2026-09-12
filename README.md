@@ -6,8 +6,6 @@ Skills I actually run.
 
 ## The Prompts
 
-These are the ones on the wall. Each one is a place on the map; the map is generated from [.claude/data/skill-map.yaml](.claude/data/skill-map.yaml).
-
 ### [`/refine-plan`](skills/refine-plan/)
 
 > *Four critics map-reduce a markdown plan in place until yield is zero.*
