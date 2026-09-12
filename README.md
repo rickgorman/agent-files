@@ -4,8 +4,6 @@
 
 Skills I actually run.
 
-Stealable Claude Code skills. Not a course. Not a prompt dump.
-
 ## The Prompts
 
 These are the ones on the wall. Each one is a place on the map; the map is generated from [.claude/data/skill-map.yaml](.claude/data/skill-map.yaml).
