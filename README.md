@@ -2,7 +2,7 @@
 
 # agent-files
 
-Steal these. Run them on your wall. Stop.
+Skills I actually run.
 
 Stealable Claude Code skills. Not a course. Not a prompt dump.
 
