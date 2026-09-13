@@ -30,6 +30,12 @@ The session model that writes the code also judges the code. This splits that: y
 
 A flow explanation that *describes* screens is easy to misread. This films the real product: clicks, toasts intact, laid onto a plat canvas. Schematics are a bug, not a fallback.
 
+### [`/handoff-beads`](skills/handoff-beads/)
+
+> *Session residue becomes beads in the graph, not a markdown brief.*
+
+A handoff doc is a copy of what the next agent should already be able to pull from the graph. This mines the session, creates only the missing beads, hangs them in the right places, and validates before you leave.
+
 ## Grok Bot
 
 A separate steal path. [`grok-bot/`](grok-bot/) is fleet playbooks for Grok Bot, not Claude `skills/`. Copy a package onto the box:
