@@ -30,6 +30,12 @@ The session model that writes the code also judges the code. This splits that: y
 
 A flow explanation that *describes* screens is easy to misread. This films the real product: clicks, toasts intact, laid onto a plat canvas. Schematics are a bug, not a fallback.
 
+### [`/expandable-reader`](skills/expandable-reader/)
+
+> *One page: a world-map paragraph, toggle sections, phrases that open in place.*
+
+A summary gives everyone the same two minutes. This reads the whole source, distills it into typed nuggets (tactic, lesson, mechanism, caveat, moment), and renders a drill-down page so a reader with any amount of time gets the map first and picks where to go deeper.
+
 ## Table of Contents
 
 - [Quick Start](#quick-start)
