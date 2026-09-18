@@ -1,0 +1,59 @@
+{
+  "title": "Building in public",
+  "subtitle": "Three days of a company built on stream, scored five minutes at a time",
+  "context": "A multi-day livestream where a small team builds a company in public, directing a fleet of autonomous agents that in turn drive coding agents. Each slice is five minutes of that stream: two or three people talking over screen shares, with guests dropping in.",
+  "tiers": [
+    "noise",
+    "mention",
+    "demo",
+    "explained",
+    "masterclass"
+  ],
+  "tier_note": "Tiers are mutually exclusive. Pick the highest tier anything in the slice reaches.",
+  "categories": {
+    "agentic_engineering": {
+      "label": "Agentic engineering",
+      "instructions": "Rate this slice on AGENTIC ENGINEERING: getting agents to actually write, review, test, and ship code. Includes harness and repo setup, prompting a coding agent, PR and review loops, specs, debugging what an agent produced, skills. Pick the HIGHEST tier that any part of the slice reaches. Pick noise if the slice contains none of this.",
+      "criteria": {
+        "noise": "No agentic-engineering content at all: chatter, goodbyes, AV problems, pure small talk.",
+        "mention": "Names a tool, agent, or action in passing with no detail a listener could act on.",
+        "demo": "Shows a concrete action or workflow a viewer could copy: a specific prompt, setting, command, or sequence of steps.",
+        "explained": "Shows AND explains the reasoning: why this way, what the tradeoff or failure mode is, when it breaks. Generalizes beyond the immediate task.",
+        "masterclass": "Non-obvious technique plus the reasoning behind it, at a level that would change how a competent practitioner works. Composing skills and harnesses, multi-agent architecture, hard-won gotchas."
+      }
+    },
+    "human_orchestration": {
+      "label": "Human orchestration",
+      "instructions": "Rate this slice on HUMAN ORCHESTRATION OF AGENTS: how a person directs, delegates to, supervises, and corrects a fleet of bots. Includes assigning roles and titles to bots, writing briefs, queueing and interrupting agents, review cadence, deciding when to step in, division of labour between humans and bots, and managing many parallel agents. Pick the HIGHEST tier reached. Pick noise if absent.",
+      "criteria": {
+        "noise": "No orchestration content.",
+        "mention": "Mentions delegating or a bot role in passing, no transferable detail.",
+        "demo": "Shows a concrete orchestration move: an actual instruction given to a bot, a handback rule, a role assignment with its scope.",
+        "explained": "Shows and explains why that orchestration choice: what failed before, what signal triggers intervention, how it scales.",
+        "masterclass": "Non-obvious orchestration doctrine with reasoning: managing many concurrent agents, escalation policy, context routing, what humans must keep."
+      }
+    },
+    "agent_infrastructure": {
+      "label": "Agent infrastructure",
+      "instructions": "Rate this slice on AGENT INFRASTRUCTURE AND PLUMBING: the substrate agents run on. Includes integrations and MCP or tool wiring, memory and context management, credentials and access, deploy and hosting, databases, observability and transcripts, runtime environments and private workers, rate limits and cost. Pick the HIGHEST tier reached. Pick noise if absent.",
+      "criteria": {
+        "noise": "No infrastructure content.",
+        "mention": "Names a service or integration in passing (for example 'we need a database') with no actionable detail.",
+        "demo": "Shows concrete wiring: connecting a service, a specific configuration, an actual setup step.",
+        "explained": "Shows and explains the infrastructure reasoning: why this substrate, the constraint it solves, its limits or cost.",
+        "masterclass": "Non-obvious infrastructure design with reasoning: context and memory architecture, agent runtime topology, observability into in-progress agent work."
+      }
+    },
+    "product_judgment": {
+      "label": "Product judgment",
+      "instructions": "Rate this slice on PRODUCT AND GO-TO-MARKET JUDGMENT: deciding what is worth building and how it reaches people. Includes validation, customer discovery, positioning, naming and branding, distribution and audience growth, pricing, prioritisation, and business strategy advice from guests. This is about the decisions agents are pointed at, not the agents themselves. Pick the HIGHEST tier reached. Pick noise if absent. Describing, pitching, or demoing the features of a product is NOT product judgment. The slice must contain an actual decision, a validation step, or reasoned advice about what to build or how to reach customers.",
+      "criteria": {
+        "noise": "No product or go-to-market content.",
+        "mention": "Names a product or market topic in passing with no reasoning.",
+        "demo": "Makes a concrete product or GTM move a viewer could copy: a specific validation step, a named channel tactic, an actual decision made on air.",
+        "explained": "Makes the move AND explains the reasoning: why this bet, what evidence, what the alternative costs.",
+        "masterclass": "Non-obvious, hard-won product or distribution insight with reasoning and evidence, at a level that would change a founder's plan."
+      }
+    }
+  }
+}
