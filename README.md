@@ -30,6 +30,12 @@ The session model that writes the code also judges the code. This splits that: y
 
 A flow explanation that *describes* screens is easy to misread. This films the real product: clicks, toasts intact, laid onto a plat canvas. Schematics are a bug, not a fallback.
 
+### [`/transcript-heatmap`](skills/transcript-heatmap/)
+
+> *Score a long transcript five minutes at a time and draw it as sheet music.*
+
+Hours of recording, and no way to say where anything was. This slices the transcript, scores every slice against a rubric written from the source itself, and lays the result out as staves: a note per five minutes, colour for category, size for depth, click to read the transcript there.
+
 ## Table of Contents
 
 - [Quick Start](#quick-start)
