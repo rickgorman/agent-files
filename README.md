@@ -1,7 +1,5 @@
 ![agent-files](world-map.png)
 
-# agent-files
-
 Skills I actually run.
 
 ## The Prompts
