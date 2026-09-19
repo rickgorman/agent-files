@@ -1,4 +1,4 @@
-# /SKILL_NAME
+![SKILL_NAME](skill-name-hero.png)
 
 ## Overview
 

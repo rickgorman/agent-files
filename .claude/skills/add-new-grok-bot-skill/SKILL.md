@@ -74,8 +74,9 @@ cp -R .claude/data/grok-bot-package-template grok-bot/<name>
 
 Replace `SKILL_NAME` and `skill-name`. Fill `SKILL.md` and `README.md` until
 they match the rubric (Input → procedure → Output → Guardrails; README with
-Overview / Prerequisites / Install / When to use / Output, contrast table,
-one mermaid). Voice matches the repo root: short, stealable, second person.
+hero embed on line 1, no H1, then Overview / Prerequisites / Install /
+When to use / Output, contrast table, one mermaid). Voice matches the repo
+root: short, stealable, second person.
 
 Rare-path material and blank fill-in templates go in `references/`. A real
 helper goes in `scripts/`. Do not add a second README, a changelog, or a
@@ -102,16 +103,20 @@ default: skip; `fleet-spring-clean` already sits there.
 
 ### 4. Hero
 
-Heroes are optional on this tree. Follow
-[.claude/data/generate-hero.md](../../data/generate-hero.md) only if the
-user asked for one or dropped a PNG.
+Required. Generate the banner **in Grok Bot** (GenerateImage / in-chat).
+Attach [.claude/data/grok-bot-orb-reference.png](../../data/grok-bot-orb-reference.png)
+and describe this package's mechanism in the orb-frontier style — see
+[.claude/grok-bot-folder.md](../../grok-bot-folder.md). Save as
+`grok-bot/<name>/<kebab-name>-hero.png`. README line 1 is the embed; no H1.
 
-If `~/Downloads/<kebab-name>-hero.png` (or a path the user named) exists and
-is a ~3:1 PNG, copy it to `grok-bot/<name>/<kebab-name>-hero.png` and switch
-the README H1 for the embed. Do not rescale.
+16:9 from GenerateImage is fine. Do not rescale to the Claude-skill ~3:1
+unless OWNER asks. Do not invent a placeholder PNG. Do **not** put an
+image prompt on the PR as the primary path. Do not follow
+`generate-hero.md` (that is ChatGPT for `skills/`).
 
-If there is no PNG, still open the PR. Do not invent a placeholder PNG. Do
-not put a prompt on the PR.
+If a PNG the user named is already on disk and matches the orb-frontier
+style, copy it in. Otherwise generate it in this Grok Bot session (or ask
+OWNER to). A package without a hero is not done.
 
 ### 5. Branch, commit, PR
 
@@ -128,17 +133,16 @@ Stage **file-by-file** (never `git add -A`). `git diff --no-ext-diff`. Commit
 without AI attribution lines. Push. Open a PR against that same base.
 
 PR body uses the repo's usual shape (Summary, Changes as a bullet list,
-Commit History). Describe the published package. Do not describe how a hero
-was generated. Do not paste a prompt.
+Commit History). Describe the published package. One short line is enough
+for the hero (`<kebab-name>-hero.png`, generated in Grok Bot). Do not
+paste a ChatGPT image prompt.
 
 ## Output
 
-- `grok-bot/<name>/` conforming to the rubric
+- `grok-bot/<name>/` conforming to the rubric, including the orb-frontier hero PNG
 - one new bullet in `grok-bot/README.md`
 - a root `README.md` `## Grok Bot` pointer
 - a PR URL
-- if a hero was requested and the PNG was missing: a one-line note that the
-  banner still needs a drop
 
 ## Guardrails
 

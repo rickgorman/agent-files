@@ -26,10 +26,11 @@ Then fill it in. Two replace tokens:
 | Token | Becomes | Example |
 | --- | --- | --- |
 | `SKILL_NAME` | Grok Bot `/` name and folder name, kebab-case | `fleet-spring-clean` |
-| `skill-name` | optional hero basename — same string | `fleet-spring-clean` |
+| `skill-name` | hero basename — same string | `fleet-spring-clean` |
 
-The template has `SKILL.md` and `README.md` only. A package still containing
-`SKILL_NAME` is not done.
+The template has `SKILL.md` and `README.md`. Generate
+`<kebab-name>-hero.png` in Grok Bot before the package is done. A package
+still containing `SKILL_NAME` is not done.
 
 ## Required
 
@@ -37,6 +38,7 @@ The template has `SKILL.md` and `README.md` only. A package still containing
 grok-bot/<name>/
   SKILL.md                 # agent procedure (source of truth)
   README.md                # GitHub steal-page
+  <kebab-name>-hero.png    # orb-frontier banner (Grok Bot GenerateImage)
 ```
 
 `<name>` is the Grok Bot skill name, including its punctuation
@@ -85,18 +87,13 @@ procedure.
 
 ## README.md — for a human on GitHub
 
-Heroes are optional. Do not invent a placeholder PNG.
-
-**No hero** (the default on this tree): start with `# /<name>` so the
-steal-page has a name.
-
-**Hero present:** line 1 is the embed, and there is no H1.
+No H1. The hero already says the name. Line 1 is the embed:
 
 ```markdown
 ![<name>](<kebab-name>-hero.png)
 ```
 
-Then the same sections either way:
+Then:
 
 ```markdown
 ## Overview
@@ -128,15 +125,32 @@ dual-install, and then label both paths.
 Last paragraph points at `SKILL.md` for the procedure. Do not paste the
 procedure into the README.
 
-## Hero (optional)
+## Hero (required)
 
-File: `<kebab-name>-hero.png` next to the README (not in `assets/`). How to
-make it is [.claude/data/generate-hero.md](data/generate-hero.md). The prompt
-never goes on a PR or into git.
+Every `grok-bot/<name>/` ships `<kebab-name>-hero.png` next to the README
+(not in `assets/`). A package without a real hero is not done. Do not
+invent a placeholder PNG.
 
-A package without a hero is still done. Do not add a fake PNG to look
-complete. If a PNG lands later, drop it on the same branch and switch the
-README's H1 for the embed.
+Generate the banner **in Grok Bot** (GenerateImage / in-chat). Attach
+[grok-bot-orb-reference.png](data/grok-bot-orb-reference.png) and describe
+this package's mechanism. Commit the PNG into the package folder. Wire
+README line 1 to the embed. Do **not** paste an image prompt onto the PR
+as the primary path. Do not follow
+[.claude/data/generate-hero.md](data/generate-hero.md) — that is the Claude
+`skills/` ChatGPT path.
+
+Style is a **subset** of Frontier Systems Cartography (old-west / steampunk
+infrastructure) but **distinct**: the protagonists are glossy teardrop
+**orb** characters — rounded bottom, pointed top, simple black pill eyes,
+small cyan accent orb on the lower side. Orbs may vary body color; the
+cyan accent and teardrop silhouette stay constant. Infrastructure stays
+frontier; orbs are the Grok Bot agents in that world.
+
+Aspect: Grok Bot GenerateImage's closest size is **16:9**. That is
+acceptable for grok-bot packages (`fleet-spring-clean-hero.png` is
+1280×720). Do not crop or stretch to the Claude-skill ~3:1 (2048×682)
+unless OWNER asks later. Keep whatever Grok Bot returned; do not invent a
+rescale.
 
 Do not add grok-bot heroes to the repo root README. The root picture is the
 Claude skills world map.
@@ -167,7 +181,8 @@ folder.
 | --- | --- |
 | What does the agent do, in order? | `SKILL.md` |
 | Why steal this, how do I install it? | `README.md` |
-| What does it look like at a glance? | optional hero PNG |
+| What does it look like at a glance? | required hero PNG (orb-frontier, Grok Bot) |
+| Orb character reference | `.claude/data/grok-bot-orb-reference.png` |
 | Long spec / blank template / example dump | `references/` |
 | Runnable helper | `scripts/` |
 | How a grok-bot folder in *this* repo is shaped | this file |
@@ -188,7 +203,8 @@ in passing but does not become a second procedure.
 - [ ] `SKILL.md` has `name` + trigger-rich `description`, then Input → procedure → Output → Guardrails
 - [ ] Published files have no personal names, private URLs, or credentials
 - [ ] `README.md` has Overview / Prerequisites / Install / When to use / Output
-- [ ] README starts with `# /<name>` or with a real hero embed — never a placeholder PNG
+- [ ] README line 1 is the hero embed, no H1, never a placeholder PNG
+- [ ] `<kebab-name>-hero.png` generated in Grok Bot (orb-frontier; 16:9 fine)
 - [ ] `cp -R grok-bot/<name> /home/box/agent-data/workflows/<name>` is the documented install
 - [ ] `grok-bot/README.md` has one bullet: `- [<name>](<name>/) <one sentence>`
 - [ ] Root `README.md` `## Grok Bot` points at the package
