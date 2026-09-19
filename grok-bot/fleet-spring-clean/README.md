@@ -1,4 +1,4 @@
-# /fleet-spring-clean
+![fleet-spring-clean](fleet-spring-clean-hero.png)
 
 ## Overview
 
