@@ -3,8 +3,9 @@ name: fleet-spring-clean
 description: >-
   Use this when spring-cleaning a multi-bot Grok Bot fleet: Notion company vs
   personal brains, naming/boss tags, boards, daily brief, routine logs,
-  CreateAgent rules, skill arsenal, and shareable reorg. Not for one domain's
-  sales strategy. Invoke as /fleet-spring-clean [path-to-fleet-config].
+  CreateAgent rules, skill arsenal, and shareable reorg. Pauses for explicit
+  user yes before every mutating batch. Not for one domain's sales strategy.
+  Invoke as /fleet-spring-clean [path-to-fleet-config].
 ---
 
 # /fleet-spring-clean
@@ -59,7 +60,32 @@ Fill once per fleet, in the config copy — never in this skill. Placeholders:
 Run Phase 0 through Phase 13 in order. Do not skip ahead of an Exit the
 OWNER has not agreed. Stay quiet on routine fires that only log `quiet`.
 
+### Confirm before apply (every mutating set)
+
+Read-only work runs without a gate: listing agents, pages, boards, skills,
+routines, and drafting a proposal.
+
+Anything that mutates agents, Notion, routines, skills, boards, or names
+needs a gate first — including Notion moves, renames, stage schema changes,
+routine deletes, UpdateAgent / CreateAgent batches, and skill writes.
+
+Before each phase's Apply (and before every later coherent batch in that
+phase):
+
+1. **Propose** — summarize this set: what, where, why. Placeholder names,
+   not private URLs.
+2. **Wait** — stop. Do not apply until OWNER gives an explicit yes to
+   *this* set.
+3. **Apply** — only the approved set. The next set (next phase, or another
+   batch in the same phase) starts again at Propose.
+
+No blanket yes. "Continue," "do the rest," "it's reversible," or owner-mode
+bias-to-act is not permission for later sets. Confirmation every time,
+every set.
+
 ### Phase 0 — Inventory (read-only)
+
+List and report without a gate:
 
 1. List agents (names, who they report to, archived?).
 2. List top-level Notion private pages; flag strays that belong under
@@ -70,12 +96,16 @@ OWNER has not agreed. Stay quiet on routine fires that only log `quiet`.
 5. Note expired approval cards from the last few hours if OWNER mentioned them.
 6. Note connector / plugin auth that is broken or mislabeled (do not rotate
    secrets in this phase).
-7. Write a one-page inventory to `BUILDER_BOT`'s board (or chat). Do not
-   move anything yet.
+
+If the inventory should land on `BUILDER_BOT`'s board (a write), propose
+that set, wait for yes, then write. Chat-only inventory needs no gate. Do
+not move anything yet.
 
 **Exit:** OWNER agrees the inventory is complete enough to reorg.
 
 ### Phase 1 — Two brains + archive
+
+Propose the set, wait for explicit yes, then apply:
 
 1. Ensure exactly two durable roots: `COMPANY_BRAIN` and `PERSONAL_BRAIN`.
    Rename old "misc" roots rather than creating a third.
@@ -90,6 +120,8 @@ OWNER has not agreed. Stay quiet on routine fires that only log `quiet`.
 defaults), not a pile of strays.
 
 ### Phase 2 — Naming (one clear boss)
+
+Propose the rename set, wait for explicit yes, then apply:
 
 1. Bots that report only to OWNER: **no owner prefix** in the name (plain name).
 2. Bots that report to another bot: front-loaded boss tag from `BOSS_TAGS`,
@@ -106,6 +138,8 @@ defaults), not a pile of strays.
 
 ### Phase 3 — Project boards
 
+Propose the board/schema set, wait for explicit yes, then apply:
+
 1. Align project boards to `STAGE_SET`. Prefer **Cancelled** over vague
    "Killed" unless OWNER insists.
 2. Funnel boards (pipeline, inbound) may skip Icebox / Next up — do not
@@ -118,6 +152,8 @@ defaults), not a pile of strays.
 **Exit:** Project boards show the full stage set OWNER expects.
 
 ### Phase 4 — Write homes + board monopoly
+
+Propose the filing set, wait for explicit yes, then apply:
 
 1. Publish `WRITE_HOMES` (role → one Notion destination). Role examples, not
    brands: marketing → Pipeline + Content inbox; legal → Legal drafts;
@@ -132,6 +168,8 @@ defaults), not a pile of strays.
 **Exit:** Each role has one obvious place to write.
 
 ### Phase 5 — Daily brief labeling
+
+Propose the brief/skill set, wait for explicit yes, then apply:
 
 1. Add YAML frontmatter on skills that should feed a morning brief:
 
@@ -151,6 +189,9 @@ fact.
 
 ### Phase 6 — Routine runs log
 
+Propose the log set (DB + skill + attaches), wait for explicit yes, then
+apply. Split into separate sets if OWNER wants them gated one at a time.
+
 1. Under `COMPANY_BRAIN`, create `ROUTINE_RUNS_DB` with at least: Name
    (title), Agent, Routine, Folder, Status (`ok` / `quiet` / `error` /
    `skipped`), Summary, Started, Finished.
@@ -163,8 +204,8 @@ fact.
 
 ### Phase 7 — Encode CreateAgent standing rules
 
-Update `BUILDER_BOT`'s description with durable rules learned this clean.
-Keep them generic:
+Propose the `BUILDER_BOT` description edit, wait for explicit yes, then
+apply. Keep the rules generic:
 
 1. Plain language: relevant, findable, understandable, usable (familiar
    words, short sentences, answer-first). Optional citation: ISO 24495-1.
@@ -182,15 +223,23 @@ re-deriving it.
 
 ### Phase 8 — Owner-mode skill
 
+Draft the skill text without a gate. Propose the write + CreateAgent bake-in
+as a set, wait for explicit yes, then apply:
+
 1. Draft (or refresh via an automate-me-style pass) a skill for OWNER's
    working style, e.g. `owner-mode`.
 2. Contents: answer-first, plain language, bias to act on reversible work,
-   Notion roots, naming, `OPS_LOCKS`, prose preferences.
+   Notion roots, naming, `OPS_LOCKS`, prose preferences. That bias is for
+   the *owner-mode* skill, not for this spring-clean run.
 3. Bake "follow owner-mode" into every new CreateAgent description.
 
 **Exit:** Owner-mode exists as a skill; `BUILDER_BOT` references it.
 
 ### Phase 9 — Shared skill arsenal
+
+Propose each coherent set (vendor copy, index write, routine create,
+Icebox cards) separately if they are not one batch. Wait for explicit yes
+before applying each set.
 
 1. Vendor chosen reusable skills into `/home/box/agent-data/workflows/`
    (shared by all bots). Prefer structure over pasting whole skills into
@@ -220,11 +269,14 @@ Icebox, not half-built.
 
 ### Phase 10 — Noise filters
 
+Propose the filter skill + wiring set, wait for explicit yes, then apply:
+
 1. For noisy recurring meetings (standup, all-hands notes): add a
    signal-filter skill (0–5 "OWNER needs" bullets; count of ignored items;
    no raw dump).
 2. Wire it into the owning bot's routine before any digest to OWNER.
-3. Optional later: thin `daily_brief` section once the filter is stable.
+3. Optional later: thin `daily_brief` section once the filter is stable
+   (its own set, its own yes).
 
 **Exit:** OWNER stops receiving meeting walls.
 
@@ -233,25 +285,29 @@ Icebox, not half-built.
 When a job moves from bot A to bot B (or a seat is archived), finish the
 handoff on **routines**, not only descriptions.
 
-1. **Inventory:** for every agent, list routines (name, folder slug,
-   schedule/trigger, enabled/paused). Note duplicate folder slugs or same
-   job name on two bots.
-2. **One owner:** each standing job has exactly one live routine on the bot
+**Inventory** (read-only, no gate): for every agent, list routines (name,
+folder slug, schedule/trigger, enabled/paused). Note duplicate folder slugs
+or same job name on two bots.
+
+Then propose each handoff set (create/update on the new owner + delete on
+the old), wait for explicit yes, then apply:
+
+1. **One owner:** each standing job has exactly one live routine on the bot
    that should run it. Create/update on the new owner first; confirm it
    appears in that bot's live routines.
-3. **Delete the old copy** on the previous owner. Do **not** leave it
+2. **Delete the old copy** on the previous owner. Do **not** leave it
    paused "just in case" — paused leftovers look like work and can be
    re-enabled by mistake (or still fire if the pause never stuck). Message
    the previous owner to delete if you cannot edit their routines yourself.
-4. **Archived seats:** delete or reassign routines on `[ARCHIVED→…]` bots;
+3. **Archived seats:** delete or reassign routines on `[ARCHIVED→…]` bots;
    never leave crons firing on archived names.
-5. **Finite watches:** delete routines whose end date has passed (even if
+4. **Finite watches:** delete routines whose end date has passed (even if
    they were supposed to self-delete).
-6. **Paused ≠ superseded:** keep intentional pauses (ops locks, product
+5. **Paused ≠ superseded:** keep intentional pauses (ops locks, product
    waits, spend caps). Only delete when another bot owns the job, the
    project is cancelled/archived, or the watch is expired.
-7. **Fleet scan before close-out:** search all agents for the moved job's
-   name/slug; zero copies on non-owners.
+6. **Fleet scan before close-out** (read-only): search all agents for the
+   moved job's name/slug; zero copies on non-owners.
 
 **Exit:** No duplicate digests/crons; no paused ghosts of jobs that already
 live elsewhere; intentional pauses documented under `OPS_LOCKS` or the
@@ -259,16 +315,22 @@ bot's board.
 
 ### Phase 12 — Approvals + leftovers
 
+Listing expired cards and moot skips is read-only. Propose each mutating
+set (re-trigger, ARCHIVED sweep), wait for explicit yes, then apply:
+
 1. Re-trigger expired approval cards OWNER still wants (same action; do
    not invent workarounds).
 2. Skip moot cards (page already exists, permission already granted).
 3. Sweep `ARCHIVED` again for leftovers OWNER named.
 4. Confirm `CHIEF` and other bots with standing crons finished
-   `log-routine-run` appends.
+   `log-routine-run` appends (read-only check).
 
 **Exit:** No silent blockers; known leftovers parked.
 
 ### Phase 13 — Close-out checklist
+
+Read-only report. Any leftover fix is a new mutating set: propose, wait
+for yes, then apply.
 
 - [ ] Two brains + `ARCHIVED` nesting correct
 - [ ] Boss tags / plain names applied
@@ -285,20 +347,29 @@ bot's board.
 
 ## Output
 
-Use these sections, in this order, at the end of the run (and after any
-phase that stops for an Exit):
+Use these sections, in this order, at the end of the run, after any phase
+that stops for an Exit, and whenever the run is waiting on a Confirm:
 
-1. **Phase** — which phase just finished, and whether its Exit held.
-2. **Changed** — what moved, renamed, created, or deleted. Paths and
-   placeholder names, not private URLs.
-3. **Still open** — leftovers for OWNER, including approval cards.
-4. **Quiet** — routine fires that only logged `quiet` (one line, or `none`).
+1. **Phase** — which phase just finished or is waiting, and whether its
+   Exit held.
+2. **Proposed** — the next mutating set, if waiting on yes. Omit if nothing
+   is pending.
+3. **Changed** — what moved, renamed, created, or deleted *after* a yes.
+   Paths and placeholder names, not private URLs.
+4. **Still open** — leftovers for OWNER, including approval cards.
+5. **Quiet** — routine fires that only logged `quiet` (one line, or `none`).
 
-If the run stops at an Exit, emit those four sections for the work so far
-and wait. Do not start the next phase.
+If the run stops at an Exit or a Confirm, emit those sections for the work
+so far and wait. Do not start the next phase or apply the next set.
 
 ## Guardrails
 
+- Before every mutating set: propose, wait for explicit yes, then apply.
+  Confirmation every time, every set. No blanket yes.
+- Do not apply a batch because it is reversible, obvious, or "bias to act."
+  Owner-mode bias-to-act does not override this skill.
+- Read-only inventory may run without a gate. Writes to boards, agents,
+  Notion, routines, skills, or names may not.
 - Soft-deleting bots is OWNER-only. This skill never destroys bots.
 - Do not fill [references/fleet-config-template.md](references/fleet-config-template.md)
   in git. OWNER fills a copy.
