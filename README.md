@@ -30,9 +30,27 @@ The session model that writes the code also judges the code. This splits that: y
 
 A flow explanation that *describes* screens is easy to misread. This films the real product: clicks, toasts intact, laid onto a plat canvas. Schematics are a bug, not a fallback.
 
+## Grok Bot
+
+A separate steal path. [`grok-bot/`](grok-bot/) is fleet playbooks for Grok Bot, not Claude `skills/`. Copy a package onto the box:
+
+```bash
+gh repo clone rickgorman/agent-files
+cp -R agent-files/grok-bot/<name> /home/box/agent-data/workflows/<name>
+```
+
+That is `/home/box/agent-data/workflows/`, not `~/.claude/skills/`. The section has its own hero on [`grok-bot/README.md`](grok-bot/) (`grok-bot-hero.png`). Each package folder has a hero too. The root banner stays `world-map.png` — do not stack a grok-bot image here.
+
+### [`/fleet-spring-clean`](grok-bot/fleet-spring-clean/)
+
+> *Declutter a multi-bot fleet: two Notion brains, one boss per seat, boards, briefs, arsenal.*
+
+The sidebar filled up. Notion grew a third "misc" root. Skills got pasted into blurbs. This is a phased clean — inventory first — and the playbook stays free of your URLs.
+
 ## Table of Contents
 
 - [Quick Start](#quick-start)
+- [Grok Bot](#grok-bot)
 - [Design Philosophy](#design-philosophy)
 - [License](#license)
 
@@ -47,6 +65,15 @@ cp -R agent-files/skills/<name> ~/.claude/skills/<name>
 ```
 
 Then invoke `/<name>`.
+
+Copy a Grok Bot package onto the box:
+
+```bash
+gh repo clone rickgorman/agent-files
+cp -R agent-files/grok-bot/<name> /home/box/agent-data/workflows/<name>
+```
+
+Then enable it and invoke `/<name>` from Grok Bot. See [`grok-bot/`](grok-bot/).
 
 ## Design Philosophy
 
