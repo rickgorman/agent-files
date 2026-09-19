@@ -75,8 +75,9 @@ cp -R .claude/data/grok-bot-package-template grok-bot/<name>
 Replace `SKILL_NAME` and `skill-name`. Fill `SKILL.md` and `README.md` until
 they match the rubric (Input → procedure → Output → Guardrails; README with
 hero embed on line 1, no H1, then Overview / Prerequisites / Install /
-When to use / Output, contrast table, one mermaid). Voice matches the repo
-root: short, stealable, second person.
+When to use / Output, contrast table, one mermaid). Strip the template's
+hero-style HTML comment. Voice matches the repo root: short, stealable,
+second person.
 
 Rare-path material and blank fill-in templates go in `references/`. A real
 helper goes in `scripts/`. Do not add a second README, a changelog, or a
@@ -105,16 +106,27 @@ default: skip; `fleet-spring-clean` already sits there.
 
 Required. Generate the banner **in Grok Bot** (GenerateImage / in-chat).
 Attach [.claude/data/grok-bot-orb-reference.png](../../data/grok-bot-orb-reference.png)
-and describe this package's mechanism in the orb-frontier style — see
-[.claude/grok-bot-folder.md](../../grok-bot-folder.md). Save as
+and describe this package's mechanism on **old-west water infrastructure**
+— see [.claude/grok-bot-folder.md](../../grok-bot-folder.md). Save as
 `grok-bot/<name>/<kebab-name>-hero.png`. README line 1 is the embed; no H1.
+
+Style lock:
+
+- Always: orb-bots on waterways, canals, aqueducts, flumes, plumbing,
+  pumps, valves, cisterns, water towers, sluice gates, pipes/troughs.
+  Waterworks is the chassis of every scene.
+- Occasionally: light, floating orbs, or energon-like cubes may emanate
+  from those water-carrying structures. Water first; luminous cargo rare.
+- Characters: glossy teardrop orbs (rounded bottom, pointed top, black
+  pill eyes, cyan accent on the lower side). The red orb mascot is the
+  reference.
 
 16:9 from GenerateImage is fine. Do not rescale to the Claude-skill ~3:1
 unless OWNER asks. Do not invent a placeholder PNG. Do **not** put an
 image prompt on the PR as the primary path. Do not follow
 `generate-hero.md` (that is ChatGPT for `skills/`).
 
-If a PNG the user named is already on disk and matches the orb-frontier
+If a PNG the user named is already on disk and matches this waterworks
 style, copy it in. Otherwise generate it in this Grok Bot session (or ask
 OWNER to). A package without a hero is not done.
 
@@ -139,7 +151,7 @@ paste a ChatGPT image prompt.
 
 ## Output
 
-- `grok-bot/<name>/` conforming to the rubric, including the orb-frontier hero PNG
+- `grok-bot/<name>/` conforming to the rubric, including the waterworks + orb hero PNG
 - one new bullet in `grok-bot/README.md`
 - a root `README.md` `## Grok Bot` pointer
 - a PR URL

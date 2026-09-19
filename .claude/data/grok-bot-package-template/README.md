@@ -1,5 +1,7 @@
 ![SKILL_NAME](skill-name-hero.png)
 
+<!-- Generate skill-name-hero.png in Grok Bot. Style lock: glossy teardrop orbs on old-west water infrastructure (canals, flumes, pumps, sluice gates, pipes). Light/cubes may emanate from those pipes — waterworks first. Ref: .claude/data/grok-bot-orb-reference.png. Strip this comment when publishing. -->
+
 ## Overview
 
 The usual way flattens the problem. `/SKILL_NAME` keeps the part that matters.

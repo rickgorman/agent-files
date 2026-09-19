@@ -38,7 +38,7 @@ still containing `SKILL_NAME` is not done.
 grok-bot/<name>/
   SKILL.md                 # agent procedure (source of truth)
   README.md                # GitHub steal-page
-  <kebab-name>-hero.png    # orb-frontier banner (Grok Bot GenerateImage)
+  <kebab-name>-hero.png    # waterworks + orb-bot banner (Grok Bot GenerateImage)
 ```
 
 `<name>` is the Grok Bot skill name, including its punctuation
@@ -133,18 +133,29 @@ invent a placeholder PNG.
 
 Generate the banner **in Grok Bot** (GenerateImage / in-chat). Attach
 [grok-bot-orb-reference.png](data/grok-bot-orb-reference.png) and describe
-this package's mechanism. Commit the PNG into the package folder. Wire
-README line 1 to the embed. Do **not** paste an image prompt onto the PR
-as the primary path. Do not follow
+this package's mechanism on old-west water infrastructure. Commit the PNG
+into the package folder. Wire README line 1 to the embed. Do **not** paste
+an image prompt onto the PR as the primary path. Do not follow
 [.claude/data/generate-hero.md](data/generate-hero.md) — that is the Claude
 `skills/` ChatGPT path.
 
-Style is a **subset** of Frontier Systems Cartography (old-west / steampunk
-infrastructure) but **distinct**: the protagonists are glossy teardrop
-**orb** characters — rounded bottom, pointed top, simple black pill eyes,
-small cyan accent orb on the lower side. Orbs may vary body color; the
-cyan accent and teardrop silhouette stay constant. Infrastructure stays
-frontier; orbs are the Grok Bot agents in that world.
+Style is a **subset** of Frontier Systems Cartography (old-west / steampunk)
+but **distinct**:
+
+- **Always:** orb-bots work on **old-west water infrastructure** — waterways,
+  canals, aqueducts, flumes, plumbing, pumps, valves, cisterns, water
+  towers, sluice gates, pipes and troughs that traditionally carry water.
+  That waterworks is the chassis of every scene.
+- **Occasionally:** non-water cargo may **emanate from** those
+  water-carrying structures — light, floating orbs, energon-like cubes,
+  luminous pulses traveling in glass pipe segments. Water infrastructure
+  first; light / orbs / cubes as rare flow through it.
+- **Characters:** glossy teardrop **orbs** — rounded bottom, pointed top,
+  simple black pill eyes, small cyan accent on the lower side. Orbs may
+  vary body color; cyan accent + teardrop silhouette stay constant.
+  Reference: [grok-bot-orb-reference.png](data/grok-bot-orb-reference.png)
+  (the red Grok Bot orb mascot). Orbs are the Grok Bot agents in that
+  world.
 
 Aspect: Grok Bot GenerateImage's closest size is **16:9**. That is
 acceptable for grok-bot packages (`fleet-spring-clean-hero.png` is
@@ -181,7 +192,7 @@ folder.
 | --- | --- |
 | What does the agent do, in order? | `SKILL.md` |
 | Why steal this, how do I install it? | `README.md` |
-| What does it look like at a glance? | required hero PNG (orb-frontier, Grok Bot) |
+| What does it look like at a glance? | required hero PNG (waterworks + orbs, Grok Bot) |
 | Orb character reference | `.claude/data/grok-bot-orb-reference.png` |
 | Long spec / blank template / example dump | `references/` |
 | Runnable helper | `scripts/` |
@@ -204,7 +215,7 @@ in passing but does not become a second procedure.
 - [ ] Published files have no personal names, private URLs, or credentials
 - [ ] `README.md` has Overview / Prerequisites / Install / When to use / Output
 - [ ] README line 1 is the hero embed, no H1, never a placeholder PNG
-- [ ] `<kebab-name>-hero.png` generated in Grok Bot (orb-frontier; 16:9 fine)
+- [ ] `<kebab-name>-hero.png` generated in Grok Bot (waterworks + orbs; 16:9 fine)
 - [ ] `cp -R grok-bot/<name> /home/box/agent-data/workflows/<name>` is the documented install
 - [ ] `grok-bot/README.md` has one bullet: `- [<name>](<name>/) <one sentence>`
 - [ ] Root `README.md` `## Grok Bot` points at the package

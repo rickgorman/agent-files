@@ -2,10 +2,11 @@
 
 Playbooks for a Grok Bot fleet. Not Claude slash commands.
 
-Each folder is one package and ships its own hero in the orb-frontier
-style: Frontier Systems infrastructure with glossy teardrop orb agents.
-Copy the folder onto the box workflows home, enable it for the bot that
-will run it, then invoke `/<name>` from the composer.
+Each folder is one package and ships its own hero: glossy teardrop orb
+agents on **old-west water infrastructure** (canals, flumes, pumps, sluice
+gates, pipes). Light or cubes may travel those pipes; waterworks is the
+chassis. Copy the folder onto the box workflows home, enable it for the
+bot that will run it, then invoke `/<name>` from the composer.
 
 ```bash
 gh repo clone rickgorman/agent-files
