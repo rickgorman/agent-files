@@ -162,11 +162,10 @@ but **distinct**:
   (the red Grok Bot orb mascot). Orbs are the Grok Bot agents in that
   world.
 
-Aspect: Grok Bot GenerateImage's closest size is **16:9**. That is
-acceptable for grok-bot packages (`fleet-spring-clean-hero.png` is
-1280×720). Do not crop or stretch to the Claude-skill ~3:1 (2048×682)
-unless OWNER asks later. Keep whatever Grok Bot returned; do not invent a
-rescale.
+Size: **exactly 2172×724** pixels (~3:1), matching root `world-map.png`.
+If GenerateImage only offers 16:9, generate wide then center-crop /
+cover-resize to 2172×724. After the file is 2172×724, do not rescale
+further. Do not leave a 16:9 file (1280×720) on disk.
 
 Do not add grok-bot heroes to the repo root README. The root picture is the
 Claude skills world map (`world-map.png`). Leave `/generate-world-map` alone.
@@ -237,7 +236,7 @@ in passing but does not become a second procedure.
 - [ ] `README.md` has Overview / Prerequisites / Install / When to use / Output
 - [ ] README line 1 is the hero embed, no H1, never a placeholder PNG
 - [ ] Ran `/generate-grok-bot-hero-prompt` so the crux (not pause/logging) leads
-- [ ] `<kebab-name>-hero.png` generated in Grok Bot (waterworks + orbs; 16:9 fine)
+- [ ] `<kebab-name>-hero.png` generated in Grok Bot (waterworks + orbs; exactly 2172×724, matching `world-map.png`)
 - [ ] `cp -R grok-bot/<name> /home/box/agent-data/workflows/<name>` is the documented install
 - [ ] `grok-bot/README.md` has one bullet: `- [<name>](<name>/) <one sentence>`
 - [ ] Regenerated `grok-bot/grok-bot-hero.png` if the catalog changed (`--kind section`)

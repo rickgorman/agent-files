@@ -120,15 +120,18 @@ Required.
 3. Commit `grok-bot/<name>/<kebab-name>-hero.png`. README line 1 is the
    embed; no H1.
 
-16:9 from GenerateImage is fine. Do not rescale to the Claude-skill ~3:1
-unless OWNER asks. Do not invent a placeholder PNG. Do **not** put an
-image prompt on the PR as the primary path. Do not follow
-`generate-hero.md` (that is ChatGPT for `skills/`).
+The PNG must be **exactly 2172×724**, matching root `world-map.png`. If
+GenerateImage only offers 16:9, generate wide then center-crop /
+cover-resize to 2172×724. Do not rescale further after that. Do not
+invent a placeholder PNG. Do **not** put an image prompt on the PR as
+the primary path. Do not follow `generate-hero.md` (that is ChatGPT
+for `skills/`).
 
-If a PNG the user named is already on disk, matches the waterworks style,
-**and** shows this skill's crux (not its ceremony), copy it in. Otherwise
-generate it in this Grok Bot session (or ask OWNER to). A package without
-a hero is not done.
+If a PNG the user named is already on disk, is exactly 2172×724, matches
+the waterworks style, **and** shows this skill's crux (not its ceremony),
+copy it in (do not rescale). If it is 16:9, center-crop/cover-resize to
+2172×724 first. Otherwise generate it in this Grok Bot session (or ask
+OWNER to). A package without a hero is not done.
 
 Then refresh the **section** hero: run
 `/generate-grok-bot-hero-prompt --kind section` on `grok-bot/` and

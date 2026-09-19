@@ -35,7 +35,9 @@ the banner shows what the skill *does*, not its ceremony — or, for
 - **Occasionally** light, floating orbs, energon-like cubes, or luminous
   pulses may **emanate from** those water-carrying structures. Waterworks
   are the chassis; light/cubes are rare cargo in the pipes.
-- Aspect: prefer `16:9` (Grok Bot GenerateImage). Reference
+- Size: **exactly 2172×724** (~3:1), matching root `world-map.png`. If
+  GenerateImage only offers 16:9, generate wide then center-crop /
+  cover-resize to 2172×724. Do not rescale further after that. Reference
   [.claude/data/grok-bot-orb-reference.png](../../data/grok-bot-orb-reference.png)
   (the red teardrop orb mascot) when available.
 
@@ -86,13 +88,16 @@ If several packages match, ask which one. One target per run.
    `reference_image_paths` note) in a fenced `text` block. Outside the
    fence: kind (`package` or `section`), save path
    (`grok-bot/<name>/<name>-hero.png` or `grok-bot/grok-bot-hero.png`),
-   aspect `16:9`, permitted on-image words, and the one-line crux you
-   chose.
+   size `2172×724` (match `world-map.png`; if GenerateImage is 16:9,
+   center-crop/cover-resize), permitted on-image words, and the one-line
+   crux you chose.
 7. If OWNER says generate: call GenerateImage with that description +
    orb reference; write the PNG to the save path. Package README line 1
    is `![<name>](<name>-hero.png)` (no H1). Section README line 1 is
-   `![grok-bot](grok-bot-hero.png)` (`# grok-bot` may follow). Do not
-   rescale 16:9 to ~3:1 unless OWNER asks. Do not write `world-map.png`.
+   `![grok-bot](grok-bot-hero.png)` (`# grok-bot` may follow). On-disk
+   size must be **exactly 2172×724**. If GenerateImage only offers 16:9,
+   generate wide then center-crop/cover-resize; do not rescale further
+   after that. Do not write `world-map.png`.
 
 ## Output
 
