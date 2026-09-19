@@ -47,10 +47,6 @@ Playbooks that get better as the bots get sharper — structure over pasted blur
 
 Each package does one job. Stack them; don't merge them into a kitchen sink.
 
-### 4. Waterworks heroes
-
-Section and package heroes are Grok Bot–generated: teardrop orb agents on old-west water infrastructure. Light or cubes may ride the pipes; waterworks is the chassis. Crux of the skill first — not secondary process.
-
 ## License
 
 MIT. See the repo [LICENSE](../LICENSE).
