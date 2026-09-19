@@ -29,7 +29,7 @@ cp -R agent-files/grok-bot/<name> /home/box/agent-data/workflows/<name>
 
 Enable it for the bot that will run it, then invoke `/<name>` from the composer. That path is `/home/box/agent-data/workflows/`, not `~/.claude/skills/`.
 
-To add a package: [.claude/grok-bot-folder.md](../.claude/grok-bot-folder.md), skeleton [.claude/data/grok-bot-package-template/](../.claude/data/grok-bot-package-template/), `/add-new-grok-bot-skill`, heroes via `/generate-grok-bot-hero-prompt` then GenerateImage in Grok Bot. When the package list changes, regenerate this page's `grok-bot-hero.png` (`--kind section`).
+To add a package: [.claude/grok-bot-folder.md](../.claude/grok-bot-folder.md), skeleton [.claude/data/grok-bot-package-template/](../.claude/data/grok-bot-package-template/), `/add-new-grok-bot-skill` (writes an entry in [`.claude/data/grok-bot-map.yaml`](../.claude/data/grok-bot-map.yaml)). Package heroes via `/generate-grok-bot-package-hero` then GenerateImage in Grok Bot. When the package list changes, `/generate-grok-bot-map` regenerates this page's `grok-bot-hero.png`.
 
 ## Design Philosophy
 

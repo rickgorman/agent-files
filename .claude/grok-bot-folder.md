@@ -12,7 +12,8 @@ and open a PR, run `/add-new-grok-bot-skill`
 
 This file is the sibling of [skill-folder.md](skill-folder.md). Same split
 (SKILL.md = procedure, README = steal-page). Different tree, different
-install home, no world-map entry.
+install home. No entry on the root `skill-map.yaml` — the grok-bot
+section hero is a function of [grok-bot-map.yaml](data/grok-bot-map.yaml).
 
 ## Start here
 
@@ -131,8 +132,8 @@ Every `grok-bot/<name>/` ships `<kebab-name>-hero.png` next to the README
 (not in `assets/`). A package without a real hero is not done. Do not
 invent a placeholder PNG.
 
-Before GenerateImage, run `/generate-grok-bot-hero-prompt`
-([.claude/skills/generate-grok-bot-hero-prompt/SKILL.md](skills/generate-grok-bot-hero-prompt/SKILL.md))
+Before GenerateImage, run `/generate-grok-bot-package-hero`
+([.claude/skills/generate-grok-bot-package-hero/SKILL.md](skills/generate-grok-bot-package-hero/SKILL.md))
 so the banner shows the skill's **real crux**. Gist by importance; secondary
 process (pause flags, confirm gates, logging) must not dominate.
 
@@ -176,18 +177,25 @@ The tree index [`grok-bot/README.md`](../grok-bot/README.md) has its own
 banner: `grok-bot/grok-bot-hero.png`. Line 1 is the embed; `# grok-bot`
 may follow (same pattern as root `# agent-files` after the world map).
 
-This hero sums the **catalog** — a waterworks town / district of the
-published packages — not one skill's crux. Same waterworks + orb style.
+This hero is a function of one file:
+[`.claude/data/grok-bot-map.yaml`](data/grok-bot-map.yaml). Same *shape*
+as the root world map (`skill-map.yaml` + `/generate-world-map`): one
+entry per published package; `/generate-grok-bot-map`
+([.claude/skills/generate-grok-bot-map/SKILL.md](skills/generate-grok-bot-map/SKILL.md))
+turns the registry into a GenerateImage description, then a 2172×724 PNG
+in Grok Bot. A package with no entry vanishes the next time the section
+hero is regenerated.
 
-When a package is added or removed, regenerate the section hero in Grok
-Bot. Run `/generate-grok-bot-hero-prompt --kind section` (path
-`grok-bot/`), then GenerateImage. Do not treat this as a package hero and
-do not touch `world-map.png`.
+`/add-new-grok-bot-skill` writes the entry (`plaque`, `region`,
+`structure`, `transform`, any `edges`). Regenerating the picture is
+`/generate-grok-bot-map`, not a package-hero `--kind section` pass.
+Do not treat this as a package hero and do not touch `world-map.png`.
 
 ## World map
 
 Leave [.claude/data/skill-map.yaml](data/skill-map.yaml) alone. That roster
-is `skills/` only. A grok-bot package is not a site on the root map.
+is `skills/` only. A grok-bot package is not a site on the root map. It
+is a site on [grok-bot-map.yaml](data/grok-bot-map.yaml).
 
 ## Optional — only when the package needs them
 
@@ -217,10 +225,12 @@ folder.
 | How a grok-bot folder in *this* repo is shaped | this file |
 | Copy-ready skeleton | `.claude/data/grok-bot-package-template/` |
 | Tree index (one bullet per package) | `grok-bot/README.md` |
-| Catalog / district banner | `grok-bot/grok-bot-hero.png` (regenerate when the roster changes) |
+| Where a package sits on the section map | `.claude/data/grok-bot-map.yaml` |
+| Catalog / district banner | `grok-bot/grok-bot-hero.png` — function of `grok-bot-map.yaml` via `/generate-grok-bot-map` |
 | Root pointer (one card or sentence) | root `README.md` `## Grok Bot` |
 | How to port a package into `grok-bot/` and open a PR | `.claude/skills/add-new-grok-bot-skill/` |
-| How to write the hero GenerateImage description | `/generate-grok-bot-hero-prompt` |
+| How to write a package hero | `/generate-grok-bot-package-hero` |
+| How to rebuild the section hero | `/generate-grok-bot-map` |
 | Claude skills (different tree) | [skill-folder.md](skill-folder.md) + `skills/` |
 
 One home per fact. If a constant lives in SKILL.md, the README may mention it
@@ -235,11 +245,12 @@ in passing but does not become a second procedure.
 - [ ] Published files have no personal names, private URLs, or credentials
 - [ ] `README.md` has Overview / Prerequisites / Install / When to use / Output
 - [ ] README line 1 is the hero embed, no H1, never a placeholder PNG
-- [ ] Ran `/generate-grok-bot-hero-prompt` so the crux (not pause/logging) leads
+- [ ] Ran `/generate-grok-bot-package-hero` so the crux (not pause/logging) leads
 - [ ] `<kebab-name>-hero.png` generated in Grok Bot (waterworks + orbs; exactly 2172×724, matching `world-map.png`)
 - [ ] `cp -R grok-bot/<name> /home/box/agent-data/workflows/<name>` is the documented install
 - [ ] `grok-bot/README.md` has one bullet: `- [<name>](<name>/) <one sentence>`
-- [ ] Regenerated `grok-bot/grok-bot-hero.png` if the catalog changed (`--kind section`)
+- [ ] `.claude/data/grok-bot-map.yaml` has an entry for the package
+- [ ] Regenerated `grok-bot/grok-bot-hero.png` via `/generate-grok-bot-map` if the catalog changed
 - [ ] Root `README.md` `## Grok Bot` points at the package
 - [ ] `.claude/data/skill-map.yaml` was not edited
 - [ ] Nothing in the folder exists only to look complete
