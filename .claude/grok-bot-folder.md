@@ -190,6 +190,8 @@ hero is regenerated.
 `structure`, `transform`, any `edges`). Regenerating the picture is
 `/generate-grok-bot-map`, not a package-hero `--kind section` pass.
 Do not treat this as a package hero and do not touch `world-map.png`.
+Never put typography instructions (e.g. ALL-CAPS, banner, plaque)
+on-image — only the actual label words.
 
 ## World map
 

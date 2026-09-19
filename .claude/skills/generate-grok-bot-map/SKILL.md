@@ -108,3 +108,4 @@ permitted words, save path `grok-bot/grok-bot-hero.png`.
 - Function of `grok-bot-map.yaml` only — do not invent packages.
 - Do not edit `world-map.png` or Claude `skills/` heroes.
 - Exact 2172×724. One continuous world, not a collage of package heroes.
+- Never put typography instructions (e.g. ALL-CAPS, banner, plaque) on-image — only the actual label words.
