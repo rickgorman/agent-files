@@ -1,3 +1,5 @@
+![grok-bot](grok-bot-hero.png)
+
 # grok-bot
 
 Playbooks for a Grok Bot fleet. Not Claude slash commands.
@@ -30,4 +32,6 @@ To port one and open a PR, run `/add-new-grok-bot-skill`
 ([.claude/skills/add-new-grok-bot-skill/SKILL.md](../.claude/skills/add-new-grok-bot-skill/SKILL.md)).
 Hero banners: `/generate-grok-bot-hero-prompt`
 ([.claude/skills/generate-grok-bot-hero-prompt/SKILL.md](../.claude/skills/generate-grok-bot-hero-prompt/SKILL.md))
-then GenerateImage in Grok Bot — crux first, not pause gates.
+then GenerateImage in Grok Bot — crux first, not pause gates. When the
+package list changes, regenerate this page's `grok-bot-hero.png` with
+`--kind section` (catalog / waterworks town).

@@ -2,25 +2,28 @@
 name: generate-grok-bot-hero-prompt
 description: >-
   Write a GenerateImage description (or make a hero PNG) for a grok-bot/
-  package: extract the skill's real crux by importance, apply the
-  waterworks+orb style, and de-emphasize secondary process like pause
-  gates. Use when adding a grok-bot hero, after SKILL.md exists, or on
-  /generate-grok-bot-hero-prompt <path|name>.
+  package or the grok-bot/ catalog: extract the real crux by importance,
+  apply the waterworks+orb style, and de-emphasize secondary process like
+  pause gates. Use when adding a grok-bot hero, after SKILL.md exists,
+  when the catalog changes (`--kind section`), or on
+  /generate-grok-bot-hero-prompt <path|name> [--kind package|section].
 ---
 
 # /generate-grok-bot-hero-prompt
 
-Read a Grok Bot package (`SKILL.md` + README) and emit a **paste-ready
-GenerateImage description** for its hero banner. Then (when OWNER asks)
-run GenerateImage and save `<name>-hero.png` beside the README.
+Read a Grok Bot package (`SKILL.md` + README) — or the `grok-bot/`
+catalog — and emit a **paste-ready GenerateImage description** for its
+hero banner. Then (when OWNER asks) run GenerateImage and save the PNG.
 
-Authoring only. The PNG lands in `grok-bot/<name>/`. The description
-stays in the session — do not commit it, and do not paste it onto the PR
-as the primary path.
+Authoring only. A package PNG lands in `grok-bot/<name>/`. The section
+PNG lands at `grok-bot/grok-bot-hero.png`. The description stays in the
+session — do not commit it, and do not paste it onto the PR as the
+primary path. Do not touch `world-map.png`.
 
 Style lives in [.claude/grok-bot-folder.md](../../grok-bot-folder.md).
 This skill does not restate the whole rubric. It picks the **crux** so
-the banner shows what the skill *does*, not its ceremony.
+the banner shows what the skill *does*, not its ceremony — or, for
+`--kind section`, the catalog as a waterworks town, not one package.
 
 ## Style lock (always)
 
@@ -42,20 +45,28 @@ Arguments: `$ARGUMENTS` (or `{{args}}` — same slot, whichever the harness inte
 
 Parse:
 
-1. **Path** — a `grok-bot/<name>/` folder or a `SKILL.md` inside one.
-2. **Name** — a published package name. Use `grok-bot/<name>/`.
-3. **Empty** — use the grok-bot package already in this conversation. If
+1. **`--kind section`** (or path exactly `grok-bot/`) — catalog banner.
+   Read `grok-bot/README.md` and the package list. Save as
+   `grok-bot/grok-bot-hero.png`. Crux is the **district**: the published
+   roster as one waterworks town, not one skill.
+2. **`--kind package`** (default) — a `grok-bot/<name>/` folder or a
+   `SKILL.md` inside one. Save as `grok-bot/<name>/<name>-hero.png`.
+3. **Name** — a published package name. Use `grok-bot/<name>/`.
+4. **Empty** — use the grok-bot package already in this conversation. If
    there isn't one, ask. Do not pick a random package.
 
-If several packages match, ask which one. One package per run.
+If several packages match, ask which one. One target per run.
 
 ## Procedure
 
-1. **Read** `SKILL.md` and the README Overview in full. Skip Guardrails
-   minutiae unless they *are* the product.
+1. **Read.** Package: `SKILL.md` and the README Overview (skip Guardrails
+   minutiae unless they *are* the product). Section: `grok-bot/README.md`
+   plus each published package's one-line promise — not one SKILL.md.
 2. **Gist by importance** — write three bullets privately, then keep only
    the top one as the **visual crux**:
-   - What does this skill *do* for the OWNER's fleet? (promise)
+   - Package: what does this skill *do* for the OWNER's fleet? (promise)
+   - Section: what is the catalog as a place? (a waterworks district of
+     the published packages)
    - What transforms? (messy → ordered, raw → refined, many → one, …)
    - What is *supporting* process (confirmation gates, logging, YAML
      flags)? Mark these **secondary** — they must not dominate the
@@ -73,13 +84,15 @@ If several packages match, ask which one. One package per run.
    a spring-clean banner).
 6. **Emit** one GenerateImage `description` string (and optional
    `reference_image_paths` note) in a fenced `text` block. Outside the
-   fence: package name, save path `grok-bot/<name>/<name>-hero.png`,
+   fence: kind (`package` or `section`), save path
+   (`grok-bot/<name>/<name>-hero.png` or `grok-bot/grok-bot-hero.png`),
    aspect `16:9`, permitted on-image words, and the one-line crux you
    chose.
 7. If OWNER says generate: call GenerateImage with that description +
-   orb reference; write the PNG next to the README; set README line 1 to
-   `![<name>](<name>-hero.png)` (no H1). Do not rescale 16:9 to ~3:1
-   unless OWNER asks.
+   orb reference; write the PNG to the save path. Package README line 1
+   is `![<name>](<name>-hero.png)` (no H1). Section README line 1 is
+   `![grok-bot](grok-bot-hero.png)` (`# grok-bot` may follow). Do not
+   rescale 16:9 to ~3:1 unless OWNER asks. Do not write `world-map.png`.
 
 ## Output
 
@@ -99,4 +112,6 @@ Use these sections, in this order:
   README embed are enough.
 - Do not put hero prompts on the PR body as the primary path — generate
   in Grok Bot.
-- One package per run.
+- One target per run.
+- `--kind section` is the catalog, not a package. Do not draw one skill
+  as if it were the whole tree. Do not edit `world-map.png`.

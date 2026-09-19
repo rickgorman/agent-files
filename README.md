@@ -32,7 +32,14 @@ A flow explanation that *describes* screens is easy to misread. This films the r
 
 ## Grok Bot
 
-Fleet playbooks. Copy a folder onto the Grok Bot box, not into `~/.claude/skills/`. Index: [`grok-bot/`](grok-bot/).
+A separate steal path. [`grok-bot/`](grok-bot/) is fleet playbooks for Grok Bot, not Claude `skills/`. Copy a package onto the box:
+
+```bash
+gh repo clone rickgorman/agent-files
+cp -R agent-files/grok-bot/<name> /home/box/agent-data/workflows/<name>
+```
+
+That is `/home/box/agent-data/workflows/`, not `~/.claude/skills/`. The section has its own hero on [`grok-bot/README.md`](grok-bot/) (`grok-bot-hero.png`). Each package folder has a hero too. The root banner stays `world-map.png` — do not stack a grok-bot image here.
 
 ### [`/fleet-spring-clean`](grok-bot/fleet-spring-clean/)
 
@@ -43,6 +50,7 @@ The sidebar filled up. Notion grew a third "misc" root. Skills got pasted into b
 ## Table of Contents
 
 - [Quick Start](#quick-start)
+- [Grok Bot](#grok-bot)
 - [Design Philosophy](#design-philosophy)
 - [License](#license)
 

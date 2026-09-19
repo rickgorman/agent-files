@@ -169,7 +169,21 @@ unless OWNER asks later. Keep whatever Grok Bot returned; do not invent a
 rescale.
 
 Do not add grok-bot heroes to the repo root README. The root picture is the
-Claude skills world map.
+Claude skills world map (`world-map.png`). Leave `/generate-world-map` alone.
+
+### Section hero (`grok-bot/grok-bot-hero.png`)
+
+The tree index [`grok-bot/README.md`](../grok-bot/README.md) has its own
+banner: `grok-bot/grok-bot-hero.png`. Line 1 is the embed; `# grok-bot`
+may follow (same pattern as root `# agent-files` after the world map).
+
+This hero sums the **catalog** — a waterworks town / district of the
+published packages — not one skill's crux. Same waterworks + orb style.
+
+When a package is added or removed, regenerate the section hero in Grok
+Bot. Run `/generate-grok-bot-hero-prompt --kind section` (path
+`grok-bot/`), then GenerateImage. Do not treat this as a package hero and
+do not touch `world-map.png`.
 
 ## World map
 
@@ -204,6 +218,7 @@ folder.
 | How a grok-bot folder in *this* repo is shaped | this file |
 | Copy-ready skeleton | `.claude/data/grok-bot-package-template/` |
 | Tree index (one bullet per package) | `grok-bot/README.md` |
+| Catalog / district banner | `grok-bot/grok-bot-hero.png` (regenerate when the roster changes) |
 | Root pointer (one card or sentence) | root `README.md` `## Grok Bot` |
 | How to port a package into `grok-bot/` and open a PR | `.claude/skills/add-new-grok-bot-skill/` |
 | How to write the hero GenerateImage description | `/generate-grok-bot-hero-prompt` |
@@ -225,6 +240,7 @@ in passing but does not become a second procedure.
 - [ ] `<kebab-name>-hero.png` generated in Grok Bot (waterworks + orbs; 16:9 fine)
 - [ ] `cp -R grok-bot/<name> /home/box/agent-data/workflows/<name>` is the documented install
 - [ ] `grok-bot/README.md` has one bullet: `- [<name>](<name>/) <one sentence>`
+- [ ] Regenerated `grok-bot/grok-bot-hero.png` if the catalog changed (`--kind section`)
 - [ ] Root `README.md` `## Grok Bot` points at the package
 - [ ] `.claude/data/skill-map.yaml` was not edited
 - [ ] Nothing in the folder exists only to look complete

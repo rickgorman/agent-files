@@ -130,6 +130,12 @@ If a PNG the user named is already on disk, matches the waterworks style,
 generate it in this Grok Bot session (or ask OWNER to). A package without
 a hero is not done.
 
+Then refresh the **section** hero: run
+`/generate-grok-bot-hero-prompt --kind section` on `grok-bot/` and
+GenerateImage to `grok-bot/grok-bot-hero.png`. That picture is the
+catalog (a waterworks town), not this one skill. Do not touch
+`world-map.png`.
+
 ### 5. Branch, commit, PR
 
 Base:
