@@ -104,31 +104,31 @@ default: skip; `fleet-spring-clean` already sits there.
 
 ### 4. Hero
 
-Required. Generate the banner **in Grok Bot** (GenerateImage / in-chat).
-Attach [.claude/data/grok-bot-orb-reference.png](../../data/grok-bot-orb-reference.png)
-and describe this package's mechanism on **old-west water infrastructure**
-— see [.claude/grok-bot-folder.md](../../grok-bot-folder.md). Save as
-`grok-bot/<name>/<kebab-name>-hero.png`. README line 1 is the embed; no H1.
+Required.
 
-Style lock:
-
-- Always: orb-bots on waterways, canals, aqueducts, flumes, plumbing,
-  pumps, valves, cisterns, water towers, sluice gates, pipes/troughs.
-  Waterworks is the chassis of every scene.
-- Occasionally: light, floating orbs, or energon-like cubes may emanate
-  from those water-carrying structures. Water first; luminous cargo rare.
-- Characters: glossy teardrop orbs (rounded bottom, pointed top, black
-  pill eyes, cyan accent on the lower side). The red orb mascot is the
-  reference.
+1. Run `/generate-grok-bot-hero-prompt`
+   ([.claude/skills/generate-grok-bot-hero-prompt/SKILL.md](../generate-grok-bot-hero-prompt/SKILL.md))
+   on `grok-bot/<name>/`. That skill reads the package, gists by
+   importance, and emits a GenerateImage description of the **crux**.
+   Secondary process (pause flags, confirm gates, logging) must not
+   dominate.
+2. Generate the banner **in Grok Bot** (GenerateImage / in-chat) with that
+   description plus
+   [.claude/data/grok-bot-orb-reference.png](../../data/grok-bot-orb-reference.png).
+   Style lock is in [.claude/grok-bot-folder.md](../../grok-bot-folder.md):
+   orb-bots on old-west waterworks; light/cubes only as rare flow.
+3. Commit `grok-bot/<name>/<kebab-name>-hero.png`. README line 1 is the
+   embed; no H1.
 
 16:9 from GenerateImage is fine. Do not rescale to the Claude-skill ~3:1
 unless OWNER asks. Do not invent a placeholder PNG. Do **not** put an
 image prompt on the PR as the primary path. Do not follow
 `generate-hero.md` (that is ChatGPT for `skills/`).
 
-If a PNG the user named is already on disk and matches this waterworks
-style, copy it in. Otherwise generate it in this Grok Bot session (or ask
-OWNER to). A package without a hero is not done.
+If a PNG the user named is already on disk, matches the waterworks style,
+**and** shows this skill's crux (not its ceremony), copy it in. Otherwise
+generate it in this Grok Bot session (or ask OWNER to). A package without
+a hero is not done.
 
 ### 5. Branch, commit, PR
 

@@ -131,11 +131,16 @@ Every `grok-bot/<name>/` ships `<kebab-name>-hero.png` next to the README
 (not in `assets/`). A package without a real hero is not done. Do not
 invent a placeholder PNG.
 
-Generate the banner **in Grok Bot** (GenerateImage / in-chat). Attach
-[grok-bot-orb-reference.png](data/grok-bot-orb-reference.png) and describe
-this package's mechanism on old-west water infrastructure. Commit the PNG
-into the package folder. Wire README line 1 to the embed. Do **not** paste
-an image prompt onto the PR as the primary path. Do not follow
+Before GenerateImage, run `/generate-grok-bot-hero-prompt`
+([.claude/skills/generate-grok-bot-hero-prompt/SKILL.md](skills/generate-grok-bot-hero-prompt/SKILL.md))
+so the banner shows the skill's **real crux**. Gist by importance; secondary
+process (pause flags, confirm gates, logging) must not dominate.
+
+Then generate the banner **in Grok Bot** (GenerateImage / in-chat). Attach
+[grok-bot-orb-reference.png](data/grok-bot-orb-reference.png) and the
+description that skill emitted. Commit the PNG into the package folder.
+Wire README line 1 to the embed. Do **not** paste an image prompt onto the
+PR as the primary path. Do not follow
 [.claude/data/generate-hero.md](data/generate-hero.md) — that is the Claude
 `skills/` ChatGPT path.
 
@@ -201,6 +206,7 @@ folder.
 | Tree index (one bullet per package) | `grok-bot/README.md` |
 | Root pointer (one card or sentence) | root `README.md` `## Grok Bot` |
 | How to port a package into `grok-bot/` and open a PR | `.claude/skills/add-new-grok-bot-skill/` |
+| How to write the hero GenerateImage description | `/generate-grok-bot-hero-prompt` |
 | Claude skills (different tree) | [skill-folder.md](skill-folder.md) + `skills/` |
 
 One home per fact. If a constant lives in SKILL.md, the README may mention it
@@ -215,6 +221,7 @@ in passing but does not become a second procedure.
 - [ ] Published files have no personal names, private URLs, or credentials
 - [ ] `README.md` has Overview / Prerequisites / Install / When to use / Output
 - [ ] README line 1 is the hero embed, no H1, never a placeholder PNG
+- [ ] Ran `/generate-grok-bot-hero-prompt` so the crux (not pause/logging) leads
 - [ ] `<kebab-name>-hero.png` generated in Grok Bot (waterworks + orbs; 16:9 fine)
 - [ ] `cp -R grok-bot/<name> /home/box/agent-data/workflows/<name>` is the documented install
 - [ ] `grok-bot/README.md` has one bullet: `- [<name>](<name>/) <one sentence>`

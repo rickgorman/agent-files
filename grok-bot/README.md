@@ -28,3 +28,6 @@ Shape: [.claude/grok-bot-folder.md](../.claude/grok-bot-folder.md). Skeleton:
 [.claude/data/grok-bot-package-template/](../.claude/data/grok-bot-package-template/).
 To port one and open a PR, run `/add-new-grok-bot-skill`
 ([.claude/skills/add-new-grok-bot-skill/SKILL.md](../.claude/skills/add-new-grok-bot-skill/SKILL.md)).
+Hero banners: `/generate-grok-bot-hero-prompt`
+([.claude/skills/generate-grok-bot-hero-prompt/SKILL.md](../.claude/skills/generate-grok-bot-hero-prompt/SKILL.md))
+then GenerateImage in Grok Bot — crux first, not pause gates.
