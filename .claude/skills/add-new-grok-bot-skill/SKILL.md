@@ -1,0 +1,153 @@
+---
+name: add-new-grok-bot-skill
+description: >-
+  Port an existing Grok Bot playbook into this repo as a published stealable
+  package: conform it to the grok-bot-folder template, strip local coupling,
+  and open a PR. Use when adding a grok-bot package to agent-files, publishing
+  a fleet playbook, or running /add-new-grok-bot-skill <path|name>.
+---
+
+# /add-new-grok-bot-skill
+
+Take a Grok Bot playbook that already exists (a folder, a `SKILL.md`, or the
+one in this conversation), reshape it to this repo's published grok-bot
+folder shape, and open a PR. Authoring only — the published copy lands in
+`grok-bot/`, not here, and not in `skills/`.
+
+Do not invent a package from a vague wish. There must be a source.
+
+## Input
+
+Arguments: `$ARGUMENTS` (or `{{args}}` — same slot, whichever the harness interpolates)
+
+Parse:
+
+1. **Path** — an existing local file or directory (`SKILL.md`, a skill folder,
+   a playbook markdown).
+2. **Name** — a skill name. Search the conversation, then
+   `/home/box/agent-data/workflows/`, `~/.grok/skills/`, and any path the
+   user named.
+3. **Empty** — use the playbook already in this conversation. If there isn't
+   one, ask. Do not pick a random package from the repo.
+
+If several sources match, ask which one. One package per run.
+
+Optional: `--name <slash>` overrides the published folder/skill name.
+
+## Procedure
+
+Read [.claude/grok-bot-folder.md](../../grok-bot-folder.md) and
+[.claude/data/grok-bot-package-template/](../../data/grok-bot-package-template/)
+in full before editing. Those files are the shape. This skill does not
+restate them.
+
+### 1. Name it
+
+`<name>` is the Grok Bot `/` skill in **kebab-case** — lowercase, hyphens, no
+underscores (`fleet-spring-clean`). Folder = skill so
+`cp -R grok-bot/<name> /home/box/agent-data/workflows/<name>` just works.
+
+If the source name has underscores or a `grok-bot-` prefix that would double
+up under `grok-bot/`, rename it on the way in and fix the references inside
+it — the published roster is kebab-case throughout.
+
+If `grok-bot/<name>/` already exists, stop and say so.
+
+### 2. Strip coupling
+
+The published package has to run on someone else's fleet. While porting:
+
+- Drop personal paths, one person's Notion URLs, and named company pages.
+- Drop a hard-coded roster of bots. Replace with placeholders
+  (`OWNER`, `BUILDER_BOT`, `COMPANY_BRAIN`) and a blank template in
+  `references/` if the run needs a fill-in config.
+- Keep the mechanism. Cut the private names, dollar maps, and "Rick" headers.
+
+A package that cannot stand without this user's stack is not ready to
+publish. Say so and stop.
+
+### 3. Write the folder
+
+```bash
+cp -R .claude/data/grok-bot-package-template grok-bot/<name>
+```
+
+Replace `SKILL_NAME` and `skill-name`. Fill `SKILL.md` and `README.md` until
+they match the rubric (Input → procedure → Output → Guardrails; README with
+Overview / Prerequisites / Install / When to use / Output, contrast table,
+one mermaid). Voice matches the repo root: short, stealable, second person.
+
+Rare-path material and blank fill-in templates go in `references/`. A real
+helper goes in `scripts/`. Do not add a second README, a changelog, or a
+hero `assets/` folder. Do not invent a placeholder hero PNG.
+
+Append one bullet to `grok-bot/README.md`, same shape as the lines already
+there:
+
+```markdown
+- [<name>](<name>/) <one sentence: the mechanism, not a slogan>
+```
+
+Point the root `README.md` `## Grok Bot` section at the new package — one
+card matching the prompts already there, or one sentence if a card would
+repeat the tree index. Do not add a Claude `## Skills` bullet and do not
+list `~/.claude/skills/` as the install.
+
+Do **not** add an entry to `.claude/data/skill-map.yaml`. That roster is
+`skills/` only.
+
+Add `grok-bot/<name>/` to the exemplar list in `.claude/grok-bot-folder.md`
+only when this package is itself a published exemplar worth naming —
+default: skip; `fleet-spring-clean` already sits there.
+
+### 4. Hero
+
+Heroes are optional on this tree. Follow
+[.claude/data/generate-hero.md](../../data/generate-hero.md) only if the
+user asked for one or dropped a PNG.
+
+If `~/Downloads/<kebab-name>-hero.png` (or a path the user named) exists and
+is a ~3:1 PNG, copy it to `grok-bot/<name>/<kebab-name>-hero.png` and switch
+the README H1 for the embed. Do not rescale.
+
+If there is no PNG, still open the PR. Do not invent a placeholder PNG. Do
+not put a prompt on the PR.
+
+### 5. Branch, commit, PR
+
+Base:
+
+1. `master` if it already contains `.claude/grok-bot-folder.md`.
+2. Otherwise the branch that does.
+
+```bash
+git checkout -b <name> <base>
+```
+
+Stage **file-by-file** (never `git add -A`). `git diff --no-ext-diff`. Commit
+without AI attribution lines. Push. Open a PR against that same base.
+
+PR body uses the repo's usual shape (Summary, Changes as a bullet list,
+Commit History). Describe the published package. Do not describe how a hero
+was generated. Do not paste a prompt.
+
+## Output
+
+- `grok-bot/<name>/` conforming to the rubric
+- one new bullet in `grok-bot/README.md`
+- a root `README.md` `## Grok Bot` pointer
+- a PR URL
+- if a hero was requested and the PNG was missing: a one-line note that the
+  banner still needs a drop
+
+## Guardrails
+
+- Publish into `grok-bot/<name>/` only. Do not copy the result into
+  `skills/` or `.claude/skills/` — `.claude/` is authoring skills for this
+  repo; `skills/` is Claude.
+- Do not edit `.claude/data/skill-map.yaml`.
+- Do not commit a hero prompt, a `prompt.txt`, or a ChatGPT dump.
+- Do not expand the PR into unrelated packages or rubric refactors.
+- One published package per run.
+- Edit nothing in the source playbook's original location unless the user asked.
+- Keep published files free of personal names, private URLs, and credentials.
