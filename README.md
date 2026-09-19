@@ -30,6 +30,16 @@ The session model that writes the code also judges the code. This splits that: y
 
 A flow explanation that *describes* screens is easy to misread. This films the real product: clicks, toasts intact, laid onto a plat canvas. Schematics are a bug, not a fallback.
 
+## Grok Bot
+
+Fleet playbooks. Copy a folder onto the Grok Bot box, not into `~/.claude/skills/`. Index: [`grok-bot/`](grok-bot/).
+
+### [`/fleet-spring-clean`](grok-bot/fleet-spring-clean/)
+
+> *Declutter a multi-bot fleet: two Notion brains, one boss per seat, boards, briefs, arsenal.*
+
+The sidebar filled up. Notion grew a third "misc" root. Skills got pasted into blurbs. This is a phased clean — inventory first — and the playbook stays free of your URLs.
+
 ## Table of Contents
 
 - [Quick Start](#quick-start)
@@ -47,6 +57,15 @@ cp -R agent-files/skills/<name> ~/.claude/skills/<name>
 ```
 
 Then invoke `/<name>`.
+
+Copy a Grok Bot package onto the box:
+
+```bash
+gh repo clone rickgorman/agent-files
+cp -R agent-files/grok-bot/<name> /home/box/agent-data/workflows/<name>
+```
+
+Then enable it and invoke `/<name>` from Grok Bot. See [`grok-bot/`](grok-bot/).
 
 ## Design Philosophy
 
