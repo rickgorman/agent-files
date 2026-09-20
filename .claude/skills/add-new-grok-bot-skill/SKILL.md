@@ -95,6 +95,16 @@ card matching the prompts already there, or one sentence if a card would
 repeat the tree index. Do not add a Claude `## Skills` bullet and do not
 list `~/.claude/skills/` as the install.
 
+Add one entry to `.claude/data/grok-bot-map.yaml` too — the section hero
+is generated from that file, and a package with no entry vanishes the
+next time the map is regenerated. Follow the entries already there:
+`plaque` (the sign bolted to the worksite — `/<name>`, lowercase, slash
+included), `region` (one of the regions declared at the top of the file
+— add a region only if none fits), `structure` (what stands at that
+site), `transform` (what the blue work does passing through, told
+through the building's shape rather than through words), and any
+`edges` to other packages.
+
 Do **not** add an entry to `.claude/data/skill-map.yaml`. That roster is
 `skills/` only.
 
@@ -106,8 +116,8 @@ default: skip; `fleet-spring-clean` already sits there.
 
 Required.
 
-1. Run `/generate-grok-bot-hero-prompt`
-   ([.claude/skills/generate-grok-bot-hero-prompt/SKILL.md](../generate-grok-bot-hero-prompt/SKILL.md))
+1. Run `/generate-grok-bot-package-hero`
+   ([.claude/skills/generate-grok-bot-package-hero/SKILL.md](../generate-grok-bot-package-hero/SKILL.md))
    on `grok-bot/<name>/`. That skill reads the package, gists by
    importance, and emits a GenerateImage description of the **crux**.
    Secondary process (pause flags, confirm gates, logging) must not
@@ -120,20 +130,24 @@ Required.
 3. Commit `grok-bot/<name>/<kebab-name>-hero.png`. README line 1 is the
    embed; no H1.
 
-16:9 from GenerateImage is fine. Do not rescale to the Claude-skill ~3:1
-unless OWNER asks. Do not invent a placeholder PNG. Do **not** put an
-image prompt on the PR as the primary path. Do not follow
-`generate-hero.md` (that is ChatGPT for `skills/`).
+The PNG must be **exactly 2172×724**, matching root `world-map.png`. If
+GenerateImage only offers 16:9, generate wide then center-crop /
+cover-resize to 2172×724. Do not rescale further after that. Do not
+invent a placeholder PNG. Do **not** put an image prompt on the PR as
+the primary path. Do not follow `generate-hero.md` (that is ChatGPT
+for `skills/`).
 
-If a PNG the user named is already on disk, matches the waterworks style,
-**and** shows this skill's crux (not its ceremony), copy it in. Otherwise
-generate it in this Grok Bot session (or ask OWNER to). A package without
-a hero is not done.
+If a PNG the user named is already on disk, is exactly 2172×724, matches
+the waterworks style, **and** shows this skill's crux (not its ceremony),
+copy it in (do not rescale). If it is 16:9, center-crop/cover-resize to
+2172×724 first. Otherwise generate it in this Grok Bot session (or ask
+OWNER to). A package without a hero is not done.
 
-Then refresh the **section** hero: run
-`/generate-grok-bot-hero-prompt --kind section` on `grok-bot/` and
-GenerateImage to `grok-bot/grok-bot-hero.png`. That picture is the
-catalog (a waterworks town), not this one skill. Do not touch
+Then regenerate the **section** hero with `/generate-grok-bot-map`
+([.claude/skills/generate-grok-bot-map/SKILL.md](../generate-grok-bot-map/SKILL.md))
+— same role as `/generate-world-map` after a `skill-map.yaml` entry.
+That picture is a function of `.claude/data/grok-bot-map.yaml`, not this
+one skill. Do not invent a placeholder PNG. Do not touch
 `world-map.png`.
 
 ### 5. Branch, commit, PR
@@ -159,7 +173,9 @@ paste a ChatGPT image prompt.
 
 - `grok-bot/<name>/` conforming to the rubric, including the waterworks + orb hero PNG
 - one new bullet in `grok-bot/README.md`
+- one new entry in `.claude/data/grok-bot-map.yaml`
 - a root `README.md` `## Grok Bot` pointer
+- a note that `/generate-grok-bot-map` regenerates `grok-bot/grok-bot-hero.png`
 - a PR URL
 
 ## Guardrails
