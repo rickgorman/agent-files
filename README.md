@@ -28,6 +28,24 @@ The session model that writes the code also judges the code. This splits that: y
 
 A flow explanation that *describes* screens is easy to misread. This films the real product: clicks, toasts intact, laid onto a plat canvas. Schematics are a bug, not a fallback.
 
+### [`/expandable-reader`](skills/expandable-reader/)
+
+> *One page: a world-map paragraph, toggle sections, phrases that open in place.*
+
+A summary gives everyone the same two minutes. This reads the whole source, distills it into typed nuggets (tactic, lesson, mechanism, caveat, moment), and renders a drill-down page so a reader with any amount of time gets the map first and picks where to go deeper.
+
+### [`/handoff-beads`](skills/handoff-beads/)
+
+> *Session residue becomes beads in the graph, not a markdown brief.*
+
+A handoff doc is a copy of what the next agent should already be able to pull from the graph. This mines the session, creates only the missing beads, hangs them in the right places, and validates before you leave.
+
+### [`/transcript-heatmap`](skills/transcript-heatmap/)
+
+> *Score a long transcript five minutes at a time and draw it as sheet music.*
+
+Hours of recording, and no way to say where anything was. This slices the transcript, scores every slice against a rubric written from the source itself, and lays the result out as staves: a note per five minutes, colour for category, size for depth, click to read the transcript there.
+
 ### [`/jev-review-loop`](skills/jev-review-loop/)
 
 > *Your agent builds the rubric. Jev scores, the fixing agent repairs, Jev scores again.*

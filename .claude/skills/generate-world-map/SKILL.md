@@ -84,10 +84,11 @@ The registry separates three kinds of information:
 - Each site's `transform` and `terminates` describe its internal mechanism,
   including local review loops. Those loops do not become edges in the DAG.
 
-For the current roster, the route is `dag-reader → refine-plan →
-jev-review-loop → screen-flow → dev-manager`. Jev is immediately upstream of
-screen-flow, with no intervening site. Future changes come from the registry;
-update this example if the route changes.
+Derive roots, junctions, and the terminal site from the current registry. The
+reading tributaries converge at dag-reader; the relay continues through the
+other regions and ends at handoff-beads. Jev is immediately upstream of
+screen-flow, with no intervening site. Do not force branches into a made-up
+linear sequence or require a single entry skill when the DAG has several roots.
 
 Background `landmarks` are separate from the skill roster and route DAG. Keep
 their placements and signs, but do not turn them into processing stages or add
@@ -200,11 +201,13 @@ subject material:
   world map. Not an overhead map, isometric diagram, or flat flowchart. One
   continuous world inside an ornate carved wooden border.
 - Size: exactly **2172×724**, **3:1**, as recorded in `canvas.primary`.
-- Topology: **relay along one trunk**. The blue enters as raw work at the
-  lower left, follows the registry's directed edges through the skill sites,
-  and leaves at the right edge. Each `edges:` entry is a visible route, drawn
-  not named. Honor explicit placement, especially Jev immediately before
-  screen-flow. Region geometry must accommodate these routes.
+- Topology: **relay along one trunk**, with only the tributaries specified by
+  the registry. A single source may fork through entry sites and converge at
+  a junction; derive that arrangement from the DAG. Follow its directed edges
+  to the terminal site. Honor `blue.leaves`: when the final artifact is retained
+  in the handoff lattice, do not draw another scroll exiting beyond it. Each
+  edge is a visible route, drawn not named. Honor explicit placement, especially
+  Jev immediately before screen-flow. Regions must accommodate these routes.
 - Per skill: `structure:` is what stands there, `transform:` is what the blue
   does passing through, `plaque:` is the sign bolted to it. State explicitly
   that a skill sits **inside its own region** and nowhere else, and that a

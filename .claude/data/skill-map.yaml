@@ -22,12 +22,15 @@ title: Rick's agent-files   # the one title cartouche. No subtitle.
 # element; on this map it is the trunk, not any single site.
 blue:
   is: the work in progress — one river-and-rail trunk of electric cyan-blue
-  enters: lower-left, a broad rough irregular braid of raw work
-  leaves: right edge, a compact rolled blue scroll — the brightest blue in frame
+  enters: lower-left, one raw braid forks through two reading sites and joins at dag-reader
+  leaves: far-right handoff lattice, where the work remains as a completed bead graph
   rule: >-
-    Every skill site sits ON the trunk and visibly takes it in and puts it back
-    changed. Continuous from entry to exit, no unexplained gaps. No site gets
-    its own separate blue. No blue clothing, lamps, sky, trim, or signage.
+    One source briefly forks through expandable-reader and transcript-heatmap,
+    rejoins at dag-reader, then follows the trunk through every downstream site.
+    The final handoff-beads site retains the work in its completed lattice; the
+    brightest current condenses there rather than leaving as another scroll.
+    Continuous routes with no unexplained gaps or separate blue sources. No
+    blue clothing, lamps, sky, trim, or signage.
 
 # Two label classes, and the viewer must feel the difference before reading a
 # word. Everything drawn on this map is one or the other.
@@ -64,6 +67,42 @@ regions:
     ground: open flats where the route exits toward the horizon
 
 skills:
+  - name: expandable-reader
+    region: reading
+    plaque: /expandable-reader
+    placement: lower reading pavilion on the gorge rim; its route climbs to dag-reader
+    structure: >-
+      A terraced reading pavilion on the gorge rim below the survey station: one wide
+      map table on the top terrace, then a stair of shallow shelves stepping down,
+      each shelf a row of small hinged doors. Two readers, one at the map, one
+      opening a door on a lower shelf.
+    transform: >-
+      the braid arrives at the map table and is drawn as a single flat chart, then
+      splits into thin threads that run down behind the shelf doors; a door opened
+      lets one thread out to be read and closes again. The exit channel carries the
+      chart and the threads together, folded, no wider than the chart.
+    edges:
+      - to: dag-reader
+        route: short ladder up the rim to the survey station — one clean line
+
+  - name: transcript-heatmap
+    region: reading
+    plaque: /transcript-heatmap
+    placement: reading weir across the gorge; its route converges with the pavilion at dag-reader
+    structure: >-
+      A river gauging weir spanning the gorge below the survey station: one long
+      stone sill divided into many equal narrow bays, a graduated measuring post
+      standing in each bay, and a raised walkway of reading desks along the top.
+      Two gaugers walking the walkway, no crowd.
+    transform: >-
+      The braid arrives whole and is combed by the sill into many equal narrow
+      streams, one per bay, each rising to a different marked height on its post
+      so the row of heights reads as a profile across the weir. Downstream the
+      streams rejoin into one channel no wider than the one that arrived.
+    edges:
+      - to: dag-reader
+        route: up the gorge wall to the survey station — one clean line
+
   - name: dag-reader
     region: reading
     plaque: /dag-reader
@@ -155,12 +194,32 @@ skills:
     transform: >-
       The incoming rolled scroll is unrolled at the booth, split onto the
       parallel tracks, and each piece is inspected at the gate before the
-      accepted work is re-rolled. The compact exit scroll leaving the right
-      edge is the same object that entered the yard, now tighter and sealed.
+      accepted work is re-rolled. The compact scroll passing onward to the
+      lattice house is the same object that entered the yard, tighter and sealed.
     # The loop ends when the last slice's done-when holds.
     terminates: >-
       The commit gate stands closed on a sealed scroll and every work track
       is empty, with no one touching the switch.
+    edges:
+      - to: handoff-beads
+        route: across the open flats to the lattice house — one clean line
+
+  - name: handoff-beads
+    region: delivery
+    plaque: /handoff-beads
+    placement: terminal lattice house on the far-right delivery flats, after dev-manager
+    structure: >-
+      A timber lattice house on the delivery flats: a wide intake apron of
+      loose session cargo, a clipping bench, a standing wire lattice already
+      hung with earlier beads, and a brass inspection gate at the far door.
+      Two or three hands at the bench, no crowd.
+    transform: >-
+      The incoming braid is clipped into separate beads and hung onto empty
+      hooks on the existing lattice. Nothing leaves as a scroll. The lattice
+      itself, now complete, is what stands after the gate.
+    terminates: >-
+      The inspection gate has closed on a complete lattice with no loose
+      cargo remaining on the apron.
     edges: []
 
 # Scenic locations are not skill nodes and do not add workflow dependencies.
