@@ -28,6 +28,15 @@ The session model that writes the code also judges the code. This splits that: y
 
 A flow explanation that *describes* screens is easy to misread. This films the real product: clicks, toasts intact, laid onto a plat canvas. Schematics are a bug, not a fallback.
 
+### [`/jev-review-loop`](skills/jev-review-loop/)
+
+> *Your agent builds the rubric. Jev scores, the fixing agent repairs, Jev scores again.*
+
+Review a codebase or diff with criteria derived from the project, or supply your
+own rubrics. Jev selects applicable rules and grades current code; the fixing
+agent works from that round's failures. The loop records coverage and spend and
+stops on success, stalled progress, or its round and budget limits.
+
 ## Grok Bot
 
 A separate steal path. [`grok-bot/`](grok-bot/) is fleet playbooks for Grok Bot, not Claude `skills/`. Copy a package onto the box:
