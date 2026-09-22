@@ -134,7 +134,43 @@ skills:
     terminates: >-
       The commit gate stands closed on a sealed scroll and every work track
       is empty, with no one touching the switch.
+    edges:
+      - to: handoff-beads
+        route: across the open flats to the lattice house — one clean line
+
+  - name: handoff-beads
+    region: delivery
+    plaque: /handoff-beads
+    structure: >-
+      A timber lattice house on the delivery flats: a wide intake apron of
+      loose session cargo, a clipping bench, a standing wire lattice already
+      hung with earlier beads, and a brass inspection gate at the far door.
+      Two or three hands at the bench, no crowd.
+    transform: >-
+      The incoming braid is clipped into separate beads and hung onto empty
+      hooks on the existing lattice. Nothing leaves as a scroll. The lattice
+      itself, now complete, is what stands after the gate.
+    terminates: >-
+      The inspection gate has closed on a complete lattice with no loose
+      cargo remaining on the apron.
     edges: []
+
+  - name: expandable-reader
+    region: reading
+    plaque: /expandable-reader
+    structure: >-
+      A terraced reading pavilion on the gorge rim below the survey station: one wide
+      map table on the top terrace, then a stair of shallow shelves stepping down,
+      each shelf a row of small hinged doors. Two readers, one at the map, one
+      opening a door on a lower shelf.
+    transform: >-
+      the braid arrives at the map table and is drawn as a single flat chart, then
+      splits into thin threads that run down behind the shelf doors; a door opened
+      lets one thread out to be read and closes again. The exit channel carries the
+      chart and the threads together, folded, no wider than the chart.
+    edges:
+      - to: dag-reader
+        route: short ladder up the rim to the survey station — one clean line
 
   - name: transcript-heatmap
     region: reading

@@ -7,7 +7,7 @@ description: >-
   conference days, podcast back catalogues, all-hands recordings, or any recording too
   long to watch twice. Use when asked for a transcript heatmap, a density map of a stream,
   "where are the good parts", or a way to find the signal in hours of talk.
-  Invoke as /transcript-heatmap <path|paths> [--chunk 5m] [--bar 4h] [--out page.html].
+  Invoke as /transcript-heatmap PATH|PATHS [--chunk 5m] [--bar 4h] [--out page.html].
 ---
 
 # /transcript-heatmap

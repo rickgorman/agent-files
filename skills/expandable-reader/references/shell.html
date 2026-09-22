@@ -1,0 +1,496 @@
+<title>Grok Bot Galaxy Field Guide</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --bg: #F3F5F7;
+  --surface: #FFFFFF;
+  --ink: #1B2430;
+  --muted: #5B6674;
+  --rule: #D6DCE3;
+  --kind-tactic: #0F766E;
+  --kind-lesson: #4338CA;
+  --kind-caveat: #B45309;
+  --kind-mechanism: #7E22CE;
+  --kind-moment: #475569;
+  --font-head: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12161B;
+    --surface: #1B2129;
+    --ink: #E6EAEE;
+    --muted: #98A3AF;
+    --rule: #2C343E;
+    --kind-tactic: #2DD4BF;
+    --kind-lesson: #818CF8;
+    --kind-caveat: #FBBF24;
+    --kind-mechanism: #C084FC;
+    --kind-moment: #94A3B8;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12161B;
+  --surface: #1B2129;
+  --ink: #E6EAEE;
+  --muted: #98A3AF;
+  --rule: #2C343E;
+  --kind-tactic: #2DD4BF;
+  --kind-lesson: #818CF8;
+  --kind-caveat: #FBBF24;
+  --kind-mechanism: #C084FC;
+  --kind-moment: #94A3B8;
+}
+body { background: var(--bg); }
+.wrap {
+  max-width: 68ch;
+  margin: 0 auto;
+  padding-inline: 16px;
+  padding-block: 24px 48px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+h1 {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 1.75rem;
+  line-height: 1.2;
+  text-wrap: balance;
+  margin: 0 0 0.35em;
+}
+.subtitle { color: var(--muted); margin: 0 0 1.25rem; }
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--rule);
+}
+.chip {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 0.875rem;
+}
+.chip-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  align-self: center;
+}
+.chip-label { font-weight: 500; }
+.chip-blurb { color: var(--muted); }
+.crux {
+  margin-bottom: 1.75rem;
+}
+.crux p { margin: 0 0 0.75em; }
+.crux p:last-child { margin-bottom: 0; }
+.section {
+  border-top: 1px solid var(--rule);
+}
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  width: 100%;
+  padding: 14px 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.section-header:focus-visible {
+  outline: 2px solid var(--kind-lesson);
+  outline-offset: 2px;
+}
+.section-time {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+.section-heading {
+  font-family: var(--font-head);
+  font-weight: 500;
+  flex: 1;
+  text-wrap: balance;
+}
+.section-chevron {
+  color: var(--muted);
+  transition: transform 0.2s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .section-chevron { transition: none; }
+}
+.section.open .section-chevron { transform: rotate(90deg); }
+.section.open .section-body {
+  background: var(--surface);
+  padding: 12px 14px 1.25rem;
+  margin-bottom: 8px;
+}
+.section-body > .summary { margin-bottom: 1rem; }
+.section-body > .summary p { margin: 0 0 0.5em; color: var(--muted); }
+.node-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.node-list .node-list {
+  margin-top: 4px;
+  padding-left: 20px;
+  border-left: 2px solid var(--rule);
+}
+.node-line {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  width: 100%;
+  margin: 6px 0;
+  padding: 4px 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+.node-line.expandable {
+  cursor: pointer;
+}
+.node-line.expandable:focus-visible,
+button.span:focus-visible {
+  outline: 2px solid var(--kind-lesson);
+  outline-offset: 2px;
+}
+.node-line.plain { padding-left: 0; }
+.kind-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 0.45em;
+}
+.kind-tag {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  color: var(--muted);
+}
+.node-text { flex: 1; min-width: 0; }
+button.span {
+  display: inline;
+  border: none;
+  padding: 0 0.1em;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  background: transparent;
+  border-radius: 2px;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+button.span.is-active { font-weight: 500; }
+.kind-tactic { --accent: var(--kind-tactic); }
+.kind-lesson { --accent: var(--kind-lesson); }
+.kind-caveat { --accent: var(--kind-caveat); }
+.kind-mechanism { --accent: var(--kind-mechanism); }
+.kind-moment { --accent: var(--kind-moment); }
+.chip-dot.kind-tactic, .kind-dot.kind-tactic { background: var(--kind-tactic); }
+.chip-dot.kind-lesson, .kind-dot.kind-lesson { background: var(--kind-lesson); }
+.chip-dot.kind-caveat, .kind-dot.kind-caveat { background: var(--kind-caveat); }
+.chip-dot.kind-mechanism, .kind-dot.kind-mechanism { background: var(--kind-mechanism); }
+.chip-dot.kind-moment, .kind-dot.kind-moment { background: var(--kind-moment); }
+button.span.kind-tactic {
+  text-decoration-color: color-mix(in srgb, var(--kind-tactic) 55%, transparent);
+  background: color-mix(in srgb, var(--kind-tactic) 12%, transparent);
+}
+button.span.kind-lesson {
+  text-decoration-color: color-mix(in srgb, var(--kind-lesson) 55%, transparent);
+  background: color-mix(in srgb, var(--kind-lesson) 12%, transparent);
+}
+button.span.kind-caveat {
+  text-decoration-color: color-mix(in srgb, var(--kind-caveat) 55%, transparent);
+  background: color-mix(in srgb, var(--kind-caveat) 12%, transparent);
+}
+button.span.kind-mechanism {
+  text-decoration-color: color-mix(in srgb, var(--kind-mechanism) 55%, transparent);
+  background: color-mix(in srgb, var(--kind-mechanism) 12%, transparent);
+}
+button.span.kind-moment {
+  text-decoration-color: color-mix(in srgb, var(--kind-moment) 55%, transparent);
+  background: color-mix(in srgb, var(--kind-moment) 12%, transparent);
+}
+button.span.is-active.kind-tactic { background: color-mix(in srgb, var(--kind-tactic) 22%, transparent); }
+button.span.is-active.kind-lesson { background: color-mix(in srgb, var(--kind-lesson) 22%, transparent); }
+button.span.is-active.kind-caveat { background: color-mix(in srgb, var(--kind-caveat) 22%, transparent); }
+button.span.is-active.kind-mechanism { background: color-mix(in srgb, var(--kind-mechanism) 22%, transparent); }
+button.span.is-active.kind-moment { background: color-mix(in srgb, var(--kind-moment) 22%, transparent); }
+.zoomed {
+  margin: 8px 0 10px 12px;
+  padding: 10px 12px;
+  background: var(--surface);
+  border-left: 3px solid var(--accent);
+}
+.zoomed.kind-tactic { --accent: var(--kind-tactic); border-left-color: var(--kind-tactic); background: color-mix(in srgb, var(--kind-tactic) 6%, var(--surface)); }
+.zoomed.kind-lesson { --accent: var(--kind-lesson); border-left-color: var(--kind-lesson); background: color-mix(in srgb, var(--kind-lesson) 6%, var(--surface)); }
+.zoomed.kind-caveat { --accent: var(--kind-caveat); border-left-color: var(--kind-caveat); background: color-mix(in srgb, var(--kind-caveat) 6%, var(--surface)); }
+.zoomed.kind-mechanism { --accent: var(--kind-mechanism); border-left-color: var(--kind-mechanism); background: color-mix(in srgb, var(--kind-mechanism) 6%, var(--surface)); }
+.zoomed.kind-moment { --accent: var(--kind-moment); border-left-color: var(--kind-moment); background: color-mix(in srgb, var(--kind-moment) 6%, var(--surface)); }
+.zoomed p { margin: 0 0 0.5em; }
+.zoomed p:last-child { margin-bottom: 0; }
+.node-panel {
+  margin: 4px 0 8px 20px;
+  padding: 10px 12px;
+  background: var(--surface);
+  border-left: 2px solid var(--rule);
+}
+.node-panel p { margin: 0 0 0.5em; }
+</style>
+<div class="wrap" id="root"></div>
+<script id="guide-data">
+window.GUIDE = {
+  title: "Grok Bot Galaxy Field Guide",
+  subtitle: "Placeholder tree for layout and drill-down behavior",
+  legend: {
+    tactic: { label: "Tactic", blurb: "Actionable move" },
+    lesson: { label: "Lesson", blurb: "Takeaway" },
+    caveat: { label: "Caveat", blurb: "Watch out" },
+    mechanism: { label: "Mechanism", blurb: "How it works" },
+    moment: { label: "Moment", blurb: "Beat in time" }
+  },
+  crux: [[
+    "The galaxy opens with a ",
+    { t: "coordination tactic", kind: "tactic", zoom: [[
+      "Teams align on a single choke point before spreading.",
+      { t: " nested lesson", kind: "lesson", zoom: [[ "Lessons can nest inside zoom panels." ]] }
+    ]] },
+    " and a steady rhythm."
+  ]],
+  sections: [
+    {
+      id: "alpha",
+      time: "0:00",
+      heading: "First contact",
+      summary: [[ "Summary line with ", { t: "context", kind: "moment", zoom: [[ "Moments can appear in summaries too." ]] }, "." ]],
+      nodes: [
+        {
+          kind: "mechanism",
+          text: [{ t: "Root mechanism", kind: "mechanism", zoom: [[ "Zoom copy attached to inline span on the node line." ]] }],
+          children: [
+            {
+              kind: "lesson",
+              text: ["Child at depth two"],
+              children: [
+                { kind: "caveat", text: ["Depth three leaf"] }
+              ]
+            }
+          ]
+        },
+        {
+          kind: "tactic",
+          text: ["Plain leaf node"]
+        }
+      ]
+    },
+    {
+      id: "beta",
+      time: "2:30",
+      heading: "Second beat",
+      summary: [[ "Closed by default." ]],
+      nodes: [
+        {
+          kind: "caveat",
+          text: ["Node with "],
+          zoom: [[ "Whole-line zoom panel when the line is expandable." ]]
+        }
+      ]
+    }
+  ]
+};
+</script>
+<script>
+(function () {
+  var KINDS = ["tactic", "lesson", "caveat", "mechanism", "moment"];
+  function seg(el, s) {
+    if (typeof s === "string") { el.appendChild(document.createTextNode(s)); return; }
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "span kind-" + s.kind;
+    b.textContent = s.t;
+    b._span = s;
+    el.appendChild(b);
+  }
+  function renderSegments(segs, parent) {
+    var p = document.createElement("p");
+    segs.forEach(function (s) { seg(p, s); });
+    parent.appendChild(p);
+  }
+  function renderParas(paras, parent) {
+    paras.forEach(function (row) { renderSegments(row, parent); });
+  }
+  function renderNodes(nodes, parent, depth) {
+    var ul = document.createElement("ul");
+    ul.className = "node-list";
+    nodes.forEach(function (n) {
+      var li = document.createElement("li");
+      var expandable = !!(n.zoom || n.children);
+      var line = document.createElement("div");
+      line.className = "node-line" + (expandable ? " expandable" : " plain");
+      if (expandable) {
+        line.setAttribute("role", "button");
+        line.tabIndex = 0;
+        line.setAttribute("aria-expanded", "false");
+        line._node = n;
+      }
+      var dot = document.createElement("span");
+      dot.className = "kind-dot kind-" + n.kind;
+      dot.setAttribute("aria-hidden", "true");
+      line.appendChild(dot);
+      var tw = document.createElement("span");
+      tw.className = "node-text";
+      n.text.forEach(function (s) { seg(tw, s); });
+      line.appendChild(tw);
+      li.appendChild(line);
+      ul.appendChild(li);
+    });
+    parent.appendChild(ul);
+  }
+  function blockForSpan(btn) {
+    return btn.closest("p") || btn.closest(".node-line");
+  }
+  function insertAfterBlock(block, el) {
+    var cur = block;
+    while (cur.nextElementSibling && cur.nextElementSibling.classList.contains("zoomed")) cur = cur.nextElementSibling;
+    cur.after(el);
+  }
+  function fillZoomPanel(panel, data) {
+    if (data.zoom) renderParas(data.zoom, panel);
+    if (data.children) renderNodes(data.children, panel, 0);
+  }
+  function toggleSpan(btn) {
+    if (btn._panel && btn._panel.isConnected) {
+      btn._panel.remove(); btn._panel = null; btn.classList.remove("is-active"); return;
+    }
+    var data = btn._span;
+    var panel = document.createElement("div");
+    panel.className = "zoomed kind-" + data.kind;
+    fillZoomPanel(panel, data);
+    insertAfterBlock(blockForSpan(btn), panel);
+    btn._panel = panel;
+    btn.classList.add("is-active");
+  }
+  function toggleNode(line) {
+    var next = line.nextElementSibling;
+    while (next && next.classList.contains("zoomed")) next = next.nextElementSibling;
+    if (next && next.classList.contains("node-panel")) {
+      next.remove(); line.setAttribute("aria-expanded", "false"); return;
+    }
+    var panel = document.createElement("div");
+    panel.className = "node-panel";
+    fillZoomPanel(panel, line._node);
+    insertAfterBlock(line, panel);
+    line.setAttribute("aria-expanded", "true");
+  }
+  function build() {
+    var g = window.GUIDE;
+    var root = document.getElementById("root");
+    var h1 = document.createElement("h1");
+    h1.textContent = g.title;
+    root.appendChild(h1);
+    var sub = document.createElement("p");
+    sub.className = "subtitle";
+    sub.textContent = g.subtitle;
+    root.appendChild(sub);
+    var leg = document.createElement("div");
+    leg.className = "legend";
+    KINDS.forEach(function (k) {
+      var item = g.legend[k];
+      if (!item) return;
+      var chip = document.createElement("div");
+      chip.className = "chip";
+      var dot = document.createElement("span");
+      dot.className = "chip-dot kind-" + k;
+      chip.appendChild(dot);
+      var lab = document.createElement("span");
+      lab.className = "chip-label";
+      lab.textContent = item.label;
+      chip.appendChild(lab);
+      var bl = document.createElement("span");
+      bl.className = "chip-blurb";
+      bl.textContent = " — " + item.blurb;
+      chip.appendChild(bl);
+      leg.appendChild(chip);
+    });
+    root.appendChild(leg);
+    var crux = document.createElement("div");
+    crux.className = "crux";
+    renderParas(g.crux, crux);
+    root.appendChild(crux);
+    g.sections.forEach(function (sec, i) {
+      var wrap = document.createElement("section");
+      wrap.className = "section" + (i === 0 ? " open" : "");
+      var hdr = document.createElement("button");
+      hdr.type = "button";
+      hdr.className = "section-header";
+      hdr.setAttribute("aria-expanded", i === 0 ? "true" : "false");
+      var tm = document.createElement("span");
+      tm.className = "section-time";
+      tm.textContent = sec.time;
+      hdr.appendChild(tm);
+      var hd = document.createElement("span");
+      hd.className = "section-heading";
+      hd.textContent = sec.heading;
+      hdr.appendChild(hd);
+      var ch = document.createElement("span");
+      ch.className = "section-chevron";
+      ch.textContent = "\u203A";
+      hdr.appendChild(ch);
+      wrap.appendChild(hdr);
+      var body = document.createElement("div");
+      body.className = "section-body";
+      body.hidden = i !== 0;
+      var sum = document.createElement("div");
+      sum.className = "summary";
+      renderParas(sec.summary, sum);
+      body.appendChild(sum);
+      renderNodes(sec.nodes, body, 0);
+      wrap.appendChild(body);
+      root.appendChild(wrap);
+    });
+  }
+  var rootEl = document.getElementById("root");
+  rootEl.addEventListener("keydown", function (e) {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    var nl = e.target.closest && e.target.closest(".node-line.expandable");
+    if (nl && e.target === nl) { e.preventDefault(); toggleNode(nl); }
+  });
+  rootEl.addEventListener("click", function (e) {
+    var t = e.target;
+    var span = t.closest && t.closest("button.span");
+    if (span) { toggleSpan(span); return; }
+    var nl = t.closest && t.closest(".node-line.expandable");
+    if (nl && !t.closest("button.span")) { toggleNode(nl); return; }
+    var sh = t.closest && t.closest("button.section-header");
+    if (sh) {
+      var sec = sh.closest(".section");
+      var body = sec.querySelector(".section-body");
+      var open = sec.classList.toggle("open");
+      body.hidden = !open;
+      sh.setAttribute("aria-expanded", open ? "true" : "false");
+    }
+  });
+  build();
+})();
+</script>

@@ -1,0 +1,61 @@
+# Grok Bot section-hero registry.
+#
+# One entry per published package in grok-bot/. This file is the ONLY input
+# that changes when the roster changes; /generate-grok-bot-map turns it into
+# a GenerateImage description (then a 2172×724 PNG). Adding a package without
+# an entry means the next section-hero regeneration silently drops it.
+
+canvas:
+  # Match root world-map.png / ChatGPT hero on-disk size exactly.
+  primary: 2172x724       # ~3:1 — committed grok-bot-hero.png
+  display_width: 900
+  render_scale: 1x
+  # Grok Bot GenerateImage offers 16:9; cover-crop/center-crop to primary.
+
+title: Grok Bot skills   # the one title cartouche. No subtitle.
+
+# The one blue thing — waterworks trunk (cyan intelligence / rare energon).
+blue:
+  is: the work in progress — one canal-and-pipe trunk of electric cyan-blue
+  enters: lower-left, a broad rough braid of messy water / raw fleet work
+  leaves: right edge, a compact bright channel — the brightest blue in frame
+  rule: >-
+    Every package site sits ON the trunk and visibly takes water (or rare
+    light/cubes in the pipes) in and puts it back changed. Continuous from
+    entry to exit. No site gets its own separate blue sky/clothing/trim.
+    Water infrastructure is the chassis; light/orbs/energon cubes only as
+    occasional cargo emanating from those pipes.
+
+label_system:
+  category:
+    is: a region banner — FLEET, OPS (drawn only when claimed)
+    grammar: >-
+      Giant elevated parchment/cloth banner on tall posts over the territory.
+      Bold ALL-CAPS. Distinctly larger than any package plaque.
+  skill:
+    is: a worksite plaque — /fleet-spring-clean
+    grammar: >-
+      Rigid cream plaque, hard dark border, cast shadow, bolted to the
+      waterworks site. Lowercase slash-command type. Equal prominence.
+
+# Regions left-to-right along the water trunk. Drop any with zero packages.
+regions:
+  - key: fleet
+    banner: FLEET
+    ground: busy canal yard and flume junction, left-center
+
+packages:
+  - name: fleet-spring-clean
+    region: fleet
+    plaque: /fleet-spring-clean
+    structure: >-
+      A spring-clean waterworks depot on the canal: tangled inflows scrubbed
+      and split into two tidy wooden cistern houses (company vs personal
+      basins). Teardrop orb-bots turn valves and clear flumes. Map-scale —
+      one distinctive silhouette, not the standalone package hero at full
+      complexity.
+    transform: >-
+      The raw messy braid enters wide, is constrained through the scrubbing
+      depot, and leaves as two clean ordered channels feeding the cistern
+      houses — then rejoins the trunk brighter and narrower.
+    edges: []

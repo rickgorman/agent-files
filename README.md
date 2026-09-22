@@ -1,7 +1,5 @@
 ![agent-files](world-map.png)
 
-# agent-files
-
 Skills I actually run.
 
 ## The Prompts
@@ -30,15 +28,45 @@ The session model that writes the code also judges the code. This splits that: y
 
 A flow explanation that *describes* screens is easy to misread. This films the real product: clicks, toasts intact, laid onto a plat canvas. Schematics are a bug, not a fallback.
 
+### [`/expandable-reader`](skills/expandable-reader/)
+
+> *One page: a world-map paragraph, toggle sections, phrases that open in place.*
+
+A summary gives everyone the same two minutes. This reads the whole source, distills it into typed nuggets (tactic, lesson, mechanism, caveat, moment), and renders a drill-down page so a reader with any amount of time gets the map first and picks where to go deeper.
+
+### [`/handoff-beads`](skills/handoff-beads/)
+
+> *Session residue becomes beads in the graph, not a markdown brief.*
+
+A handoff doc is a copy of what the next agent should already be able to pull from the graph. This mines the session, creates only the missing beads, hangs them in the right places, and validates before you leave.
+
 ### [`/transcript-heatmap`](skills/transcript-heatmap/)
 
 > *Score a long transcript five minutes at a time and draw it as sheet music.*
 
 Hours of recording, and no way to say where anything was. This slices the transcript, scores every slice against a rubric written from the source itself, and lays the result out as staves: a note per five minutes, colour for category, size for depth, click to read the transcript there.
 
+## Grok Bot
+
+A separate steal path. [`grok-bot/`](grok-bot/) is fleet playbooks for Grok Bot, not Claude `skills/`. Copy a package onto the box:
+
+```bash
+gh repo clone rickgorman/agent-files
+cp -R agent-files/grok-bot/<name> /home/box/agent-data/workflows/<name>
+```
+
+That is `/home/box/agent-data/workflows/`, not `~/.claude/skills/`. The section has its own hero on [`grok-bot/README.md`](grok-bot/) (`grok-bot-hero.png`). Each package folder has a hero too. The root banner stays `world-map.png` — do not stack a grok-bot image here.
+
+### [`/fleet-spring-clean`](grok-bot/fleet-spring-clean/)
+
+> *Declutter a multi-bot fleet: two Notion brains, one boss per seat, boards, briefs, arsenal.*
+
+The sidebar filled up. Notion grew a third "misc" root. Skills got pasted into blurbs. This is a phased clean — inventory first — and the playbook stays free of your URLs.
+
 ## Table of Contents
 
 - [Quick Start](#quick-start)
+- [Grok Bot](#grok-bot)
 - [Design Philosophy](#design-philosophy)
 - [License](#license)
 
@@ -53,6 +81,15 @@ cp -R agent-files/skills/<name> ~/.claude/skills/<name>
 ```
 
 Then invoke `/<name>`.
+
+Copy a Grok Bot package onto the box:
+
+```bash
+gh repo clone rickgorman/agent-files
+cp -R agent-files/grok-bot/<name> /home/box/agent-data/workflows/<name>
+```
+
+Then enable it and invoke `/<name>` from Grok Bot. See [`grok-bot/`](grok-bot/).
 
 ## Design Philosophy
 
