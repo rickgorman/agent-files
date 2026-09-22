@@ -97,8 +97,9 @@ individual Grok Bot packages to the skill registry.
 ## Pick the canvas
 
 Use `canvas.primary` from the registry: **2172×724**, exactly **3:1**. Put these
-exact dimensions at the start of the image-generation prompt. Both
-`world-map.png` and `agent-files-hero.png` use this size.
+exact dimensions at the start of the image-generation prompt. Request this
+size for both `world-map.png` and `agent-files-hero.png`. `canvas.exported`,
+when present, records the actual supplied PNG dimensions, not a new target.
 
 Do not substitute another canvas based on skill count. If the roster cannot
 fit legibly, simplify the mechanisms or propose splitting the map before
@@ -239,9 +240,11 @@ on-image words, and where to save the PNG (`world-map.png` at the repo root).
 Use the newly supplied `~/Downloads/world-map.png` or
 `~/Downloads/agent-files-hero.png`; if both exist, use the user's identified
 image or the newer matching image after inspection, not a stale namesake.
-Verify it is **2172×724**, then copy it unchanged to **both** `world-map.png`
-and `agent-files-hero.png` at the repo root. Keep the two files byte-identical.
-If the dimensions differ, report the mismatch instead of silently resizing.
+Check its dimensions against **2172×724**. Report any mismatch rather than
+silently resizing; preserve a supplied near-size export at its native size.
+Record the actual dimensions in `canvas.exported`, keeping `canvas.primary`
+as the prompt target. Copy the supplied PNG unchanged to **both** `world-map.png`
+and `agent-files-hero.png` at the repo root. Keep the files byte-identical.
 
 Root README line 1 is the only embed:
 

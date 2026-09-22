@@ -9,7 +9,8 @@
 # A skill's internal iteration belongs in transform/terminates, not DAG edges.
 
 canvas:
-  primary: 2172x724       # exactly 3:1 — both root hero files
+  primary: 2172x724       # exactly 3:1 — image-generation prompt target
+  exported: 2170x725      # actual supplied PNG, preserved without resizing
   display_width: 900
   min_glyph_px: 28        # stronger than the computed 25px display floor
   title_px: 140
