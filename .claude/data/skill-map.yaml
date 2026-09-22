@@ -134,6 +134,25 @@ skills:
     terminates: >-
       The commit gate stands closed on a sealed scroll and every work track
       is empty, with no one touching the switch.
+    edges:
+      - to: handoff-beads
+        route: across the open flats to the lattice house — one clean line
+
+  - name: handoff-beads
+    region: delivery
+    plaque: /handoff-beads
+    structure: >-
+      A timber lattice house on the delivery flats: a wide intake apron of
+      loose session cargo, a clipping bench, a standing wire lattice already
+      hung with earlier beads, and a brass inspection gate at the far door.
+      Two or three hands at the bench, no crowd.
+    transform: >-
+      The incoming braid is clipped into separate beads and hung onto empty
+      hooks on the existing lattice. Nothing leaves as a scroll. The lattice
+      itself, now complete, is what stands after the gate.
+    terminates: >-
+      The inspection gate has closed on a complete lattice with no loose
+      cargo remaining on the apron.
     edges: []
 
   - name: expandable-reader

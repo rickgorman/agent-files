@@ -6,7 +6,7 @@ description: >-
   highlighted phrases that expand in place into deeper nuggets. For a reader with a variable amount of time
   who wants the overview first and chooses where to go deeper. Use when asked for an expandable reader,
   a drill-down summary, a field guide, a layered overview, or "let me dive where I choose".
-  Invoke as /expandable-reader <path|paths|url|text> [--lens <topic>] [--out <file.html>].
+  Invoke as /expandable-reader PATH|PATHS|URL|TEXT [--lens TOPIC] [--out FILE.HTML].
 ---
 
 # /expandable-reader
