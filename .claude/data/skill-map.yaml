@@ -1,21 +1,21 @@
-# Root world map registry.
+# Root world map registry: locations, visible routes, and site mechanisms.
+# .claude/skills/generate-world-map/SKILL.md compiles this data into the prompt.
+# Every published skill has one entry. Background landmarks are separate.
 #
-# One entry per published skill in skills/. This file is the ONLY input that
-# changes when the roster changes; .claude/data/generate-world-map.md turns it
-# into a paste-ready image prompt. Adding a skill without adding its entry
-# means the next map regeneration silently drops it.
+# skills[].edges is the DAG of inter-site work routes drawn on the map, not
+# runtime dependencies or a mandatory order for invoking skills. Follow these
+# edges rather than inferring connections from YAML order or a prior image.
+# regions[].ground and skills[].placement describe spatial layout separately.
+# A skill's internal iteration belongs in transform/terminates, not DAG edges.
 
 canvas:
-  # Root README displays at ~900px wide. See generate-world-map.md for the
-  # type-floor arithmetic these numbers drive.
-  primary: 1200x500       # 24:10 — the committed world-map.png
-  overflow: 1440x960      # 3:2 — switch when skill count exceeds 10
+  primary: 2172x724       # exactly 3:1 — image-generation prompt target
+  exported: 2170x725      # actual supplied PNG, preserved without resizing
   display_width: 900
-  # Sized to the README slot at 1×. Deliberately NOT doubled for HiDPI: it
-  # stays slightly soft on a retina display and that is the accepted trade.
-  # Do not "fix" this by rendering at 2× — that halves the effective type
-  # floor relative to the slot and the labels stop being the design.
-  render_scale: 1x
+  min_glyph_px: 28        # stronger than the computed 25px display floor
+  title_px: 140
+  # Keep this canvas fixed. If the roster outgrows it, simplify or split the
+  # map explicitly rather than silently changing dimensions or shrinking type.
 
 title: Rick's agent-files   # the one title cartouche. No subtitle.
 
@@ -23,12 +23,15 @@ title: Rick's agent-files   # the one title cartouche. No subtitle.
 # element; on this map it is the trunk, not any single site.
 blue:
   is: the work in progress — one river-and-rail trunk of electric cyan-blue
-  enters: lower-left, a broad rough irregular braid of raw work
-  leaves: right edge, a compact rolled blue scroll — the brightest blue in frame
+  enters: lower-left, one raw braid forks through two reading sites and joins at dag-reader
+  leaves: far-right handoff lattice, where the work remains as a completed bead graph
   rule: >-
-    Every skill site sits ON the trunk and visibly takes it in and puts it back
-    changed. Continuous from entry to exit, no unexplained gaps. No site gets
-    its own separate blue. No blue clothing, lamps, sky, trim, or signage.
+    One source briefly forks through expandable-reader and transcript-heatmap,
+    rejoins at dag-reader, then follows the trunk through every downstream site.
+    The final handoff-beads site retains the work in its completed lattice; the
+    brightest current condenses there rather than leaving as another scroll.
+    Continuous routes with no unexplained gaps or separate blue sources. No
+    blue clothing, lamps, sky, trim, or signage.
 
 # Two label classes, and the viewer must feel the difference before reading a
 # word. Everything drawn on this map is one or the other.
@@ -65,6 +68,42 @@ regions:
     ground: open flats where the route exits toward the horizon
 
 skills:
+  - name: expandable-reader
+    region: reading
+    plaque: /expandable-reader
+    placement: lower reading pavilion on the gorge rim; its route climbs to dag-reader
+    structure: >-
+      A terraced reading pavilion on the gorge rim below the survey station: one wide
+      map table on the top terrace, then a stair of shallow shelves stepping down,
+      each shelf a row of small hinged doors. Two readers, one at the map, one
+      opening a door on a lower shelf.
+    transform: >-
+      the braid arrives at the map table and is drawn as a single flat chart, then
+      splits into thin threads that run down behind the shelf doors; a door opened
+      lets one thread out to be read and closes again. The exit channel carries the
+      chart and the threads together, folded, no wider than the chart.
+    edges:
+      - to: dag-reader
+        route: short ladder up the rim to the survey station — one clean line
+
+  - name: transcript-heatmap
+    region: reading
+    plaque: /transcript-heatmap
+    placement: reading weir across the gorge; its route converges with the pavilion at dag-reader
+    structure: >-
+      A river gauging weir spanning the gorge below the survey station: one long
+      stone sill divided into many equal narrow bays, a graduated measuring post
+      standing in each bay, and a raised walkway of reading desks along the top.
+      Two gaugers walking the walkway, no crowd.
+    transform: >-
+      The braid arrives whole and is combed by the sill into many equal narrow
+      streams, one per bay, each rising to a different marked height on its post
+      so the row of heights reads as a profile across the weir. Downstream the
+      streams rejoin into one channel no wider than the one that arrived.
+    edges:
+      - to: dag-reader
+        route: up the gorge wall to the survey station — one clean line
+
   - name: dag-reader
     region: reading
     plaque: /dag-reader
@@ -101,12 +140,38 @@ skills:
       The brass scale has settled perfectly level and the return switch has
       fallen open toward the right-hand flats with no one touching it.
     edges:
-      - to: dev-manager
-        route: off the plateau onto the open right-hand flats — one clean line
+      - to: jev-review-loop
+        route: descend from the plateau to the upstream review assay yard
+
+  - name: jev-review-loop
+    region: review
+    plaque: /jev-review-loop
+    placement: upstream review yard, immediately before screen-flow along the trunk
+    structure: >-
+      A circular brass assay yard beside the review junction: a parchment
+      rubric rack, an inspection arch, and a timber repair bench connected
+      by one clean return rail. Jev is an original non-human assay spirit,
+      foxlike with long tapered ears, a soot-charcoal body, a warm parchment
+      face, small ink-dark eyes, a curling smoke tail, and a brass monocle.
+      Restrained anime-inspired expressiveness in the same engraved painterly
+      style as the world; no separate glow. One human mechanic at the bench.
+    transform: >-
+      The same blue work scroll enters beneath the rubric rack, passes Jev's
+      inspection arch, and travels to the mechanic with rust-red fault tabs.
+      One short return loop brings the repaired scroll back through that same
+      arch; one faint prior-pass trace carries more tabs. The current scroll
+      leaves compact and free of tabs, still part of the single blue trunk.
+    terminates: >-
+      An empty fault tray balances the assay scale and releases the exit switch
+      automatically. A finite brass ratchet bounds the return mechanism.
+    edges:
+      - to: screen-flow
+        route: directly from the assay exit to the adjacent viewport gallery
 
   - name: screen-flow
     region: review
     plaque: /screen-flow
+    placement: review trestle immediately downstream of jev-review-loop
     structure: >-
       A long roofed timber gallery spanning a canyon on trestles: incoming
       viewport, a brass NAV press, a bellows SHOT camera, then equal FLOW
@@ -116,7 +181,9 @@ skills:
       The incoming rolled scroll unrolls along the gallery as a sequence of
       window-sized panes; the same blue current is visible in every pane, and
       it leaves the far end of the yard re-rolled, the last pane the brightest.
-    edges: []
+    edges:
+      - to: dev-manager
+        route: leave the gallery across the bridge to the delivery dispatch yard
 
   - name: dev-manager
     region: delivery
@@ -128,8 +195,8 @@ skills:
     transform: >-
       The incoming rolled scroll is unrolled at the booth, split onto the
       parallel tracks, and each piece is inspected at the gate before the
-      accepted work is re-rolled. The compact exit scroll leaving the right
-      edge is the same object that entered the yard, now tighter and sealed.
+      accepted work is re-rolled. The compact scroll passing onward to the
+      lattice house is the same object that entered the yard, tighter and sealed.
     # The loop ends when the last slice's done-when holds.
     terminates: >-
       The commit gate stands closed on a sealed scroll and every work track
@@ -141,6 +208,7 @@ skills:
   - name: handoff-beads
     region: delivery
     plaque: /handoff-beads
+    placement: terminal lattice house on the far-right delivery flats, after dev-manager
     structure: >-
       A timber lattice house on the delivery flats: a wide intake apron of
       loose session cargo, a clipping bench, a standing wire lattice already
@@ -155,36 +223,15 @@ skills:
       cargo remaining on the apron.
     edges: []
 
-  - name: expandable-reader
-    region: reading
-    plaque: /expandable-reader
+# Scenic locations are not skill nodes and do not add workflow dependencies.
+landmarks:
+  - name: grok-bot-mountain
+    plaque: Grok Bot Mountain
+    placement: distant central mountain above the review yard, behind the trunk
     structure: >-
-      A terraced reading pavilion on the gorge rim below the survey station: one wide
-      map table on the top terrace, then a stair of shallow shelves stepping down,
-      each shelf a row of small hinged doors. Two readers, one at the map, one
-      opening a door on a lower shelf.
-    transform: >-
-      the braid arrives at the map table and is drawn as a single flat chart, then
-      splits into thin threads that run down behind the shelf doors; a door opened
-      lets one thread out to be read and closes again. The exit channel carries the
-      chart and the threads together, folded, no wider than the chart.
-    edges:
-      - to: dag-reader
-        route: short ladder up the rim to the survey station — one clean line
-
-  - name: transcript-heatmap
-    region: reading
-    plaque: /transcript-heatmap
-    structure: >-
-      A river gauging weir spanning the gorge below the survey station: one long
-      stone sill divided into many equal narrow bays, a graduated measuring post
-      standing in each bay, and a raised walkway of reading desks along the top.
-      Two gaugers walking the walkway, no crowd.
-    transform: >-
-      The braid arrives whole and is combed by the sill into many equal narrow
-      streams, one per bay, each rising to a different marked height on its post
-      so the row of heights reads as a profile across the weir. Downstream the
-      streams rejoin into one channel no wider than the one that arrived.
-    edges:
-      - to: dag-reader
-        route: up the gorge wall to the survey station — one clean line
+      A far-off fortified mountaintop with three small floating dark orbs,
+      distinguished by restrained red, gold, and green halos. Preserve this
+      established background landmark at lower prominence than the skill sites.
+    role: >-
+      A geographic reference to the separate Grok Bot catalog, not a stage on
+      the skill route. Individual Grok Bot packages stay in grok-bot-map.yaml.

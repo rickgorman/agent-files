@@ -46,6 +46,15 @@ A handoff doc is a copy of what the next agent should already be able to pull fr
 
 Hours of recording, and no way to say where anything was. This slices the transcript, scores every slice against a rubric written from the source itself, and lays the result out as staves: a note per five minutes, colour for category, size for depth, click to read the transcript there.
 
+### [`/jev-review-loop`](skills/jev-review-loop/)
+
+> *Your agent builds the rubric. Jev scores, the fixing agent repairs, Jev scores again.*
+
+Review a codebase or diff with criteria derived from the project, or supply your
+own rubrics. Jev selects applicable rules and grades current code; the fixing
+agent works from that round's failures. The loop records coverage and spend and
+stops on success, stalled progress, or its round and budget limits.
+
 ## Grok Bot
 
 A separate steal path. [`grok-bot/`](grok-bot/) is fleet playbooks for Grok Bot, not Claude `skills/`. Copy a package onto the box:

@@ -107,6 +107,13 @@ passing through, told through the building's shape rather than through words),
 and any `edges` to other skills. Add `terminates` only when the skill actually
 has a stopping rule.
 
+Record a `placement` when relative location matters. Splice the site into the
+existing `edges` route, updating its predecessor and successor as needed;
+do not leave it disconnected or create an inter-site cycle. These edges track
+the map's work routes, not runtime dependencies. Keep the skill's internal
+loops in `transform` / `terminates`. Background landmarks belong separately
+in `landmarks`, outside the skill route.
+
 Do not repaint the map in this run. It costs a human round-trip through
 ChatGPT; `/generate-world-map`
 ([.claude/skills/generate-world-map/SKILL.md](../generate-world-map/SKILL.md))
