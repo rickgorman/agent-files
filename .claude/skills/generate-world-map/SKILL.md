@@ -32,8 +32,8 @@ added to `skills/` without an entry there is a skill that vanishes from the map
 on the next regeneration. `/add-new-skill` writes the entry; this file turns
 entries into a picture.
 
-Regenerate when: a skill is added or removed, a skill's region changes, or an
-edge between skills appears. Do not regenerate for a wording tweak inside a
+Regenerate when: a skill is added or removed, a skill's region or placement
+changes, a route changes, or a background landmark changes. Do not regenerate for a wording tweak inside a
 skill — the map costs a human round-trip.
 
 ## Find the style guide
@@ -70,37 +70,50 @@ folder, is a bug — say so and stop rather than drawing a map you know is wrong
 Drop any region no skill claims. Regions are scaffolding for the roster, not
 decoration.
 
+### Locations and route DAG
+
+The registry separates three kinds of information:
+
+- `regions[].ground`, `skills[].placement`, and `landmarks[].placement` describe
+  geography. Honor explicit placement constraints while composing the scene.
+- `skills[].edges` defines the directed inter-site work routes. Validate that
+  every target exists, that there are no duplicate edges or cycles, and that
+  the route covers every skill. Derive travel order from these edges, not YAML
+  listing order or the arrangement in an old image. This is a map of work
+  routes, not a claim that the skills require each other at runtime.
+- Each site's `transform` and `terminates` describe its internal mechanism,
+  including local review loops. Those loops do not become edges in the DAG.
+
+For the current roster, the route is `dag-reader → refine-plan →
+jev-review-loop → screen-flow → dev-manager`. Jev is immediately upstream of
+screen-flow, with no intervening site. Future changes come from the registry;
+update this example if the route changes.
+
+Background `landmarks` are separate from the skill roster and route DAG. Keep
+their placements and signs, but do not turn them into processing stages or add
+individual Grok Bot packages to the skill registry.
+
 ## Pick the canvas
 
-| Skill count | Canvas | Ratio |
-| --- | --- | --- |
-| 1–10 | **1200×500** | 24:10 |
-| 11–18 | 1440×960 | 3:2 |
-| 19+ | stop — split the map or cut the roster |
+Use `canvas.primary` from the registry: **2172×724**, exactly **3:1**. Put these
+exact dimensions at the start of the image-generation prompt. Both
+`world-map.png` and `agent-files-hero.png` use this size.
 
-24:10 is the default and what `world-map.png` is. Past ten sites the wide strip
-starves each site of area and the plaques fall under the type floor; take the
-vertical room instead. Do not shrink the type to fit more sites.
+Do not substitute another canvas based on skill count. If the roster cannot
+fit legibly, simplify the mechanisms or propose splitting the map before
+changing the registered dimensions. Do not shrink labels to fit more sites.
 
 ## Compute the type floor
 
-Root README displays at about **900px** wide, and the map is rendered at
-**1×** that slot — not doubled for HiDPI. It stays slightly soft on a retina
-screen; that is the accepted trade, and the registry's `render_scale` records
-it. Rendering at 2× would halve the effective type floor against the slot and
-the label hierarchy stops being the design.
+Root README displays at about **900px** wide. The image file stays at
+**2172×724**; calculate lettering for the smaller display width.
 
 Per the style guide, `min_file_px = ceil(10 × gen_width / display_width)`.
 
-| Canvas | Floor in file | Title in file |
-| --- | --- | --- |
-| 1200×500 | **14px** | ~80px |
-| 1440×960 | **16px** | ~96px |
-| 2172×724 (ChatGPT hero size, README ~900px) | **28px** | ~140px |
-
-Both numbers go in the prompt. A label that cannot clear the floor gets cut,
-not shrunk. If ChatGPT returns a 2172×724 file, keep it — do not rescale down
-to 1200×500. Enlarge signs rather than compressing their text.
+The mathematical floor is `ceil(10 × 2172 / 900) = 25px`. Use the stronger
+registry minimum of **28px** and a title around **140px**. Put both design
+sizes in the prompt. A label that cannot clear the floor gets cut, not shrunk.
+Enlarge signs rather than compressing text. Keep the PNG at its native size.
 
 ## Attach references
 
@@ -129,7 +142,7 @@ landscape** instead of squeezing in another inset or shrinking existing labels.
 
 ## Label budget
 
-Four label classes, and the viewer must feel the difference before consciously
+Five label classes, and the viewer must feel the difference before consciously
 reading a word. Permitted words, and nothing else:
 
 - One title cartouche: the registry's `title`. **No subtitle.** Largest.
@@ -139,6 +152,9 @@ reading a word. Permitted words, and nothing else:
 - Local mechanism plates **only** when the registry's `structure:` named them
   (example: `NAV`, `SHOT`, `FLOW` on the `/screen-flow` gallery). Smaller than
   plaques, still ≥ the type floor.
+- Background landmark signs from `landmarks[].plaque` only (currently
+  `Grok Bot Mountain`). Subordinate to region banners and skill plaques, but
+  still above the type floor. They do not label a skill or processing stage.
 
 That is the whole list. Spell it out in the prompt as an exhaustive one, then
 ban the rest by name — the generator will otherwise invent them:
@@ -183,11 +199,12 @@ subject material:
 - Kind: `map` — elevated scenic viewpoint, like a richly illustrated antique
   world map. Not an overhead map, isometric diagram, or flat flowchart. One
   continuous world inside an ornate carved wooden border.
-- Size: from the canvas table above. ChatGPT often returns **2172×724**; that
-  is an acceptable on-disk size for the README hero slot.
+- Size: exactly **2172×724**, **3:1**, as recorded in `canvas.primary`.
 - Topology: **relay along one trunk**. The blue enters as raw work at the
-  lower left, passes through each skill site in region order, and leaves at the
-  right edge. Each `edges:` entry is a visible route, drawn not named.
+  lower left, follows the registry's directed edges through the skill sites,
+  and leaves at the right edge. Each `edges:` entry is a visible route, drawn
+  not named. Honor explicit placement, especially Jev immediately before
+  screen-flow. Region geometry must accommodate these routes.
 - Per skill: `structure:` is what stands there, `transform:` is what the blue
   does passing through, `plaque:` is the sign bolted to it. State explicitly
   that a skill sits **inside its own region** and nowhere else, and that a
@@ -195,6 +212,8 @@ subject material:
   generator drifts on both.
 - Blue: the registry's `blue:` block, one continuous route, brightest where it
   exits.
+- Background landmarks: use their registered placements, structures, and signs;
+  keep them visually subordinate and off the work route.
 - Termination: only where a skill's entry has a `terminates:` line.
 - Composition: five or six large visual masses with generous open ground.
   Say that empty land, water, and sky are intentional, or the generator fills
@@ -214,10 +233,12 @@ on-image words, and where to save the PNG (`world-map.png` at the repo root).
 
 ## After the PNG lands
 
-If `~/Downloads/agent-files-hero.png` or `~/Downloads/world-map.png` exists and
-is a ~3:1 PNG, copy it to **both** `world-map.png` and `agent-files-hero.png`
-at the repo root. ChatGPT returns whatever it returns — do not rescale it to
-the nominal canvas. Keep the two root files in sync.
+Use the newly supplied `~/Downloads/world-map.png` or
+`~/Downloads/agent-files-hero.png`; if both exist, use the user's identified
+image or the newer matching image after inspection, not a stale namesake.
+Verify it is **2172×724**, then copy it unchanged to **both** `world-map.png`
+and `agent-files-hero.png` at the repo root. Keep the two files byte-identical.
+If the dimensions differ, report the mismatch instead of silently resizing.
 
 Root README line 1 is the only embed:
 
