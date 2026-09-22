@@ -171,3 +171,20 @@ skills:
     edges:
       - to: dag-reader
         route: short ladder up the rim to the survey station — one clean line
+
+  - name: transcript-heatmap
+    region: reading
+    plaque: /transcript-heatmap
+    structure: >-
+      A river gauging weir spanning the gorge below the survey station: one long
+      stone sill divided into many equal narrow bays, a graduated measuring post
+      standing in each bay, and a raised walkway of reading desks along the top.
+      Two gaugers walking the walkway, no crowd.
+    transform: >-
+      The braid arrives whole and is combed by the sill into many equal narrow
+      streams, one per bay, each rising to a different marked height on its post
+      so the row of heights reads as a profile across the weir. Downstream the
+      streams rejoin into one channel no wider than the one that arrived.
+    edges:
+      - to: dag-reader
+        route: up the gorge wall to the survey station — one clean line

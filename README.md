@@ -40,6 +40,12 @@ A summary gives everyone the same two minutes. This reads the whole source, dist
 
 A handoff doc is a copy of what the next agent should already be able to pull from the graph. This mines the session, creates only the missing beads, hangs them in the right places, and validates before you leave.
 
+### [`/transcript-heatmap`](skills/transcript-heatmap/)
+
+> *Score a long transcript five minutes at a time and draw it as sheet music.*
+
+Hours of recording, and no way to say where anything was. This slices the transcript, scores every slice against a rubric written from the source itself, and lays the result out as staves: a note per five minutes, colour for category, size for depth, click to read the transcript there.
+
 ## Grok Bot
 
 A separate steal path. [`grok-bot/`](grok-bot/) is fleet playbooks for Grok Bot, not Claude `skills/`. Copy a package onto the box:

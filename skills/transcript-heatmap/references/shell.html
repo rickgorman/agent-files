@@ -1,0 +1,49 @@
+<title>Transcript heatmap</title>
+<link rel="stylesheet" href="app.css" />
+<div class="page">
+  <header class="page-header">
+    <div class="title-row">
+      <h1 id="page-title">Transcript heatmap</h1>
+      <button type="button" class="pill copy-btn" id="copy-everything">
+        Copy everything
+      </button>
+    </div>
+    <p class="subtitle" id="subtitle"></p>
+    <div class="legend">
+      <div class="legend-block">
+        <h3>Tier (dot size)</h3>
+        <div class="legend-tiers" id="legend-tiers"></div>
+      </div>
+      <div class="legend-block">
+        <h3>Category (colour)</h3>
+        <div class="legend-cats" id="legend-cats"></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="controls">
+    <span class="controls-label">Categories</span>
+    <div id="category-pills" style="display: flex; flex-wrap: wrap; gap: 8px"></div>
+    <div class="toggle-row">
+      <span class="controls-label">Filter</span>
+      <button type="button" class="pill" id="top-tier-toggle">Top tier only</button>
+    </div>
+  </div>
+
+  <main id="parts-root"></main>
+</div>
+
+<div id="tooltip" class="tooltip" role="tooltip"></div>
+
+<div id="drawer-backdrop" class="drawer-backdrop" aria-hidden="true"></div>
+<aside id="drawer" class="drawer" aria-label="Chunk detail">
+  <div class="drawer-header">
+    <h2 id="drawer-title"></h2>
+    <button type="button" class="drawer-close" id="drawer-close" aria-label="Close">×</button>
+  </div>
+  <div class="drawer-meta" id="drawer-meta"></div>
+  <div class="drawer-cats" id="drawer-cats"></div>
+  <div class="drawer-transcript-pane" id="drawer-transcript-pane"></div>
+</aside>
+
+<script src="app.js"></script>
