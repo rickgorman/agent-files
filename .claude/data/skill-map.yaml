@@ -140,6 +140,31 @@ skills:
       The brass scale has settled perfectly level and the return switch has
       fallen open toward the right-hand flats with no one touching it.
     edges:
+      - to: decision-gui
+        route: a short level spur across the plateau to the signal tower
+
+  - name: decision-gui
+    region: planning
+    plaque: /decision-gui
+    placement: plateau signal tower at the east rim, after refine-plan, before the descent to review
+    structure: >-
+      A two-storey timber signal tower over a rail junction at the plateau's
+      edge: an upper cabin with a long row of iron levers, each lever topped by
+      a small card and fitted with two to four notches, one notch on every
+      lever already marked with a brass pin. A brass speaking tube runs down
+      the cabin wall to a ledger desk. One dispatcher at the levers, one clerk
+      at the desk.
+    transform: >-
+      The rolled scroll arrives and is cut into separate cards, one clipped to
+      each lever. The dispatcher throws the levers one by one; a lever left
+      untouched falls to its pinned notch. Each thrown lever sets a small
+      switch on the junction below, and the clerk copies every setting into
+      one bound ledger. The ledger, not the cards, rides out on the trunk.
+    terminates: >-
+      Every lever stands in a notch, the ledger lies closed and stamped on the
+      desk, and the junction switch has dropped toward the descent with no one
+      touching it.
+    edges:
       - to: jev-review-loop
         route: descend from the plateau to the upstream review assay yard
 

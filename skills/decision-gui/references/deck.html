@@ -1,0 +1,640 @@
+<title>Decision deck</title>
+<meta name="description" content="A decision deck: one page per decision, with choices, tradeoffs, Claude's lean, and an answer sheet for Claude.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&family=Spline+Sans+Mono:wght@400;500&family=Archivo:wdth,wght@62..125,400..800&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+/* Layout: one-screen app. Header row (title, legend, tally, copy) and progress bar on top;
+   decision page left, two-column answer sheet right; panels scroll inside only if the window is short.
+   Tokens: light = Basecamp, dark = Polar Night; the page follows the system color scheme. */
+:root {
+  --bg: #E7D9BF; --surface: #FAF6EE; --surface-2: #F2EBDD; --line: #D3C6AD; --ink: #28241F; --muted: #665D51;
+  --primary: #2F5D43; --on-primary: #FAF6EE; --signal: #A3562A; --on-signal: #FAF6EE; --ok: #3E7A4F; --warn: #8C5D12;
+  --sel: #E9F0E8; --focus: #2F5D43;
+  --label-ink: #2B2414; --label-bg: linear-gradient(180deg, #D3B36A, #B48E40); --label-pad: 0 8px;
+  --label-shadow: inset 0 1px 0 rgba(255,255,255,.35), inset 0 -1px 0 rgba(0,0,0,.15);
+  --font-display: "Bricolage Grotesque", "Figtree", system-ui, sans-serif; --font-ui: "Figtree", system-ui, sans-serif; --font-mono: "Spline Sans Mono", ui-monospace, monospace;
+  --display-stretch: 100%; --display-track: -0.01em;
+  --radius: 7px; --ctl-radius: 5px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0A1020; --surface: #111A2E; --surface-2: #0D1528; --line: #23314F; --ink: #DCE6F5; --muted: #8494B2;
+    --primary: #DCE6F5; --on-primary: #0A1020; --signal: #4CC9F0; --on-signal: #0A1020; --ok: #3DDC97; --warn: #FFB020;
+    --sel: #16243D; --focus: #4CC9F0;
+    --label-ink: #8494B2; --label-bg: transparent; --label-pad: 0; --label-shadow: none;
+    --font-display: "Archivo", system-ui, sans-serif; --font-ui: "Archivo", system-ui, sans-serif; --font-mono: "JetBrains Mono", ui-monospace, monospace;
+    --display-stretch: 112%; --display-track: 0;
+    --radius: 4px; --ctl-radius: 3px;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0A1020; --surface: #111A2E; --surface-2: #0D1528; --line: #23314F; --ink: #DCE6F5; --muted: #8494B2;
+  --primary: #DCE6F5; --on-primary: #0A1020; --signal: #4CC9F0; --on-signal: #0A1020; --ok: #3DDC97; --warn: #FFB020;
+  --sel: #16243D; --focus: #4CC9F0;
+  --label-ink: #8494B2; --label-bg: transparent; --label-pad: 0; --label-shadow: none;
+  --font-display: "Archivo", system-ui, sans-serif; --font-ui: "Archivo", system-ui, sans-serif; --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --display-stretch: 112%; --display-track: 0;
+  --radius: 4px; --ctl-radius: 3px;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font: 16px/1.5 var(--font-ui); }
+#bgc { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; display: block; }
+.app { height: 100%; max-width: 1640px; margin: 0 auto; padding: 12px 16px 14px; display: grid; grid-template-rows: auto auto minmax(0, 1fr); gap: 10px; }
+
+/* header row */
+.top { display: flex; align-items: center; gap: 8px 22px; flex-wrap: wrap; min-height: 36px; }
+h1 { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 23px; line-height: 28px; letter-spacing: var(--display-track); font-stretch: var(--display-stretch); white-space: nowrap; }
+.legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 14px; color: var(--muted); }
+.legend i { display: inline-block; width: 11px; height: 11px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+.top .right { margin-left: auto; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.tally { font: 500 13.5px var(--font-mono); color: var(--muted); }
+.toast { font-size: 13.5px; color: var(--ok); }
+.progress { display: grid; gap: 3px; }
+.progress button { all: unset; cursor: pointer; height: 9px; border-radius: 2px; background: var(--line); }
+.progress button.done { background: var(--primary); }
+.progress button.lean { background: var(--ok); }
+.progress button.cur { outline: 2px solid var(--signal); outline-offset: 1px; }
+.progress button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+.grid { min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 470px; gap: 14px; }
+
+/* decision page */
+.page { min-height: 0; overflow: hidden; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 22px 16px;
+  display: flex; flex-direction: column; gap: 12px; box-shadow: 0 1px 0 rgba(0,0,0,.04), 0 10px 26px -18px rgba(0,0,0,.45); }
+.pbody { flex: 1; min-height: 0; overflow: auto; display: flex; flex-direction: column; gap: 12px; position: relative;  scroll-padding-block: 6px 32px; }
+.pbody.more-below::after { content: ""; position: sticky; bottom: 0; left: 0; right: 0; height: 28px; margin-top: -28px; pointer-events: none;
+  background: linear-gradient(180deg, transparent, var(--surface)); }
+h2 { margin: 0; font-family: var(--font-display); font-weight: 750; font-size: 27px; line-height: 34px; font-stretch: var(--display-stretch); letter-spacing: var(--display-track); text-wrap: balance; }
+.pfx { display: inline-flex; align-items: center; gap: 8px; margin-right: 12px; vertical-align: 4px; }
+.plate { display: inline-block; height: 22px; line-height: 22px; padding: var(--label-pad); border-radius: 2px; background: var(--label-bg); color: var(--label-ink);
+  font: 600 12px var(--font-ui); letter-spacing: .08em; text-transform: uppercase; box-shadow: var(--label-shadow); font-stretch: 100%; }
+.plate b { font-family: var(--font-mono); font-weight: 700; letter-spacing: .02em; margin-left: 6px; }
+.locked { font: 600 12px var(--font-ui); letter-spacing: .06em; text-transform: uppercase; color: var(--on-signal); background: var(--signal); padding: 0 8px; height: 20px; line-height: 20px; border-radius: 999px; font-stretch: 100%; }
+.why { display: grid; gap: 6px; max-width: 128ch; }
+.why p { margin: 0; }
+.why .w { padding: 6px 12px; border-left: 3px solid var(--warn); background: var(--surface-2); border-radius: 0 var(--ctl-radius) var(--ctl-radius) 0; font-size: 15px; }
+.why .w b { letter-spacing: .02em; }
+
+.choices { display: grid; gap: 8px; }
+.choice { all: unset; box-sizing: border-box; cursor: pointer; display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 2px 12px; align-items: start;
+  padding: 10px 14px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+.choice:hover { border-color: var(--muted); }
+.choice:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.choice[aria-checked="true"] { border: 2px solid var(--primary); padding: 9px 13px; background: var(--sel); }
+.choice[aria-disabled="true"] { cursor: default; }
+.key { grid-row: span 2; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; border: 1.5px solid var(--line);
+  font: 700 14px var(--font-mono); color: var(--muted); background: var(--surface); }
+.choice[aria-checked="true"] .key { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
+.ctitle { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-weight: 650; font-size: 16.5px; line-height: 24px; padding-top: 3px; }
+.leantag { font: 600 11.5px var(--font-ui); letter-spacing: .08em; text-transform: uppercase; color: var(--ok); border: 1.5px solid var(--ok); border-radius: 999px; padding: 0 7px; line-height: 18px; font-stretch: 100%; }
+.tradeoffs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 20px; font-size: 14.5px; line-height: 21px; }
+.tradeoffs ul { margin: 0; padding: 0; list-style: none; display: grid; align-content: start; }
+.tradeoffs li { padding-left: 16px; position: relative; }
+.tradeoffs li::before { position: absolute; left: 0; top: 0; font: 700 14px/21px var(--font-mono); }
+.tradeoffs .g li::before { content: "+"; color: var(--ok); }
+.tradeoffs .c li::before { content: "−"; color: var(--signal); }
+
+/* V2 conflict rows */
+.subs { display: grid; }
+.subrow { display: grid; grid-template-columns: 36px 230px minmax(0, 1fr) minmax(0, 1fr); gap: 10px; align-items: center; padding: 4px 0; border-top: 1px solid var(--line); }
+.subrow:last-child { border-bottom: 1px solid var(--line); }
+.subrow .sid { font: 700 13px var(--font-mono); color: var(--muted); }
+.subrow .st { font-weight: 650; font-size: 15px; line-height: 20px; }
+.subopt { all: unset; box-sizing: border-box; cursor: pointer; display: flex; gap: 8px; align-items: center; min-height: 40px; padding: 4px 10px; border: 1px solid var(--line); border-radius: var(--ctl-radius); font-size: 14.5px; line-height: 20px; background: var(--surface); }
+.subopt:hover { border-color: var(--muted); }
+.subopt:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.subopt[aria-checked="true"] { border: 2px solid var(--primary); padding: 3px 9px; background: var(--sel); }
+.subopt b { font-family: var(--font-mono); font-size: 13px; color: var(--muted); flex: none; }
+.subopt .leantag { margin-left: auto; flex: none; }
+
+/* nav row: back, note, lean, count, next */
+.nav { margin-top: auto; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding-top: 12px; border-top: 1px solid var(--line); }
+.btn { font: 600 14.5px var(--font-ui); height: 36px; padding: 0 14px; border-radius: var(--ctl-radius); border: 1px solid var(--muted); background: transparent; color: var(--ink); cursor: pointer; white-space: nowrap; }
+.btn:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.btn.go { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
+.btn:disabled { opacity: .45; cursor: default; }
+.note { flex: 1 1 260px; min-width: 0; height: 36px; font: 15px var(--font-ui); color: var(--ink); background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--ctl-radius); padding: 0 10px; }
+.note:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+.note.listening { border-color: var(--signal); }
+.mic { all: unset; box-sizing: border-box; cursor: pointer; flex: none; width: 36px; height: 36px; border-radius: var(--ctl-radius); border: 1px solid var(--line);
+  background: var(--surface-2); color: var(--muted); display: grid; place-items: center; position: relative; }
+.mic:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.mic:disabled { opacity: .45; cursor: default; }
+.mic.recording { border-color: var(--signal); color: var(--signal); }
+.mic.recording::after { content: ""; position: absolute; top: 5px; right: 5px; width: 7px; height: 7px; border-radius: 50%; background: var(--signal); }
+@media (prefers-reduced-motion: no-preference) {
+  .mic.recording::after { animation: micpulse 1s ease-in-out infinite; }
+  @keyframes micpulse { 50% { opacity: .35; transform: scale(.85); } }
+}
+.pos { font: 500 13.5px var(--font-mono); color: var(--muted); min-width: 52px; text-align: right; }
+.out { flex: 1; width: 100%; min-height: 200px; font: 13.5px/1.55 var(--font-mono); color: var(--ink); background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--ctl-radius); padding: 10px; resize: none; }
+.openlist { margin: 0; }
+.link { all: unset; cursor: pointer; text-decoration: underline; font-family: var(--font-mono); font-size: 14px; margin-right: 6px; }
+.link:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* accelerator badges: shown while Alt/Option is held */
+.key, .btn, .subopt { position: relative; }
+.acc { display: none; position: absolute; z-index: 2; font: 700 11px/16px var(--font-mono); padding: 0 5px; border-radius: 3px; letter-spacing: 0;
+  background: var(--primary); color: var(--on-primary); white-space: nowrap; pointer-events: none; box-shadow: 0 0 0 2px var(--surface); }
+body.show-accel .acc { display: block; }
+.key .acc { top: -10px; left: -14px; }
+.btn .acc { top: -11px; right: -6px; }
+.subopt .acc { top: -10px; right: -6px; }
+.subrow.target { background: var(--sel); box-shadow: -8px 0 0 var(--sel), 8px 0 0 var(--sel); }
+
+/* answer sheet */
+aside { min-height: 0; overflow: auto; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+aside h3 { margin: 0; font: 750 17px var(--font-display); font-stretch: var(--display-stretch); }
+.sheet { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-flow: column; gap: 2px 10px; }
+.item { all: unset; box-sizing: border-box; cursor: pointer; display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 6px; align-items: center; height: 34px; padding: 0 6px; border-radius: var(--ctl-radius); font-size: 14.5px; }
+.item.gs { margin-top: 6px; }
+.item:hover { background: var(--surface-2); }
+.item:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+.item.cur { background: var(--sel); }
+.item .c { font: 700 12.5px var(--font-mono); color: var(--muted); }
+.item .t { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.item .a { font: 700 12.5px var(--font-mono); padding: 0 6px; height: 20px; line-height: 20px; border-radius: 3px; background: var(--surface-2); color: var(--muted); white-space: nowrap; }
+.item .a.set { background: var(--primary); color: var(--on-primary); }
+.item .a.set.lean { background: var(--ok); color: var(--on-primary); }
+.sidefoot { margin-top: auto; display: grid; gap: 6px; font-size: 13.5px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 10px; }
+.reset { all: unset; cursor: pointer; text-decoration: underline; justify-self: start; }
+.reset:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.confirm { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; color: var(--ink); }
+
+@media (max-width: 1400px) {
+  .grid { grid-template-columns: minmax(0, 1fr) 410px; }
+  .subrow { grid-template-columns: 36px minmax(0, 1fr) minmax(0, 1fr); row-gap: 4px; }
+  .subrow .sid { grid-row: 1 / 3; align-self: start; padding-top: 2px; }
+  .subrow .st { grid-column: 2 / -1; }
+}
+@media (max-width: 1080px) {
+  html, body { height: auto; }
+  .app { height: auto; }
+  .grid { grid-template-columns: minmax(0, 1fr); }
+  .page, aside { overflow: visible; }
+  .pbody { flex: none; min-height: 0; overflow: visible; }
+  .pbody.more-below::after { display: none; }
+  .subrow { grid-template-columns: 36px minmax(0, 1fr); }
+  .subrow .subopt { grid-column: 2; }
+}
+@media (max-width: 640px) { .tradeoffs { grid-template-columns: minmax(0, 1fr); } .sheet { grid-template-columns: minmax(0, 1fr); grid-auto-flow: row; grid-template-rows: none; } }
+@media (prefers-reduced-motion: no-preference) {
+  .page.enter { animation: enter 200ms cubic-bezier(.2,0,0,1) both; }
+  @keyframes enter { from { opacity: .4; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+}
+</style>
+
+<canvas id="bgc" aria-hidden="true"></canvas>
+<div class="app">
+  <header class="top">
+    <h1>Decision deck</h1>
+    <div class="legend"><span><i style="background:var(--ok)"></i>Chose Claude's lean</span><span><i style="background:var(--primary)"></i>Chose something else</span><span><i style="background:var(--line)"></i>Open</span></div>
+    <div class="right">
+      <span class="toast" id="toast" role="status"></span>
+      <span class="tally" id="tally"></span>
+      <button class="btn go" id="copy" type="button">Copy answers for Claude</button>
+    </div>
+  </header>
+  <div class="progress" id="progress" role="group" aria-label="Decisions"></div>
+  <div class="grid">
+    <main class="page" id="page" aria-live="polite"></main>
+    <aside aria-label="Answer sheet">
+      <h3>Answer sheet</h3>
+      <div class="sheet" id="sheet"></div>
+      <div class="sidefoot">
+        <span>↑ ↓ pick a choice, then the note · ← → change page · Enter goes next and takes Claude's lean if you chose nothing · Hold Space (or the mic) to dictate in local mode · Hold ⌥ for ⌥A ⌥S ⌥D. Click the page once so it gets your keys.</span>
+        <button class="reset" id="reset" type="button">Clear all answers</button>
+        <div class="confirm" id="confirmReset" hidden><span>Clear every answer and note?</span><button class="btn" id="resetYes" type="button">Clear</button><button class="btn" id="resetNo" type="button">Keep</button></div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script id="deck-data" type="application/json">/*DECK_JSON*/</script>
+<script>
+(function () {
+  const deck = JSON.parse(document.getElementById("deck-data").textContent);
+  const DECISIONS = deck.decisions;
+  const N = DECISIONS.length;
+  const MODE = deck.mode || "artifact";
+  const STORE = deck.storeKey || ("decision-gui:" + deck.id);
+  const COL2 = Math.ceil(N / 2);
+  const TITLE = deck.title || "Decision deck";
+  document.querySelector("h1").textContent = TITLE;
+  const $ = id => document.getElementById(id);
+  $("progress").style.gridTemplateColumns = "repeat(" + N + ", minmax(0, 1fr))";
+  $("sheet").style.gridTemplateRows = "repeat(" + COL2 + ", auto)";
+
+  let state = { idx: 0, a: {}, sub: {}, notes: {} };
+  let answersTimer = null;
+  let answersSavedToast = false;
+
+  function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+  function scheduleAnswersPost() {
+    if (MODE !== "local") return;
+    clearTimeout(answersTimer);
+    answersTimer = setTimeout(postAnswers, 700);
+  }
+  function postAnswersNow() {
+    if (MODE !== "local") return;
+    clearTimeout(answersTimer);
+    postAnswers();
+  }
+  function postAnswers() {
+    fetch("/api/answers", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text: buildText(), state }) })
+      .then(r => { if (!r.ok) throw new Error(String(r.status)); return r.json(); })
+      .then(() => {
+        if (!answersSavedToast) { answersSavedToast = true; $("toast").textContent = "Answers are saved for Claude as you go."; }
+      })
+      .catch(e => console.warn("answers post failed", e));
+  }
+  function save() { try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) {} scheduleAnswersPost(); }
+  function leanKey(d) { const o = d.options && d.options.find(x => x.lean); return o ? o.k : null; }
+  function subLean(s) { return s.o.find(o => o[2])[0]; }
+  const ACC = ["A", "S", "D", "F"];
+  function letter(d, k) { const i = d.options.findIndex(o => o.k === k); return i < 0 ? k : ACC[i]; }
+  function subLetter(v) { return v === "a" ? "A" : "S"; }
+  function answered(d) { return d.sub ? d.sub.every(s => state.sub[s.id]) : !!state.a[d.id]; }
+  function isLean(d) { return d.sub ? d.sub.every(s => state.sub[s.id] === subLean(s)) : state.a[d.id] === leanKey(d); }
+  function shortAnswer(d) {
+    if (d.sub) { const n = d.sub.filter(s => state.sub[s.id]).length; if (!n) return "—"; if (n < d.sub.length) return n + "/" + d.sub.length; return isLean(d) ? "leans" : "mixed"; }
+    return state.a[d.id] ? letter(d, state.a[d.id]) : "—";
+  }
+
+  function renderProgress() {
+    $("progress").innerHTML = DECISIONS.map((d, i) => "<button type='button' data-i='" + i + "' class='" + (answered(d) ? (isLean(d) ? "lean" : "done") : "") + (i === state.idx ? " cur" : "") +
+      "' aria-label='" + d.id + ": " + esc(d.short) + (answered(d) ? ", answered" : ", open") + "'></button>").join("");
+  }
+
+  function renderSheet() {
+    $("sheet").innerHTML = DECISIONS.map((d, i) => {
+      const gs = i > 0 && i !== COL2 && DECISIONS[i - 1].group !== d.group;
+      return "<button type='button' class='item" + (gs ? " gs" : "") + (i === state.idx ? " cur" : "") + "' data-i='" + i + "' title='" + esc(d.group + ": " + d.q) + "'><span class='c'>" + d.id + "</span><span class='t'>" + esc(d.short) +
+        "</span><span class='a" + (answered(d) ? " set" + (isLean(d) ? " lean" : "") : "") + "'>" + esc(shortAnswer(d)) + "</span></button>";
+    }).join("");
+    const done = DECISIONS.filter(answered).length, leans = DECISIONS.filter(d => answered(d) && isLean(d)).length;
+    $("tally").textContent = done + " of " + N + " answered · " + leans + " lean";
+  }
+
+  let v2row = null;
+  function v2Index(d) { if (v2row !== null) return v2row; return d.sub.findIndex(s => !state.sub[s.id]); }
+  function v2Target(d) { const i = v2Index(d); return i >= 0 ? d.sub[i].id : null; }
+
+  function choiceHTML(d, o, i) {
+    const on = (state.a[d.id] || null) === o.k;
+    return "<button type='button' class='choice' role='radio' aria-checked='" + on + "' data-k='" + o.k + "'" + (d.locked ? " aria-disabled='true'" : "") + ">" +
+      "<span class='key'>" + ACC[i] + (d.locked ? "" : "<kbd class='acc'>⌥" + ACC[i] + "</kbd>") + "</span>" +
+      "<span class='ctitle'>" + esc(o.t) + (o.lean ? "<span class='leantag'>" + (d.locked ? "Decided" : "Claude's lean") + "</span>" : "") + "</span>" +
+      "<span class='tradeoffs'><ul class='g'>" + (o.g || []).map(x => "<li>" + esc(x) + "</li>").join("") + "</ul><ul class='c'>" + (o.c || []).map(x => "<li>" + esc(x) + "</li>").join("") + "</ul></span></button>";
+  }
+
+  function subHTML(d) {
+    const target = v2Target(d);
+    return "<div class='subs'>" + d.sub.map(s => "<div class='subrow" + (s.id === target ? " target" : "") + "' role='radiogroup' aria-label='" + esc(s.t) + "'><span class='sid'>" + s.id + "</span><span class='st'>" + esc(s.t) + "</span>" +
+      s.o.map(o => "<button type='button' class='subopt' role='radio' aria-checked='" + (state.sub[s.id] === o[0]) + "' data-s='" + s.id + "' data-v='" + o[0] + "'><b>" + subLetter(o[0]) + "</b><span>" + esc(o[1]) + "</span>" +
+        (o[2] ? "<span class='leantag'>Lean</span>" : "") + (s.id === target ? "<kbd class='acc'>⌥" + subLetter(o[0]) + "</kbd>" : "") + "</button>").join("") + "</div>").join("") + "</div>";
+  }
+
+  function renderPage(animate) {
+    const page = $("page");
+    if (state.idx >= N) return renderSummary(animate);
+    const d = DECISIONS[state.idx];
+    if (d.locked && !state.a[d.id]) state.a[d.id] = leanKey(d);
+    const keys = d.sub ? "" : (d.locked ? "" : "1–" + d.options.length + " choose · ");
+    const micBtn = MODE === "local" ? "<button class='mic' id='mic' type='button' aria-label='Hold to dictate' hidden><svg width='18' height='18' viewBox='0 0 24 24' aria-hidden='true' fill='none' stroke='currentColor' stroke-width='2'><path d='M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z'/><path d='M19 10v2a7 7 0 0 1-14 0v-2'/><line x1='12' y1='19' x2='12' y2='23'/><line x1='8' y1='23' x2='16' y2='23'/></svg></button>" : "";
+    page.innerHTML =
+      "<h2><span class='pfx'><span class='plate'>" + esc(d.group) + "<b>" + d.id + "</b></span>" + (d.locked ? "<span class='locked'>" + esc(d.locked) + "</span>" : "") + "</span>" + esc(d.q) + "</h2>" +
+      "<div class='pbody'><div class='why'>" + d.why.map(p => "<p>" + esc(p) + "</p>").join("") + (d.warn ? "<p class='w'><b>" + esc(d.warn.split(":")[0]) + ":</b>" + esc(d.warn.slice(d.warn.indexOf(":") + 1)) + "</p>" : "") + "</div>" +
+      (d.sub ? subHTML(d) : "<div class='choices' role='radiogroup' aria-label='Choices for " + d.id + "'>" + d.options.map((o, i) => choiceHTML(d, o, i)).join("") + "</div>") + "</div>" +
+      "<div class='nav'><button class='btn' id='back' type='button'" + (state.idx === 0 ? " disabled" : "") + ">Back<kbd class='acc'>←</kbd></button>" +
+      "<input class='note' id='note' type='text' aria-label='Note for Claude' placeholder='Note for Claude (optional)' value='" + esc(state.notes[d.id] || "").replace(/'/g, "&#39;") + "'>" +
+      micBtn +
+      (d.locked ? "" : "<button class='btn' id='lean' type='button'>Use Claude's lean</button>") +
+      "<span class='pos'>" + (state.idx + 1) + " / " + N + "</span>" +
+      "<button class='btn go' id='next' type='button'>" + (state.idx + 1 === N ? "Review answers" : "Next") + "<kbd class='acc'>Enter</kbd></button></div>";
+    wirePage(d);
+    if (animate) { page.classList.remove("enter"); void page.offsetWidth; page.classList.add("enter"); }
+    bindPbody();
+    voiceSyncMic();
+    if (voiceActive && utterDecisionId === d.id) setListeningUI(true);
+    renderProgress(); renderSheet(); save();
+  }
+
+  function wirePage(d) {
+    const page = $("page");
+    page.querySelectorAll(".choice").forEach(b => b.addEventListener("click", () => { if (d.locked) return; state.a[d.id] = b.dataset.k; renderPage(false); page.querySelector(".choice[data-k='" + b.dataset.k + "']").focus(); }));
+    page.querySelectorAll(".subopt").forEach(b => b.addEventListener("click", () => { state.sub[b.dataset.s] = b.dataset.v; v2row = null; renderPage(false); page.querySelector(".subopt[data-s='" + b.dataset.s + "'][data-v='" + b.dataset.v + "']").focus(); }));
+    $("note").addEventListener("input", e => { const v = e.target.value; if (v.trim()) state.notes[d.id] = v; else delete state.notes[d.id]; save(); });
+    $("back").addEventListener("click", () => go(state.idx - 1));
+    $("next").addEventListener("click", () => go(state.idx + 1));
+    const lb = $("lean");
+    if (lb) lb.addEventListener("click", () => { if (d.sub) d.sub.forEach(s => { state.sub[s.id] = subLean(s); }); else state.a[d.id] = leanKey(d); renderPage(false); });
+    const mic = $("mic");
+    if (mic) {
+      mic.addEventListener("pointerdown", e => { e.preventDefault(); try { mic.setPointerCapture(e.pointerId); } catch (err) {} voiceStart(); });
+      mic.addEventListener("pointerup", () => voiceStop());
+      mic.addEventListener("pointerleave", () => { if (voiceActive) voiceStop(); });
+    }
+  }
+
+  function bindPbody() {
+    const pb = document.querySelector("#page .pbody");
+    if (!pb) return;
+    const up = () => { pb.classList.toggle("more-below", pb.scrollHeight > pb.clientHeight + 2 && pb.scrollTop + pb.clientHeight < pb.scrollHeight - 2); };
+    pb.onscroll = up;
+    up();
+  }
+  window.addEventListener("resize", () => { const pb = document.querySelector("#page .pbody"); if (pb && pb.onscroll) pb.onscroll(); });
+
+  function go(i) { state.idx = Math.max(0, Math.min(N, i)); v2row = null; renderPage(true); }
+
+  function buildText() {
+    const lines = [TITLE + " (" + DECISIONS.filter(answered).length + " of " + N + " answered)", ""];
+    DECISIONS.forEach(d => {
+      if (d.sub) {
+        const parts = d.sub.map(s => s.id + " " + (state.sub[s.id] ? subLetter(state.sub[s.id]) : "?") + (state.sub[s.id] && state.sub[s.id] !== subLean(s) ? " (not lean)" : ""));
+        lines.push(d.id + " = " + (answered(d) && isLean(d) ? "all leans: " : "") + parts.join(", "));
+        d.sub.forEach(s => { const v = state.sub[s.id]; const o = v && s.o.find(x => x[0] === v); if (o && !o[2]) lines.push("    " + s.id + " " + subLetter(v) + ": " + o[1]); });
+      } else {
+        const k = state.a[d.id], o = k && d.options.find(x => x.k === k);
+        lines.push(d.id + " = " + (o ? letter(d, k) + " · " + o.t + (o.lean ? " (lean)" : " (not lean)") : "OPEN"));
+      }
+      if (state.notes[d.id]) lines.push("    note: " + state.notes[d.id].replace(/\s+/g, " ").trim());
+    });
+    const open = DECISIONS.filter(d => !answered(d)).map(d => d.id);
+    lines.push("", open.length ? "Open: " + open.join(", ") : "All answered.");
+    return lines.join("\n");
+  }
+
+  function renderSummary(animate) {
+    const page = $("page");
+    const open = DECISIONS.filter(d => !answered(d));
+    page.innerHTML = "<h2><span class='pfx'><span class='plate'>Review</span></span>" +
+      (open.length ? open.length + " decision" + (open.length > 1 ? "s are" : " is") + " still open" : "All " + N + " answered. Copy the sheet back to Claude.") + "</h2>" +
+      (open.length ? "<p class='openlist'>Open: " + open.map(d => "<button class='link' type='button' data-i='" + DECISIONS.indexOf(d) + "'>" + d.id + "</button>").join("") + "You can still copy now; open items show as OPEN.</p>" : "") +
+      "<textarea class='out' id='outText' readonly aria-label='Answer sheet text'>" + esc(buildText()) + "</textarea>" +
+      "<div class='nav'><button class='btn' id='back' type='button'>Back</button><span style='flex:1'></span><button class='btn go' id='copy2' type='button'>Copy answers for Claude</button></div>";
+    page.querySelectorAll("[data-i]").forEach(b => b.addEventListener("click", () => go(Number(b.dataset.i))));
+    $("back").addEventListener("click", () => go(N - 1));
+    $("copy2").addEventListener("click", copy);
+    if (animate) { page.classList.remove("enter"); void page.offsetWidth; page.classList.add("enter"); }
+    renderProgress(); renderSheet(); save();
+    postAnswersNow();
+  }
+
+  function copy() {
+    postAnswersNow();
+    const text = buildText();
+    const done = () => { $("toast").textContent = "Copied. Paste it into the Claude chat."; };
+    const fail = () => { if (state.idx < N) go(N); const t = $("outText"); t.focus(); t.select(); $("toast").textContent = "Copy was blocked. The text is selected; press ⌘C."; };
+    try { navigator.clipboard.writeText(text).then(done, fail); } catch (e) { fail(); }
+  }
+
+  $("copy").addEventListener("click", copy);
+  $("progress").addEventListener("click", e => { const b = e.target.closest("button[data-i]"); if (b) go(Number(b.dataset.i)); });
+  $("sheet").addEventListener("click", e => { const b = e.target.closest("button[data-i]"); if (b) go(Number(b.dataset.i)); });
+  $("reset").addEventListener("click", () => { $("confirmReset").hidden = false; });
+  $("resetNo").addEventListener("click", () => { $("confirmReset").hidden = true; });
+  $("resetYes").addEventListener("click", () => { state = { idx: 0, a: {}, sub: {}, notes: {} }; $("confirmReset").hidden = true; $("toast").textContent = "Cleared."; renderPage(true); });
+
+  /* Speech (local mode only) */
+  const WORKLET_SRC = "class DeckDownsample extends AudioWorkletProcessor{constructor(){super();this.ratio=sampleRate/16000;this.queue=[];this.outEvery=1600;}process(i){const c=i[0]&&i[0][0];if(!c)return true;for(let n=0;n<c.length;n++)this.queue.push(c[n]);const need=Math.ceil(this.outEvery*this.ratio);while(this.queue.length>=need){const slice=this.queue.splice(0,need);const out=new Int16Array(this.outEvery);for(let j=0;j<this.outEvery;j++){const a=Math.floor(j*this.ratio),b=Math.max(a+1,Math.min(slice.length,Math.floor((j+1)*this.ratio)));let s=0;for(let k=a;k<b;k++)s+=slice[k];s/=(b-a);const v=Math.max(-1,Math.min(1,s));out[j]=v<0?v*32768:v*32767;}this.port.postMessage(out.buffer,[out.buffer]);}return true;}}registerProcessor('deck-downsample',DeckDownsample);";
+  let sttWs = null, sttBackoff = 500, voiceEngine = null, voiceAllowed = false, voiceActive = false, voiceWanted = false, spaceHeld = false, utterTimer = null;
+  let utterDecisionId = null, voiceBase = "", voiceUtterance = "", mediaStream = null, audioCtx = null, workletNode = null, sourceNode = null, workletReady = false;
+  function voiceNoteBase(val) { if (!val) return ""; return /\s$/.test(val) ? val : val + " "; }
+  function applyVoiceNote() {
+    if (!utterDecisionId) return;
+    const val = voiceBase + voiceUtterance.replace(/^\s+/, "");
+    if (val.trim()) state.notes[utterDecisionId] = val; else delete state.notes[utterDecisionId];
+    const note = $("note");
+    if (state.idx < N && DECISIONS[state.idx].id === utterDecisionId && note) note.value = val;
+    save();
+  }
+  function setListeningUI(on) {
+    const note = $("note");
+    const mic = $("mic");
+    if (note) { note.classList.toggle("listening", on); note.placeholder = on ? "Listening…" : "Note for Claude (optional)"; }
+    if (mic) mic.classList.toggle("recording", on);
+  }
+  function voiceSyncMic() {
+    const mic = $("mic");
+    if (!mic || MODE !== "local") return;
+    if (!voiceEngine) { mic.hidden = false; mic.disabled = true; mic.title = "Voice unavailable: no speech engine"; return; }
+    mic.hidden = false; mic.disabled = !voiceAllowed; mic.title = voiceAllowed ? "Hold to dictate" : "";
+  }
+  function connectStt() {
+    if (MODE !== "local") return;
+    try { sttWs = new WebSocket("ws://" + location.host + "/stt"); } catch (e) { scheduleSttRetry(); return; }
+    sttWs.onmessage = e => {
+      let msg; try { msg = JSON.parse(e.data); } catch (err) { return; }
+      if (msg.type === "ready") {
+        voiceEngine = msg.engine;
+        voiceAllowed = !!msg.engine;
+        voiceSyncMic();
+        return;
+      }
+      if (!utterDecisionId) return;
+      if (msg.type === "partial") { voiceUtterance = msg.text || ""; applyVoiceNote(); }
+      else if (msg.type === "delta") { voiceUtterance += msg.text || ""; applyVoiceNote(); }
+      else if (msg.type === "final") { voiceUtterance = msg.text || ""; applyVoiceNote(); if (!voiceActive) utterDecisionId = null; }
+      else if (msg.type === "error") { $("toast").textContent = msg.message || "Voice error"; voiceStop(); }
+    };
+    sttWs.onopen = () => { sttBackoff = 500; };
+    sttWs.onclose = () => scheduleSttRetry();
+    sttWs.onerror = () => {};
+  }
+  function scheduleSttRetry() {
+    setTimeout(connectStt, sttBackoff);
+    sttBackoff = Math.min(5000, Math.max(500, Math.round(sttBackoff * 1.4)));
+  }
+  async function ensureAudio() {
+    if (!mediaStream) {
+      try { mediaStream = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true } }); }
+      catch (e) { voiceAllowed = false; voiceSyncMic(); $("toast").textContent = "Microphone blocked. Allow it in the browser's site settings."; throw e; }
+    }
+    if (!audioCtx) audioCtx = new AudioContext();
+    if (audioCtx.state === "suspended") await audioCtx.resume();
+    if (!workletReady) {
+      const url = URL.createObjectURL(new Blob([WORKLET_SRC], { type: "application/javascript" }));
+      await audioCtx.audioWorklet.addModule(url);
+      URL.revokeObjectURL(url);
+      workletReady = true;
+    }
+  }
+  function teardownAudioGraph() {
+    if (workletNode) { workletNode.port.onmessage = null; workletNode.disconnect(); workletNode = null; }
+    if (sourceNode) { sourceNode.disconnect(); sourceNode = null; }
+  }
+  async function voiceStart() {
+    if (MODE !== "local" || !voiceAllowed || voiceActive || state.idx >= N) return;
+    const d = DECISIONS[state.idx];
+    utterDecisionId = d.id;
+    const note = $("note");
+    const cur = note ? note.value : (state.notes[d.id] || "");
+    voiceBase = voiceNoteBase(cur);
+    voiceUtterance = "";
+    voiceWanted = true;
+    try { await ensureAudio(); } catch (e) { voiceWanted = false; return; }
+    if (!voiceWanted) return;
+    teardownAudioGraph();
+    sourceNode = audioCtx.createMediaStreamSource(mediaStream);
+    workletNode = new AudioWorkletNode(audioCtx, "deck-downsample");
+    workletNode.port.onmessage = ev => { if (sttWs && sttWs.readyState === 1 && voiceActive) sttWs.send(ev.data); };
+    sourceNode.connect(workletNode);
+    if (sttWs && sttWs.readyState === 1) sttWs.send(JSON.stringify({ type: "start", sampleRate: 16000 }));
+    voiceActive = true;
+    setListeningUI(true);
+  }
+  function voiceStop() {
+    voiceWanted = false;
+    if (!voiceActive) return;
+    voiceActive = false;
+    setListeningUI(false);
+    if (sttWs && sttWs.readyState === 1) sttWs.send(JSON.stringify({ type: "stop" }));
+    teardownAudioGraph();
+    applyVoiceNote();
+    if (!utterDecisionId) return;
+    const id = utterDecisionId;
+    clearTimeout(utterTimer);
+    utterTimer = setTimeout(() => { if (!voiceActive && utterDecisionId === id) utterDecisionId = null; }, 15000);
+  }
+
+  /* Keyboard: hold Alt/Option to show badges; Enter goes next (lean if empty); hold Space records voice in local mode. */
+  const CODES = { KeyA: 0, KeyS: 1, KeyD: 2, KeyF: 3 };
+  const typing = t => !!t && (t.tagName === "TEXTAREA" || t.tagName === "INPUT");
+  function showAccel(on) { document.body.classList.toggle("show-accel", on); }
+  function scrollFocus(el, box) { if (!el) return; el.focus({ preventScroll: true }); (box || el).scrollIntoView({ block: "nearest" }); }
+  function focusChoice(d) {
+    const page = $("page");
+    if (d.sub) { const id = v2Target(d); if (!id) return; const row = [...page.querySelectorAll(".subrow")].find(r => r.querySelector(".sid").textContent === id);
+      scrollFocus(row.querySelector(".subopt[aria-checked='true']") || row.querySelector(".subopt"), row); return; }
+    scrollFocus(page.querySelector(".choice[aria-checked='true']") || page.querySelector(".choice"));
+  }
+  function pick(i) {
+    if (state.idx >= N) return;
+    const d = DECISIONS[state.idx];
+    if (d.locked) return;
+    if (d.sub) {
+      const r = v2Index(d); if (r < 0 || i > 1) return;
+      state.sub[d.sub[r].id] = i === 0 ? "a" : "b";
+      const nextOpen = d.sub.findIndex((s, j) => j > r && !state.sub[s.id]);
+      v2row = nextOpen >= 0 ? nextOpen : null;
+    } else {
+      if (i >= d.options.length) return;
+      state.a[d.id] = d.options[i].k;
+    }
+    renderPage(false); focusChoice(d);
+  }
+  /* Up/Down walk the choices (or V2 rows); past the last one, focus moves to the note. */
+  function moveChoice(dir) {
+    if (state.idx >= N) return;
+    const d = DECISIONS[state.idx];
+    if (d.sub) {
+      const cur = v2Index(d) < 0 ? (dir > 0 ? -1 : d.sub.length) : v2Index(d);
+      const next = cur + dir;
+      if (next >= d.sub.length) { $("note").focus(); return; }
+      v2row = Math.max(0, next); renderPage(false); focusChoice(d); return;
+    }
+    if (d.locked) { if (dir > 0) $("note").focus(); return; }
+    const cur = d.options.findIndex(o => o.k === state.a[d.id]);
+    let next = cur < 0 ? (dir > 0 ? 0 : d.options.length - 1) : cur + dir;
+    if (next >= d.options.length) { $("note").focus(); return; }
+    next = Math.max(0, next);
+    state.a[d.id] = d.options[next].k; renderPage(false); focusChoice(d);
+  }
+  function upFromNote() {
+    const d = DECISIONS[state.idx];
+    if (d.sub) { v2row = d.sub.length - 1; renderPage(false); focusChoice(d); return; }
+    if (!d.locked && !state.a[d.id]) { state.a[d.id] = d.options[d.options.length - 1].k; renderPage(false); }
+    focusChoice(d);
+  }
+  function enterNext() {
+    if (state.idx >= N) return;
+    const d = DECISIONS[state.idx];
+    let usedLean = false;
+    if (d.sub) d.sub.forEach(s => { if (!state.sub[s.id]) { state.sub[s.id] = subLean(s); usedLean = true; } });
+    else if (!state.a[d.id]) { state.a[d.id] = leanKey(d); usedLean = !d.locked; }
+    $("toast").textContent = usedLean ? d.id + ": took Claude's lean" : "";
+    go(state.idx + 1);
+  }
+  document.addEventListener("keydown", e => {
+    if (e.repeat) { if ((e.code === "Space" || e.key === " ") && !typing(e.target)) e.preventDefault(); return; }
+    if (e.key === "Alt") { showAccel(true); return; }
+    if (e.altKey && !e.metaKey && !e.ctrlKey && e.code in CODES) { e.preventDefault(); pick(CODES[e.code]); return; }
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (typing(e.target)) {
+      const t = e.target;
+      if (t.id === "note" && e.key === "Enter") { e.preventDefault(); go(state.idx + 1); return; }
+      if (t.id === "note" && e.key === "ArrowUp") { e.preventDefault(); upFromNote(); return; }
+      if (t.id === "note" && !t.value && (e.key === "ArrowLeft" || e.key === "ArrowRight")) { e.preventDefault(); go(state.idx + (e.key === "ArrowRight" ? 1 : -1)); return; }
+      return;
+    }
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); moveChoice(e.key === "ArrowDown" ? 1 : -1); return; }
+    if (e.code === "Space" || e.key === " ") {
+      e.preventDefault();
+      if (MODE === "local" && voiceAllowed) { if (!spaceHeld) { spaceHeld = true; voiceStart(); } }
+      return;
+    }
+    if (e.key === "Enter") { e.preventDefault(); enterNext(); return; }
+    if (e.key === "ArrowRight") { e.preventDefault(); go(state.idx + 1); return; }
+    if (e.key === "ArrowLeft") { e.preventDefault(); go(state.idx - 1); return; }
+  });
+  document.addEventListener("keyup", e => {
+    if (e.key === "Alt") showAccel(false);
+    if ((e.code === "Space" || e.key === " ") && !typing(e.target)) {
+      e.preventDefault();
+      if (MODE === "local" && spaceHeld) { spaceHeld = false; voiceStop(); }
+    }
+  });
+  window.addEventListener("blur", () => { showAccel(false); if (spaceHeld) { spaceHeld = false; voiceStop(); } });
+
+  /* background: birch grain (Basecamp) or polar grid (Polar Night) */
+  const cv = $("bgc");
+  function isDark() { const t = document.documentElement.getAttribute("data-theme"); if (t) return t === "dark"; return window.matchMedia("(prefers-color-scheme: dark)").matches; }
+  function rng(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  function paint() {
+    const dpr = Math.min(2, window.devicePixelRatio || 1), w = window.innerWidth, h = window.innerHeight;
+    cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+    const ctx = cv.getContext("2d"); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (isDark()) {
+      ctx.fillStyle = "#0A1020"; ctx.fillRect(0, 0, w, h);
+      const cx = w * 0.9, cy = -h * 0.35, max = Math.hypot(w, h) * 1.6;
+      ctx.strokeStyle = "rgba(132,148,178,.10)"; ctx.lineWidth = 1;
+      for (let r = 90; r < max; r += 90) { ctx.beginPath(); ctx.arc(cx, cy, r, 0, 6.283); ctx.stroke(); }
+      for (let a = 0; a < 360; a += 10) { const t = a * Math.PI / 180; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(t) * max, cy + Math.sin(t) * max); ctx.stroke(); }
+    } else {
+      const r = rng(7);
+      ctx.fillStyle = "#E7D9BF"; ctx.fillRect(0, 0, w, h);
+      for (let i = 0; i < 9; i++) { const y = r() * h, bh = 30 + r() * 90, g = ctx.createLinearGradient(0, y, 0, y + bh); g.addColorStop(0, "rgba(176,141,92,0)"); g.addColorStop(0.5, "rgba(176,141,92,.12)"); g.addColorStop(1, "rgba(176,141,92,0)"); ctx.fillStyle = g; ctx.fillRect(0, y, w, bh); }
+      for (let y = -10; y < h + 10; y += 2.4) {
+        const a = 0.02 + r() * 0.07, ph = r() * 6.28, amp = 1 + r() * 3, fr = 0.002 + r() * 0.004;
+        ctx.strokeStyle = "rgba(120,92,55," + a.toFixed(3) + ")"; ctx.lineWidth = 0.6 + r() * 0.6; ctx.beginPath();
+        for (let x = 0; x <= w + 12; x += 12) { const yy = y + Math.sin(x * fr + ph) * amp + Math.sin(x * fr * 3.1 + ph) * amp * 0.3; if (x === 0) ctx.moveTo(x, yy); else ctx.lineTo(x, yy); }
+        ctx.stroke();
+      }
+    }
+  }
+  let rt = null;
+  window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(paint, 120); });
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", paint);
+  new MutationObserver(paint).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(paint);
+
+  function start(data) {
+    if (data && data.a) state = data;
+    else { try { const s = JSON.parse(localStorage.getItem(STORE) || "null"); if (s && s.a) state = s; } catch (e) {} }
+    state.idx = Math.max(0, Math.min(N, Number(state.idx) || 0));
+    state.a = state.a || {}; state.sub = state.sub || {}; state.notes = state.notes || {};
+    paint(); renderPage(false);
+    if (MODE === "local") connectStt();
+  }
+  if (window.claude && window.claude.hot && window.claude.hot.snapshot) window.claude.hot.snapshot(() => state);
+  window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? null);
+})();
+</script>
