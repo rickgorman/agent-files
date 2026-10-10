@@ -55,6 +55,12 @@ own rubrics. Jev selects applicable rules and grades current code; the fixing
 agent works from that round's failures. The loop records coverage and spend and
 stops on success, stalled progress, or its round and budget limits.
 
+### [`/decision-gui`](skills/decision-gui/)
+
+> *One page per pending decision, the agent's lean marked, answered by keyboard or voice.*
+
+Twenty decisions in one chat message get half-answered. This puts each on its own page with gains, costs and an honest lean. You answer with the arrow keys, hold Space to dictate a note through local Whisper, and the agent reads your answer sheet straight from disk.
+
 ## Grok Bot
 
 A separate steal path. [`grok-bot/`](grok-bot/) is fleet playbooks for Grok Bot, not Claude `skills/`. Copy a package onto the box:
